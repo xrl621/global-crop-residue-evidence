@@ -132,7 +132,8 @@ def project(row: dict[str, str]) -> dict[str, str]:
     if abs(math.log(treatment_mean / control_mean) - lnrr) > 1e-8:
         raise ValueError(f"lnRR does not match arm means for {effect_id}")
 
-    tier, tier_reconciliation = analysis_tier(row)
+    tier, projected_reconciliation = analysis_tier(row)
+    tier_reconciliation = value(row, "tier_reconciliation") or projected_reconciliation
     quality_flags = []
     if "row_level_origin_unresolved" in value(row, "variance_provenance").lower():
         quality_flags.append("variance_row_origin_unresolved")
@@ -179,7 +180,7 @@ def project(row: dict[str, str]) -> dict[str, str]:
         "source_locator": value(row, "primary_table_locator"),
         "variance_provenance": value(row, "variance_provenance"),
         "analysis_tier": tier,
-        "source_analysis_tier": value(row, "analysis_tier"),
+        "source_analysis_tier": value(row, "secondary_analysis_tier", "analysis_tier"),
         "tier_reconciliation": tier_reconciliation,
         "formal_decision": value(row, "formal_decision"),
         "variance_origin_status": (

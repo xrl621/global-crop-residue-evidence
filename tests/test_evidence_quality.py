@@ -25,7 +25,10 @@ class EvidenceQualityTests(unittest.TestCase):
         self.assertEqual(len({row["study_id"] for row in self.rows}), 26)
 
     def test_reconciled_tiers_preserve_original(self):
-        reconciled = [row for row in self.rows if row["tier_reconciliation"]]
+        reconciled = [
+            row for row in self.rows
+            if row["tier_reconciliation"] == "primary_fulltext_review_reconciled_2026-09-23"
+        ]
         self.assertEqual(len(reconciled), 30)
         self.assertEqual(
             Counter(row["study_id"] for row in reconciled),
@@ -43,20 +46,44 @@ class EvidenceQualityTests(unittest.TestCase):
             row for row in self.rows
             if row["variance_origin_status"] == "unresolved_row_origin"
         ]
-        self.assertEqual(len(unresolved), 22)
+        self.assertEqual(len(unresolved), 2)
         self.assertEqual(
             Counter(row["study_id"] for row in unresolved),
-            {"biochar_li2024SD_176": 14, "biochar_li2024SD_3": 8},
+            {"biochar_li2024SD_176": 2},
         )
         self.assertTrue(all("variance_row_origin_unresolved" in row["quality_flags"] for row in unresolved))
+
+    def test_primary_table_recheck_is_traceable(self):
+        reviewed = [
+            row for row in self.rows
+            if row["tier_reconciliation"] == "primary_tables_verified_2026-09-23"
+        ]
+        self.assertEqual(len(reviewed), 20)
+        self.assertEqual(
+            Counter(row["study_id"] for row in reviewed),
+            {"biochar_li2024SD_176": 12, "biochar_li2024SD_3": 8},
+        )
+        self.assertTrue(all(row["source_locator"] for row in reviewed))
+        self.assertTrue(all(row["variance_origin_status"] == "documented_or_reconstructed" for row in reviewed))
+        self.assertTrue(all("pending" in row["source_analysis_tier"] for row in reviewed))
+        values = {row["effect_id"]: row for row in reviewed}
+        yield_sd = {
+            "BiocharDS_v1_row_01259_CropYield": (0.569, 0.137),
+            "BiocharDS_v1_row_01260_CropYield": (0.347, 0.137),
+            "BiocharDS_v1_row_01262_CropYield": (0.199, 0.584),
+            "BiocharDS_v1_row_01263_CropYield": (0.843, 0.584),
+        }
+        for effect_id, (treatment_sd, control_sd) in yield_sd.items():
+            self.assertAlmostEqual(float(values[effect_id]["treatment_sd"]), treatment_sd)
+            self.assertAlmostEqual(float(values[effect_id]["control_sd"]), control_sd)
 
     def test_study_count_gate_uses_variance_screen(self):
         summary = {(row["pathway"], row["outcome"]): row for row in summarize(EVIDENCE, 10)}
         self.assertEqual(summary[("biochar_return", "yield")]["independent_studies"], 6)
-        self.assertEqual(summary[("biochar_return", "yield")]["variance_screen_independent_studies"], 4)
-        self.assertEqual(summary[("biochar_return", "SOC")]["variance_screen_independent_studies"], 4)
-        self.assertEqual(summary[("biochar_return", "CH4")]["variance_screen_independent_studies"], 2)
-        self.assertEqual(summary[("biochar_return", "N2O")]["variance_screen_independent_studies"], 2)
+        self.assertEqual(summary[("biochar_return", "yield")]["variance_screen_independent_studies"], 6)
+        self.assertEqual(summary[("biochar_return", "SOC")]["variance_screen_independent_studies"], 5)
+        self.assertEqual(summary[("biochar_return", "CH4")]["variance_screen_independent_studies"], 4)
+        self.assertEqual(summary[("biochar_return", "N2O")]["variance_screen_independent_studies"], 4)
         passing = [row for row in summary.values() if row["meets_count_threshold"] == "true"]
         self.assertEqual([(row["pathway"], row["outcome"]) for row in passing], [("open_burning", "yield")])
 

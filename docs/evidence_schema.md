@@ -92,16 +92,18 @@ In this snapshot, 13 rows lack a title, 6 lack a primary DOI, and 113 lack
 both broad and Köppen climate fields. These gaps stay visible rather than
 being filled from unverified secondary metadata.
 
-The 2026-09-23 [quality audit](EVIDENCE_QUALITY_AUDIT_20260923.md) reconciled
-30 of 52 source-table `pending` labels against already documented primary
-reviews of three studies. Both old and current tiers remain in the public CSV.
-The other 22 rows, from two studies, still have unresolved row-level secondary
-variance origin and missing source locators; they are excluded from the
-variance-origin-screen count for first-pass inverse-variance models. Six rows
-still lack a DOI. No effect estimate or sampling variance was changed by this
-tier reconciliation. `documented_or_reconstructed` does **not** mean automatic
-main-model eligibility: dependence, variance reconstruction, comparator and
-system boundaries still require review.
+The 2026-09-23 [quality audit](EVIDENCE_QUALITY_AUDIT_20260923.md) first
+reconciled 30 of 52 source-table `pending` labels. A subsequent
+[primary-table recheck](PRIMARY_TABLE_RECHECK_20260923.md) resolved the row-level
+variance source for another 20 effects in two studies. The public CSV retains
+the old tier in `source_analysis_tier` and records the reconciliation source.
+Only two figure-digitized SOC rows remain `unresolved_row_origin` and are
+excluded from the variance-origin-screen count for first-pass inverse-variance
+models. Six rows still lack a DOI. Four Yang 2019 yield SDs and their sampling
+variances changed when exact primary-table values replaced secondary rounding;
+their means and lnRR did not change. `documented_or_reconstructed` does **not**
+mean automatic main-model eligibility: dependence, variance reconstruction,
+comparator and system boundaries still require review.
 
 ## Rebuild and provenance
 

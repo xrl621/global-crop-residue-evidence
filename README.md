@@ -52,10 +52,11 @@ effect, **not** an independent study. See the
 the study-level analysis rule. New literature can be logged in
 [`literature/screening_template.csv`](literature/screening_template.csv) using
 the [`screening protocol`](docs/screening_protocol.md).
-The [2026-09-23 quality audit](docs/EVIDENCE_QUALITY_AUDIT_20260923.md)
-reconciles 30 legacy pending-tier labels while retaining their originals;
-22 effects from two studies still lack row-level variance provenance and are
-held out of the first-pass inverse-variance count.
+The [quality audit](docs/EVIDENCE_QUALITY_AUDIT_20260923.md) reconciled 30
+legacy labels; the subsequent [primary-table recheck](docs/PRIMARY_TABLE_RECHECK_20260923.md)
+resolved another 20 effects against two source papers. Original labels remain
+visible. Two figure-digitized SOC effects still lack reproducible row-level
+variance provenance and are held out of first-pass inverse-variance counts.
 
 To regenerate the public snapshot from the local full-text-validated audit
 table, run `python scripts/export_evidence_database.py`; add `--check` to test
