@@ -1,0 +1,41 @@
+# OS / editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+~$*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Raw data: keep local/source copies out of GitHub
+data/raw/*
+!data/raw/.gitkeep
+
+# Generated outputs
+outputs/*
+!outputs/.gitkeep
+
+# Common large/binary analysis files
+*.zip
+*.7z
+*.tar
+*.gz
+*.rar
+*.h5
+*.hdf5
+*.parquet
+*.feather
+
+# Logs
+*.log
