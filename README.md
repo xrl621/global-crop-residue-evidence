@@ -52,15 +52,19 @@ effect, **not** an independent study. See the
 the study-level analysis rule. New literature can be logged in
 [`literature/screening_template.csv`](literature/screening_template.csv) using
 the [`screening protocol`](docs/screening_protocol.md).
+The [2026-09-23 quality audit](docs/EVIDENCE_QUALITY_AUDIT_20260923.md)
+reconciles 30 legacy pending-tier labels while retaining their originals;
+22 effects from two studies still lack row-level variance provenance and are
+held out of the first-pass inverse-variance count.
 
 To regenerate the public snapshot from the local full-text-validated audit
 table, run `python scripts/export_evidence_database.py`; add `--check` to test
 that the committed CSV matches the local source. Primary PDFs, the full audit
 table, and automatically generated outputs stay local by default. The CSV is
 not a substitute for those source materials or for model-level dependence and
-system-boundary checks. Several rows retain unresolved variance-provenance or
-legacy-tier flags; filter and audit `quality_flags` before a submission-grade
-meta-analysis.
+system-boundary checks. Several rows retain unresolved variance-provenance
+flags; filter and audit `quality_flags` and `variance_origin_status` before a
+submission-grade meta-analysis.
 
 The repository ignore rules keep the pre-repository bulk data, downloaded
 papers, generated outputs and exploratory figure files local. Select a final
@@ -68,6 +72,7 @@ figure deliberately for version control after checking its data source and
 size; it can then be force-added if the ignore rule covers its file type.
 
 For a count-only view of coverage by pathway and outcome, run
-`python scripts/describe_evidence.py`. It counts distinct field experiments,
-not papers or CSV rows. Its threshold flag is not a substitute for statistical
-or system-boundary checks.
+`python scripts/describe_evidence.py`. It shows all effects and independent
+field experiments alongside the subset passing the row-level variance-origin
+screen. Its threshold flag is not a substitute for statistical or
+system-boundary checks.

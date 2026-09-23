@@ -27,13 +27,36 @@ FIELDS = [
     "treatment_arm", "control_arm", "treatment_mean", "control_mean",
     "treatment_sd", "control_sd", "treatment_n", "control_n",
     "lnrr", "variance_lnrr", "percent_change", "shared_control_group",
-    "source_locator", "variance_provenance", "analysis_tier", "formal_decision",
+    "source_locator", "variance_provenance", "analysis_tier", "source_analysis_tier",
+    "tier_reconciliation", "formal_decision", "variance_origin_status",
     "independence_resolution", "sensitivity_note", "quality_flags", "system_boundary",
     "gwp_version", "soc_measure", "soil_depth", "water_regime",
     "nitrogen_rate", "extraction_method",
 ]
 
 PATHWAYS = {"direct_return", "biochar_return", "open_burning"}
+
+# These three candidate-tier labels were not updated when the named study's
+# primary-source review replaced the secondary extraction. Keep the original
+# label in the public export and fail closed if the expected reviewed row
+# signature changes. This does not resolve uncertainty in studies 3 or 176.
+RECONCILED_TIERS = {
+    "biochar_li2024SD_31": {
+        "tier": "A_primary_matched_pair_figure_digitized_SD",
+        "locators": {"yield": "Figure 2"},
+        "variance_marker": "primary states mean ± one SD",
+    },
+    "biochar_li2024SD_71": {
+        "tier": "A_primary_matched_pair_SE_converted_table_and_figure",
+        "locators": {"yield": "Table 5", "CH4": "Figure 3a", "N2O": "Figure 3b"},
+        "variance_marker": "primary SE converted to SD",
+    },
+    "biochar_li2024SD_73": {
+        "tier": "A_primary_exact_table_mean_SD",
+        "locators": {"SOC": "Table 2"},
+        "variance_marker": "primary Table 2 mean ± SD",
+    },
+}
 
 
 def value(row: dict[str, str], *keys: str) -> str:
@@ -65,6 +88,25 @@ def publication_year(row: dict[str, str]) -> str:
     return year
 
 
+def analysis_tier(row: dict[str, str]) -> tuple[str, str]:
+    original = value(row, "analysis_tier")
+    study_id = value(row, "independent_study_key")
+    rule = RECONCILED_TIERS.get(study_id)
+    if not rule or "pending" not in original.lower():
+        return original, ""
+    outcome = value(row, "analysis_outcome")
+    locator = value(row, "primary_table_locator")
+    provenance = value(row, "variance_provenance")
+    if (
+        value(row, "analysis_pathway") != "biochar_return"
+        or rule["locators"].get(outcome) != locator
+        or rule["variance_marker"] not in provenance
+        or "row_level_origin_unresolved" in provenance.lower()
+    ):
+        raise ValueError(f"Tier reconciliation signature changed for {value(row, 'effect_id')}")
+    return rule["tier"], "primary_fulltext_review_reconciled_2026-09-23"
+
+
 def project(row: dict[str, str]) -> dict[str, str]:
     effect_id = value(row, "effect_id")
     study_id = value(row, "independent_study_key")
@@ -90,10 +132,11 @@ def project(row: dict[str, str]) -> dict[str, str]:
     if abs(math.log(treatment_mean / control_mean) - lnrr) > 1e-8:
         raise ValueError(f"lnRR does not match arm means for {effect_id}")
 
+    tier, tier_reconciliation = analysis_tier(row)
     quality_flags = []
     if "row_level_origin_unresolved" in value(row, "variance_provenance").lower():
         quality_flags.append("variance_row_origin_unresolved")
-    if "pending" in value(row, "analysis_tier").lower():
+    if "pending" in tier.lower():
         quality_flags.append("legacy_analysis_tier_pending")
     if not value(row, "primary_paper_doi"):
         quality_flags.append("primary_doi_missing")
@@ -135,8 +178,14 @@ def project(row: dict[str, str]) -> dict[str, str]:
         "shared_control_group": value(row, "shared_control_group"),
         "source_locator": value(row, "primary_table_locator"),
         "variance_provenance": value(row, "variance_provenance"),
-        "analysis_tier": value(row, "analysis_tier"),
+        "analysis_tier": tier,
+        "source_analysis_tier": value(row, "analysis_tier"),
+        "tier_reconciliation": tier_reconciliation,
         "formal_decision": value(row, "formal_decision"),
+        "variance_origin_status": (
+            "unresolved_row_origin" if "variance_row_origin_unresolved" in quality_flags
+            else "documented_or_reconstructed"
+        ),
         "independence_resolution": value(row, "independence_resolution"),
         "sensitivity_note": value(row, "sensitivity_note"),
         "quality_flags": ";".join(quality_flags),

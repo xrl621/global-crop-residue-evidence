@@ -67,8 +67,11 @@ field experiments.
 | `shared_control_group` | Identifier for contrasts sharing a control within a field trial. |
 | `source_locator` | Primary paper table, figure or supplementary-data location. |
 | `variance_provenance` | Explanation of where SD/SE/variance values came from. |
-| `analysis_tier` | Source-specific evidence tier carried through for sensitivity checks; not a substitute for `formal_decision`. |
+| `analysis_tier` | Current tier after narrowly scoped reconciliation of three primary-reviewed studies; not a substitute for `formal_decision`. |
+| `source_analysis_tier` | Original tier from the local validated source, retained even if it still says `pending`. |
+| `tier_reconciliation` | Nonblank only where an original pending label was reconciled against an existing full-text review. |
 | `formal_decision` | Full-text review decision and any admission condition. |
+| `variance_origin_status` | `unresolved_row_origin` or `documented_or_reconstructed`; this is only a variance-provenance screen, not full model admission. |
 | `independence_resolution` | How repeated observations or shared controls were grouped. |
 | `sensitivity_note` | Required caveat or model exclusion sensitivity. |
 | `quality_flags` | Semicolon-separated unresolved provenance/metadata flags generated without altering the source admission decision. Blank is not a guarantee of absence of all bias. |
@@ -89,12 +92,16 @@ In this snapshot, 13 rows lack a title, 6 lack a primary DOI, and 113 lack
 both broad and Köppen climate fields. These gaps stay visible rather than
 being filled from unverified secondary metadata.
 
-The current export also flags 22 rows with unresolved row-level secondary
-variance origin and 52 rows retaining a legacy `analysis_tier` label that says
-“pending” despite a later formal admission decision. These records need a
-focused provenance reconciliation and exclusion sensitivity before being
-treated as submission-grade main-model evidence. The flags describe a real
-source-table inconsistency; the exporter does not silently resolve it.
+The 2026-09-23 [quality audit](EVIDENCE_QUALITY_AUDIT_20260923.md) reconciled
+30 of 52 source-table `pending` labels against already documented primary
+reviews of three studies. Both old and current tiers remain in the public CSV.
+The other 22 rows, from two studies, still have unresolved row-level secondary
+variance origin and missing source locators; they are excluded from the
+variance-origin-screen count for first-pass inverse-variance models. Six rows
+still lack a DOI. No effect estimate or sampling variance was changed by this
+tier reconciliation. `documented_or_reconstructed` does **not** mean automatic
+main-model eligibility: dependence, variance reconstruction, comparator and
+system boundaries still require review.
 
 ## Rebuild and provenance
 

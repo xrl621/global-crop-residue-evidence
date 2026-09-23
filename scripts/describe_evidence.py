@@ -1,8 +1,8 @@
 """Report effect counts and independent study coverage from the public CSV.
 
-This checks only the predeclared minimum study count. It does not declare a
-pathway/outcome analysis valid without dependence, uncertainty and boundary
-audits.
+The threshold uses studies with no unresolved row-level variance origin.
+It does not declare an analysis valid without dependence, other uncertainty,
+and system-boundary audits.
 """
 
 from __future__ import annotations
@@ -18,23 +18,34 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = ROOT / "literature/evidence_database.csv"
 FIELDS = [
     "pathway", "outcome", "effect_rows", "independent_studies",
+    "variance_screen_effect_rows", "variance_screen_independent_studies",
     "rows_with_quality_flags", "meets_count_threshold",
 ]
 
 
 def summarize(path: Path, minimum_studies: int) -> list[dict[str, object]]:
     groups: dict[tuple[str, str], dict[str, object]] = defaultdict(
-        lambda: {"effects": 0, "studies": set(), "flagged": 0}
+        lambda: {"effects": 0, "studies": set(), "variance_effects": 0,
+                 "variance_studies": set(), "flagged": 0}
     )
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
-        for row in csv.DictReader(stream):
+        reader = csv.DictReader(stream)
+        if not reader.fieldnames or "variance_origin_status" not in reader.fieldnames:
+            raise ValueError("Input needs the current variance_origin_status column")
+        for row in reader:
             pathway, outcome, study = row["pathway"], row["outcome"], row["study_id"]
             if not pathway or not outcome or not study:
                 raise ValueError("Each row requires pathway, outcome and study_id")
+            variance_status = row["variance_origin_status"]
+            if variance_status not in {"unresolved_row_origin", "documented_or_reconstructed"}:
+                raise ValueError(f"Unknown variance origin status for {row['effect_id']}")
             group = groups[(pathway, outcome)]
             group["effects"] += 1
             group["studies"].add(study)
             group["flagged"] += bool(row["quality_flags"])
+            if variance_status == "documented_or_reconstructed":
+                group["variance_effects"] += 1
+                group["variance_studies"].add(study)
     result = []
     for (pathway, outcome), group in sorted(groups.items()):
         n_studies = len(group["studies"])
@@ -43,8 +54,12 @@ def summarize(path: Path, minimum_studies: int) -> list[dict[str, object]]:
             "outcome": outcome,
             "effect_rows": group["effects"],
             "independent_studies": n_studies,
+            "variance_screen_effect_rows": group["variance_effects"],
+            "variance_screen_independent_studies": len(group["variance_studies"]),
             "rows_with_quality_flags": group["flagged"],
-            "meets_count_threshold": str(n_studies >= minimum_studies).lower(),
+            "meets_count_threshold": str(
+                len(group["variance_studies"]) >= minimum_studies
+            ).lower(),
         })
     return result
 
