@@ -6,7 +6,7 @@ file and must not be interpreted as one independent study per row. Each row is
 one treatment–control contrast for one outcome at a reported observation
 time, season, soil depth, or treatment dose. `study_id` is the field-experiment
 cluster used for statistical independence; multiple rows can share a control
-and a study. The 2026-09-23 snapshot contains 464 effects from 29 independent
+and a study. The 2026-09-23 snapshot contains 488 effects from 30 independent
 field experiments.
 
 ## Scope and analysis rules
@@ -20,7 +20,7 @@ field experiments.
 - The sign of `lnrr` is treatment relative to the matched control. A positive
   yield `lnrr` is increased yield; a positive GHG `lnrr` is increased emissions.
 - Repeated years, seasons, doses, depths, and shared controls are dependent.
-  Never use the 464 rows as 464 independent studies. For a first pathway ×
+  Never use the 488 rows as 488 independent studies. For a first pathway ×
   outcome pooled model, require at least 10 independent `study_id` values.
 - GWP conversion factors and system boundaries differ across source papers.
   `gwp_version` and `system_boundary` must be harmonized before cross-paper
@@ -115,6 +115,15 @@ are an n=3 representation, not a claim that the pooled SE was computed from
 exactly three independent annual observations. `describe_evidence.py` now
 reports a stricter screen excluding these rows and unusually large relative-SE
 rows, alongside the historical variance-origin count.
+The [Du 2024 addition and gate re-audit](DU2024_PRIMARY_EXTRACTION_20260923.md)
+adds 24 effects from one further trial. Two older studies (`rice_primary_466`,
+`rice_primary_494`) have primary tables with `±` values but no explicit SD/SE
+label. Their rows now carry `reported_error_type_ambiguous` and are excluded
+from the stricter screen, along with Sharma's pooled-SE ambiguity. Thus
+direct-return × yield is 56 rows/11 studies broadly, but 39 rows/8 studies
+under the strict uncertainty screen. The Du source prints malformed geographic
+coordinates; the export intentionally leaves latitude/longitude blank and
+marks `source_coordinates_malformed` rather than guessing a location.
 
 ## Rebuild and provenance
 

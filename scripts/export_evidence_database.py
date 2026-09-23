@@ -22,6 +22,7 @@ PRIMARY_ADDENDA = [
     ROOT / "literature/primary_extractions/panneerselvam2024_yield.csv",
     ROOT / "literature/primary_extractions/huang2013_yield_n2o.csv",
     ROOT / "literature/primary_extractions/sharma2023_yield.csv",
+    ROOT / "literature/primary_extractions/du2024_yield_soc_gwp_ghgi.csv",
 ]
 
 FIELDS = [
@@ -145,6 +146,9 @@ def project(row: dict[str, str]) -> dict[str, str]:
         quality_flags.append("variance_row_origin_unresolved")
     if "pending" in tier.lower():
         quality_flags.append("legacy_analysis_tier_pending")
+    provenance_lower = value(row, "variance_provenance").lower()
+    if "footnote omits the label" in provenance_lower or "without defining se versus sd" in provenance_lower:
+        quality_flags.append("reported_error_type_ambiguous")
     if not value(row, "primary_paper_doi"):
         quality_flags.append("primary_doi_missing")
     if not value(row, "primary_table_locator"):
@@ -212,7 +216,7 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     if not effect_id or value(row, "pathway") not in PATHWAYS:
         raise ValueError(f"Invalid primary addendum identity/pathway: {effect_id}")
     study_id = value(row, "study_id")
-    if study_id not in {"rice_primary_53", "panneerselvam_cuttack_2021_2022", "huang_shangzhuang_2006_2013", "sharma_ludhiana_2011_2018"}:
+    if study_id not in {"rice_primary_53", "panneerselvam_cuttack_2021_2022", "huang_shangzhuang_2006_2013", "sharma_ludhiana_2011_2018", "du_dingxi_2016_2022"}:
         raise ValueError(f"Primary addendum study needs explicit review: {effect_id}")
     if study_id == "panneerselvam_cuttack_2021_2022" and not (
         value(row, "paper_doi") == "10.1016/j.jenvman.2024.120916"
@@ -250,6 +254,31 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
         and value(row, "experiment_year") == "2011-2018 pooled"
     ):
         raise ValueError(f"Sharma matched-tillage and matched-GM signature changed: {effect_id}")
+    if study_id == "du_dingxi_2016_2022" and not (
+        value(row, "paper_doi") == "10.3390/agronomy14092087"
+        and value(row, "pathway") == "direct_return"
+        and value(row, "crop_core") == "wheat"
+        and value(row, "experiment_year") in {"2021", "2022"}
+        and (value(row, "outcome"), value(row, "source_locator")) in {
+            ("yield", "Table 3"), ("SOC", "Table 2"),
+            ("GWP", "Table 3"), ("GHGI", "Table 3")
+        }
+        and (value(row, "treatment_arm"), value(row, "control_arm")) in {
+            ("CTS-LN", "CT-LN"), ("CTS-MN", "CT-MN"), ("CTS-HN", "CT-HN")
+        }
+        and value(row, "nitrogen_rate") == {
+            "LN": "55 kg N ha-1", "MN": "110 kg N ha-1", "HN": "220 kg N ha-1"
+        }[value(row, "control_arm").split("-")[-1]]
+        and (value(row, "outcome") != "SOC" or (
+            value(row, "soc_measure") == "SOC concentration"
+            and value(row, "soil_depth") == "0-10 cm"
+        ))
+        and (value(row, "outcome") not in {"GWP", "GHGI"} or
+             value(row, "gwp_version") == "AR4 CH4=25 N2O=298")
+        and value(row, "latitude") == ""
+        and value(row, "longitude") == ""
+    ):
+        raise ValueError(f"Du matched-N, matched-tillage source signature changed: {effect_id}")
     treatment_mean = number(row, "treatment_mean", positive=True)
     control_mean = number(row, "control_mean", positive=True)
     treatment_n = number(row, "treatment_n", positive=True)
@@ -298,9 +327,12 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     elif study_id == "huang_shangzhuang_2006_2013":
         decision = "ADMIT_FIXED_N_STRAW_RETURN_VS_REMOVAL"
         dependence = "One field trial established 2006; cluster 2010-2013 seasons, crops, N strata and outcomes by study_id"
-    else:
+    elif study_id == "sharma_ludhiana_2011_2018":
         decision = "ADMIT_MATCHED_TILLAGE_AND_GREEN_MANURE_STRAW_RETENTION"
         dependence = "One 2011-established split-plot trial; cluster seven-year pooled rice/wheat outcomes and green-manure strata by study_id"
+    else:
+        decision = "ADMIT_MATCHED_N_STRAW_INCORPORATION_VS_NO_STRAW"
+        dependence = "One 2016-established split-plot trial; cluster 2021/2022 years, N strata and yield/SOC/GWP/GHGI outcomes by study_id"
     result.update({
         "treatment_mean": compact(treatment_mean),
         "control_mean": compact(control_mean),
@@ -325,6 +357,10 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
         result["variance_provenance"] = "primary Tables 2-3 pooled seven-year mean +/- SE; three field replicates; pooled SE denominator unspecified"
         result["quality_flags"] = ";".join(filter(None, [result["quality_flags"], "pooled_se_denominator_ambiguous"]))
         result["sensitivity_note"] = "Exclude this study in sensitivity analysis because treatment-by-year interaction was reported and pooled-SE denominator is not explicit"
+    if study_id == "du_dingxi_2016_2022":
+        result["quality_flags"] = ";".join(filter(None, [result["quality_flags"], "source_coordinates_malformed"]))
+        if value(row, "outcome") in {"GWP", "GHGI"}:
+            result["sensitivity_note"] = "Soil CH4+N2O growing-season boundary only; source AR4 factors 25/298 require harmonization and do not include upstream or open-burning emissions"
     return result
 
 

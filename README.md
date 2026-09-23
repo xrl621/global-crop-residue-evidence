@@ -45,8 +45,8 @@ in the same commit. Older exploration notes remain available for provenance
 but are not automatically current conclusions.
 
 The project now includes a compact full-text-reviewed evidence snapshot at
-[`literature/evidence_database.csv`](literature/evidence_database.csv): 464 paired
-effects from 29 independent field experiments (2026-09-23 snapshot). The row is a treatment–control
+[`literature/evidence_database.csv`](literature/evidence_database.csv): 488 paired
+effects from 30 independent field experiments (2026-09-23 snapshot). The row is a treatment–control
 effect, **not** an independent study. See the
 [`evidence schema`](docs/evidence_schema.md) for definitions, limitations, and
 the study-level analysis rule. New literature can be logged in
@@ -61,9 +61,11 @@ The latest [direct-return primary extraction](docs/DIRECT_RETURN_PRIMARY_EXTRACT
 adds 10 effects from an already indexed field trial, without inflating the
 independent-study count.
 The [independent-trial expansion audit](docs/INDEPENDENT_TRIAL_EXPANSION_20260923.md)
-adds 26 source-table effects from three new field trials. Direct-return ×
-yield now has 10 trials in the broad count, but only 9 after excluding one
-seven-year pooled study with an ambiguous SE denominator.
+adds 26 source-table effects from three new field trials. A further
+[Du 2024 extraction and gate re-audit](docs/DU2024_PRIMARY_EXTRACTION_20260923.md)
+adds 24 effects from one new wheat trial. Direct-return × yield has 11 trials
+in the broad count, but only 8 after excluding three studies with unresolved
+reported-error semantics. This is not yet a defensible pooled-result gate.
 
 To regenerate the public snapshot from the local full-text-validated audit
 table, run `python scripts/export_evidence_database.py`; add `--check` to test

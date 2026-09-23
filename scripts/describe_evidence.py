@@ -1,7 +1,8 @@
 """Report effect counts and independent study coverage from the public CSV.
 
 The count threshold uses studies with no unresolved row-level variance origin.
-A stricter sensitivity screen also omits pooled-SE and large-relative-SE flags.
+A stricter uncertainty screen also omits ambiguous pooled SE, undefined SD/SE,
+and large-relative-SE flags.
 Neither screen declares an analysis valid without dependence, other uncertainty,
 and system-boundary audits.
 """
@@ -27,6 +28,7 @@ FIELDS = [
 STRICT_EXCLUSION_FLAGS = {
     "pooled_se_denominator_ambiguous",
     "large_relative_se_lnrr_delta_approx",
+    "reported_error_type_ambiguous",
 }
 
 
