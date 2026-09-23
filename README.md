@@ -36,4 +36,38 @@ global-crop-residue-evidence/
 
 ## Status
 
-Project scaffold initialized. Detailed study scope, evidence schema, analysis plan, and reproducible workflows can be added as the project develops.
+The current research question, three-pathway scope, data layers, analysis
+gates, six-figure plan, and next milestones are documented in the
+**[project framework and analysis plan](docs/PROJECT_FRAMEWORK_AND_ANALYSIS.md)**
+(Chinese). Scope, data, method, figure, or conclusion changes must update that
+document and append a dated entry to the **[project change log](docs/PROJECT_CHANGELOG.md)**
+in the same commit. Older exploration notes remain available for provenance
+but are not automatically current conclusions.
+
+The project now includes a compact full-text-reviewed evidence snapshot at
+[`literature/evidence_database.csv`](literature/evidence_database.csv): 428 paired
+effects from 26 independent field experiments. The row is a treatment–control
+effect, **not** an independent study. See the
+[`evidence schema`](docs/evidence_schema.md) for definitions, limitations, and
+the study-level analysis rule. New literature can be logged in
+[`literature/screening_template.csv`](literature/screening_template.csv) using
+the [`screening protocol`](docs/screening_protocol.md).
+
+To regenerate the public snapshot from the local full-text-validated audit
+table, run `python scripts/export_evidence_database.py`; add `--check` to test
+that the committed CSV matches the local source. Primary PDFs, the full audit
+table, and automatically generated outputs stay local by default. The CSV is
+not a substitute for those source materials or for model-level dependence and
+system-boundary checks. Several rows retain unresolved variance-provenance or
+legacy-tier flags; filter and audit `quality_flags` before a submission-grade
+meta-analysis.
+
+The repository ignore rules keep the pre-repository bulk data, downloaded
+papers, generated outputs and exploratory figure files local. Select a final
+figure deliberately for version control after checking its data source and
+size; it can then be force-added if the ignore rule covers its file type.
+
+For a count-only view of coverage by pathway and outcome, run
+`python scripts/describe_evidence.py`. It counts distinct field experiments,
+not papers or CSV rows. Its threshold flag is not a substitute for statistical
+or system-boundary checks.

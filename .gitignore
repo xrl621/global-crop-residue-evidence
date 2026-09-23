@@ -39,3 +39,28 @@ outputs/*
 
 # Logs
 *.log
+
+# Legacy local research workspace. Only the normalized processed layer is
+# eligible for ordinary tracking; primary PDFs and intermediate extractions
+# stay local unless deliberately reviewed and force-added.
+data/*
+!data/raw/
+!data/processed/
+data/raw/*
+!data/raw/.gitkeep
+
+# Large generated or downloaded workspace trees
+download_papers/
+tmp/
+ml/
+.claude/
+scripts/node_modules/
+figures/*
+!figures/.gitkeep
+!figures/*.md
+
+# Loose root-level source documents from the pre-repository workspace
+/*.pdf
+/*.png
+/*.docx
+/*.pptx
