@@ -65,6 +65,27 @@ RECONCILED_TIERS = {
     },
 }
 
+# Table 2 of doi:10.3390/agronomy13030880 reports these within-tillage
+# rice-yield contrasts as mean ± SE. The legacy staging omitted their arm and
+# crop labels. Only the three yield rows are backfilled here: the other 12
+# outcome rows require separate source-value/unit reconciliation.
+RICE_140_YIELD_BACKFILL = {
+    "rice_primary_rice_ext_pair_0013_yield": {
+        "means": (7000.0, 7700.0), "arms": ("RoT + S", "RoT - S"),
+        "system": "rice in rice-wheat cropping system",
+    },
+    "rice_primary_rice_ext_pair_0014_yield": {
+        "means": (9100.0, 8800.0), "arms": ("PT + S", "PT - S"),
+        "system": "single rice",
+    },
+    "rice_primary_rice_ext_pair_0015_yield": {
+        "means": (8200.0, 9100.0), "arms": ("RoT + S", "RoT - S"),
+        "system": "double rice",
+    },
+}
+
+LAND_CLEARING_STUDY = "mbah_nneji_agbani_2007_2008"
+
 
 def value(row: dict[str, str], *keys: str) -> str:
     for key in keys:
@@ -154,7 +175,39 @@ def project(row: dict[str, str]) -> dict[str, str]:
     if not value(row, "primary_table_locator"):
         quality_flags.append("source_locator_missing")
 
-    return {
+    if study_id == LAND_CLEARING_STUDY:
+        if not (
+            value(row, "primary_paper_doi") == "10.5897/AJAR09.746"
+            and "land-clearing residue" in value(row, "control_arm")
+        ):
+            raise ValueError(f"Land-clearing source signature changed for {effect_id}")
+        quality_flags.append("land_clearing_residue_not_harvest_straw")
+
+    backfill = RICE_140_YIELD_BACKFILL.get(effect_id)
+    if backfill:
+        if not (
+            study_id == "rice_primary_140"
+            and value(row, "primary_paper_doi") == "10.3390/agronomy13030880"
+            and value(row, "analysis_pathway") == "direct_return"
+            and value(row, "analysis_outcome") == "yield"
+            and "Table 2" in value(row, "primary_table_locator")
+            and (treatment_mean, control_mean) == backfill["means"]
+            and not any(value(row, key) for key in
+                        ("crop", "crop_core", "treatment_arm", "control_arm"))
+        ):
+            raise ValueError(f"Rice 140 Table 2 backfill signature changed for {effect_id}")
+        quality_flags.append("primary_table_metadata_backfilled")
+    elif study_id == "rice_primary_140":
+        if not (
+            value(row, "primary_paper_doi") == "10.3390/agronomy13030880"
+            and value(row, "analysis_pathway") == "direct_return"
+            and value(row, "analysis_outcome") in {"CH4", "N2O", "GWP", "GHGI"}
+            and effect_id.startswith("rice_primary_rice_ext_pair_00")
+        ):
+            raise ValueError(f"Rice 140 non-yield signature changed for {effect_id}")
+        quality_flags.append("primary_non_yield_arm_and_value_recheck")
+
+    result = {
         "effect_id": effect_id,
         "study_id": study_id,
         "paper_doi": value(row, "primary_paper_doi"),
@@ -208,6 +261,15 @@ def project(row: dict[str, str]) -> dict[str, str]:
         "nitrogen_rate": value(row, "nitrogen_rate"),
         "extraction_method": value(row, "data_extraction_method"),
     }
+    if backfill:
+        result["crop_as_reported"] = backfill["system"]
+        result["crop_core"] = "rice"
+        result["treatment_arm"], result["control_arm"] = backfill["arms"]
+        result["outcome_unit"] = "kg ha-1 grain yield"
+        result["sensitivity_note"] = (
+            (result["sensitivity_note"] + "; ") if result["sensitivity_note"] else ""
+        ) + "crop and arms backfilled from primary Table 2; other outcomes not reconciled"
+    return result
 
 
 def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:

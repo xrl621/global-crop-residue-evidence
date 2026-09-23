@@ -65,7 +65,11 @@ adds 26 source-table effects from three new field trials. A further
 [Du 2024 extraction and gate re-audit](docs/DU2024_PRIMARY_EXTRACTION_20260923.md)
 adds 24 effects from one new wheat trial. Direct-return × yield has 11 trials
 in the broad count, but only 8 after excluding three studies with unresolved
-reported-error semantics. This is not yet a defensible pooled-result gate.
+reported-error semantics. The subsequent [straw-origin and Table 2 re-audit](docs/STRAW_ORIGIN_AND_RICE140_REAUDIT_20260923.md)
+flags a land-clearing-residue trial in both direct-return and burning pathways:
+after the source and known-origin screens, yield coverage is 7 and 9 trials,
+respectively. Neither reaches the prespecified 10-trial count gate. This is
+not yet a defensible pooled-result gate.
 
 To regenerate the public snapshot from the local full-text-validated audit
 table, run `python scripts/export_evidence_database.py`; add `--check` to test

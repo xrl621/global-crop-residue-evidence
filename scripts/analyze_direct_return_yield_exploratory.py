@@ -19,7 +19,6 @@ from describe_evidence import STRICT_EXCLUSION_FLAGS
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = ROOT / "literature/evidence_database.csv"
 LAND_CLEARING_TRIAL = "mbah_nneji_agbani_2007_2008"
-UNLABELLED_ARMS_TRIAL = "rice_primary_140"
 
 
 def percent(log_ratio: float) -> float:
@@ -39,6 +38,9 @@ def load_study_effects(path: Path) -> dict[str, dict[str, object]]:
             if row["pathway"] != "direct_return" or row["outcome"] != "yield":
                 continue
             flags = set(filter(None, row["quality_flags"].split(";")))
+            if (row["study_id"] == LAND_CLEARING_TRIAL
+                    and "land_clearing_residue_not_harvest_straw" not in flags):
+                raise ValueError("Land-clearing residue flag missing from public export")
             if row["variance_origin_status"] != "documented_or_reconstructed":
                 continue
             if flags & STRICT_EXCLUSION_FLAGS:
@@ -97,7 +99,6 @@ def main() -> None:
     for label, excluded in (
         ("all_uncertainty_screened", set()),
         ("exclude_land_clearing_residue", {LAND_CLEARING_TRIAL}),
-        ("also_exclude_unlabelled_arms", {LAND_CLEARING_TRIAL, UNLABELLED_ARMS_TRIAL}),
     ):
         result = summarize(studies, excluded)
         print(f"{label}: {result}")

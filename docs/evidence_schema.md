@@ -125,6 +125,19 @@ under the strict uncertainty screen. The Du source prints malformed geographic
 coordinates; the export intentionally leaves latitude/longitude blank and
 marks `source_coordinates_malformed` rather than guessing a location.
 
+The [straw-origin and rice-140 re-audit](STRAW_ORIGIN_AND_RICE140_REAUDIT_20260923.md)
+adds a second, non-interchangeable screen. Mbah/Nneji's 12 land-clearing-residue
+rows carry `land_clearing_residue_not_harvest_straw`; they remain in the public
+evidence table but are held from the core harvested-crop-straw analysis.
+`describe_evidence.py` reports a `straw_origin_screen_*` count after the
+source/uncertainty screen, which gives 35 rows/7 studies for direct-return
+yield and 17 rows/9 studies for burning yield. This is only a known-origin
+exclusion, not a full eligibility decision. Three `rice_primary_140` yield
+rows have primary Table 2 crop and arm labels backfilled under exact source
+signatures (`primary_table_metadata_backfilled`); their 12 non-yield rows
+carry `primary_non_yield_arm_and_value_recheck` and are held from the strict
+source screen until arm identities and values are reconciled.
+
 ## Rebuild and provenance
 
 The complete local audit table remains outside the public repository. When it

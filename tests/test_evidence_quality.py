@@ -93,6 +93,30 @@ class EvidenceQualityTests(unittest.TestCase):
         self.assertEqual([(row["pathway"], row["outcome"]) for row in passing], [("direct_return", "yield"), ("open_burning", "yield")])
         strictly_passing = [row for row in summary.values() if row["meets_strict_threshold"] == "true"]
         self.assertEqual([(row["pathway"], row["outcome"]) for row in strictly_passing], [("open_burning", "yield")])
+        self.assertEqual(summary[("direct_return", "yield")]["straw_origin_screen_independent_studies"], 7)
+        self.assertEqual(summary[("direct_return", "yield")]["straw_origin_screen_effect_rows"], 35)
+        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_independent_studies"], 9)
+        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_effect_rows"], 17)
+        self.assertFalse(any(row["meets_straw_origin_threshold"] == "true" for row in summary.values()))
+
+    def test_rice_140_yield_labels_and_land_clearing_source_screen(self):
+        by_id = {row["effect_id"]: row for row in self.rows}
+        expected = {
+            "0013": ("RoT + S", "RoT - S", "rice in rice-wheat cropping system"),
+            "0014": ("PT + S", "PT - S", "single rice"),
+            "0015": ("RoT + S", "RoT - S", "double rice"),
+        }
+        for pair, (treatment, control, crop) in expected.items():
+            row = by_id[f"rice_primary_rice_ext_pair_{pair}_yield"]
+            self.assertEqual((row["treatment_arm"], row["control_arm"]), (treatment, control))
+            self.assertEqual((row["crop_as_reported"], row["crop_core"]), (crop, "rice"))
+            self.assertIn("primary_table_metadata_backfilled", row["quality_flags"])
+        pending = [row for row in self.rows if row["study_id"] == "rice_primary_140" and row["outcome"] != "yield"]
+        self.assertEqual(len(pending), 12)
+        self.assertTrue(all("primary_non_yield_arm_and_value_recheck" in row["quality_flags"] for row in pending))
+        land_clearing = [row for row in self.rows if row["study_id"] == "mbah_nneji_agbani_2007_2008"]
+        self.assertEqual(len(land_clearing), 12)
+        self.assertTrue(all("land_clearing_residue_not_harvest_straw" in row["quality_flags"] for row in land_clearing))
 
     def test_new_primary_extractions_have_study_level_clusters_and_source_flags(self):
         by_study = Counter(row["study_id"] for row in self.rows)

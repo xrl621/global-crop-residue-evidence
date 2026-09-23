@@ -1,8 +1,8 @@
 """Report effect counts and independent study coverage from the public CSV.
 
 The count threshold uses studies with no unresolved row-level variance origin.
-A stricter uncertainty screen also omits ambiguous pooled SE, undefined SD/SE,
-and large-relative-SE flags.
+A stricter source/uncertainty screen also omits ambiguous pooled SE, undefined
+SD/SE, large-relative-SE, and pending primary-source numeric rechecks.
 Neither screen declares an analysis valid without dependence, other uncertainty,
 and system-boundary audits.
 """
@@ -22,21 +22,26 @@ FIELDS = [
     "pathway", "outcome", "effect_rows", "independent_studies",
     "variance_screen_effect_rows", "variance_screen_independent_studies",
     "strict_screen_effect_rows", "strict_screen_independent_studies",
+    "straw_origin_screen_effect_rows", "straw_origin_screen_independent_studies",
     "rows_with_quality_flags", "meets_count_threshold", "meets_strict_threshold",
+    "meets_straw_origin_threshold",
 ]
 
 STRICT_EXCLUSION_FLAGS = {
     "pooled_se_denominator_ambiguous",
     "large_relative_se_lnrr_delta_approx",
     "reported_error_type_ambiguous",
+    "primary_non_yield_arm_and_value_recheck",
 }
+STRAW_ORIGIN_EXCLUSION_FLAGS = {"land_clearing_residue_not_harvest_straw"}
 
 
 def summarize(path: Path, minimum_studies: int) -> list[dict[str, object]]:
     groups: dict[tuple[str, str], dict[str, object]] = defaultdict(
         lambda: {"effects": 0, "studies": set(), "variance_effects": 0,
                  "variance_studies": set(), "strict_effects": 0,
-                 "strict_studies": set(), "flagged": 0}
+                 "strict_studies": set(), "straw_effects": 0,
+                 "straw_studies": set(), "flagged": 0}
     )
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
@@ -60,6 +65,9 @@ def summarize(path: Path, minimum_studies: int) -> list[dict[str, object]]:
                 if not (flags & STRICT_EXCLUSION_FLAGS):
                     group["strict_effects"] += 1
                     group["strict_studies"].add(study)
+                    if not (flags & STRAW_ORIGIN_EXCLUSION_FLAGS):
+                        group["straw_effects"] += 1
+                        group["straw_studies"].add(study)
     result = []
     for (pathway, outcome), group in sorted(groups.items()):
         n_studies = len(group["studies"])
@@ -72,12 +80,17 @@ def summarize(path: Path, minimum_studies: int) -> list[dict[str, object]]:
             "variance_screen_independent_studies": len(group["variance_studies"]),
             "strict_screen_effect_rows": group["strict_effects"],
             "strict_screen_independent_studies": len(group["strict_studies"]),
+            "straw_origin_screen_effect_rows": group["straw_effects"],
+            "straw_origin_screen_independent_studies": len(group["straw_studies"]),
             "rows_with_quality_flags": group["flagged"],
             "meets_count_threshold": str(
                 len(group["variance_studies"]) >= minimum_studies
             ).lower(),
             "meets_strict_threshold": str(
                 len(group["strict_studies"]) >= minimum_studies
+            ).lower(),
+            "meets_straw_origin_threshold": str(
+                len(group["straw_studies"]) >= minimum_studies
             ).lower(),
         })
     return result
