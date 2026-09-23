@@ -20,9 +20,9 @@ class EvidenceQualityTests(unittest.TestCase):
             cls.rows = list(csv.DictReader(stream))
 
     def test_snapshot_size_and_independent_units(self):
-        self.assertEqual(len(self.rows), 438)
-        self.assertEqual(len({row["effect_id"] for row in self.rows}), 438)
-        self.assertEqual(len({row["study_id"] for row in self.rows}), 26)
+        self.assertEqual(len(self.rows), 464)
+        self.assertEqual(len({row["effect_id"] for row in self.rows}), 464)
+        self.assertEqual(len({row["study_id"] for row in self.rows}), 29)
 
     def test_reconciled_tiers_preserve_original(self):
         reconciled = [
@@ -79,17 +79,32 @@ class EvidenceQualityTests(unittest.TestCase):
 
     def test_study_count_gate_uses_variance_screen(self):
         summary = {(row["pathway"], row["outcome"]): row for row in summarize(EVIDENCE, 10)}
-        self.assertEqual(summary[("direct_return", "yield")]["independent_studies"], 7)
+        self.assertEqual(summary[("direct_return", "yield")]["independent_studies"], 10)
+        self.assertEqual(summary[("direct_return", "yield")]["strict_screen_independent_studies"], 9)
         self.assertEqual(summary[("direct_return", "SOC")]["independent_studies"], 8)
         self.assertEqual(summary[("direct_return", "CH4")]["independent_studies"], 4)
-        self.assertEqual(summary[("direct_return", "N2O")]["independent_studies"], 4)
+        self.assertEqual(summary[("direct_return", "N2O")]["independent_studies"], 5)
         self.assertEqual(summary[("biochar_return", "yield")]["independent_studies"], 6)
         self.assertEqual(summary[("biochar_return", "yield")]["variance_screen_independent_studies"], 6)
         self.assertEqual(summary[("biochar_return", "SOC")]["variance_screen_independent_studies"], 5)
         self.assertEqual(summary[("biochar_return", "CH4")]["variance_screen_independent_studies"], 4)
         self.assertEqual(summary[("biochar_return", "N2O")]["variance_screen_independent_studies"], 4)
         passing = [row for row in summary.values() if row["meets_count_threshold"] == "true"]
-        self.assertEqual([(row["pathway"], row["outcome"]) for row in passing], [("open_burning", "yield")])
+        self.assertEqual([(row["pathway"], row["outcome"]) for row in passing], [("direct_return", "yield"), ("open_burning", "yield")])
+        strictly_passing = [row for row in summary.values() if row["meets_strict_threshold"] == "true"]
+        self.assertEqual([(row["pathway"], row["outcome"]) for row in strictly_passing], [("open_burning", "yield")])
+
+    def test_new_primary_extractions_have_study_level_clusters_and_source_flags(self):
+        by_study = Counter(row["study_id"] for row in self.rows)
+        self.assertEqual(by_study["panneerselvam_cuttack_2021_2022"], 6)
+        self.assertEqual(by_study["huang_shangzhuang_2006_2013"], 16)
+        self.assertEqual(by_study["sharma_ludhiana_2011_2018"], 4)
+        sharma = [row for row in self.rows if row["study_id"] == "sharma_ludhiana_2011_2018"]
+        self.assertTrue(all(row["quality_flags"] == "pooled_se_denominator_ambiguous" for row in sharma))
+        self.assertTrue(all(row["paper_doi"] == "10.1016/j.heliyon.2023.e17828" for row in sharma))
+        huang = [row for row in self.rows if row["study_id"] == "huang_shangzhuang_2006_2013"]
+        self.assertEqual(Counter(row["outcome"] for row in huang), {"yield": 8, "N2O": 8})
+        self.assertTrue(all(row["treatment_arm"].replace("S", "", 1) == row["control_arm"] for row in huang))
 
     def test_liu_direct_return_addendum_preserves_shared_control(self):
         added = [row for row in self.rows if row["effect_id"].startswith("rice_primary_53_") and row["pathway"] == "direct_return"]

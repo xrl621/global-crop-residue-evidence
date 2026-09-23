@@ -45,8 +45,8 @@ in the same commit. Older exploration notes remain available for provenance
 but are not automatically current conclusions.
 
 The project now includes a compact full-text-reviewed evidence snapshot at
-[`literature/evidence_database.csv`](literature/evidence_database.csv): 438 paired
-effects from 26 independent field experiments. The row is a treatment–control
+[`literature/evidence_database.csv`](literature/evidence_database.csv): 464 paired
+effects from 29 independent field experiments (2026-09-23 snapshot). The row is a treatment–control
 effect, **not** an independent study. See the
 [`evidence schema`](docs/evidence_schema.md) for definitions, limitations, and
 the study-level analysis rule. New literature can be logged in
@@ -60,6 +60,10 @@ variance provenance and are held out of first-pass inverse-variance counts.
 The latest [direct-return primary extraction](docs/DIRECT_RETURN_PRIMARY_EXTRACTION_20260923.md)
 adds 10 effects from an already indexed field trial, without inflating the
 independent-study count.
+The [independent-trial expansion audit](docs/INDEPENDENT_TRIAL_EXPANSION_20260923.md)
+adds 26 source-table effects from three new field trials. Direct-return ×
+yield now has 10 trials in the broad count, but only 9 after excluding one
+seven-year pooled study with an ambiguous SE denominator.
 
 To regenerate the public snapshot from the local full-text-validated audit
 table, run `python scripts/export_evidence_database.py`; add `--check` to test
@@ -77,6 +81,6 @@ size; it can then be force-added if the ignore rule covers its file type.
 
 For a count-only view of coverage by pathway and outcome, run
 `python scripts/describe_evidence.py`. It shows all effects and independent
-field experiments alongside the subset passing the row-level variance-origin
-screen. Its threshold flag is not a substitute for statistical or
+field experiments alongside variance-origin and stricter uncertainty screens.
+The broad threshold flag is not a substitute for statistical or
 system-boundary checks.

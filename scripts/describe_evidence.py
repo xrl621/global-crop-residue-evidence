@@ -1,7 +1,8 @@
 """Report effect counts and independent study coverage from the public CSV.
 
-The threshold uses studies with no unresolved row-level variance origin.
-It does not declare an analysis valid without dependence, other uncertainty,
+The count threshold uses studies with no unresolved row-level variance origin.
+A stricter sensitivity screen also omits pooled-SE and large-relative-SE flags.
+Neither screen declares an analysis valid without dependence, other uncertainty,
 and system-boundary audits.
 """
 
@@ -19,14 +20,21 @@ DEFAULT_INPUT = ROOT / "literature/evidence_database.csv"
 FIELDS = [
     "pathway", "outcome", "effect_rows", "independent_studies",
     "variance_screen_effect_rows", "variance_screen_independent_studies",
-    "rows_with_quality_flags", "meets_count_threshold",
+    "strict_screen_effect_rows", "strict_screen_independent_studies",
+    "rows_with_quality_flags", "meets_count_threshold", "meets_strict_threshold",
 ]
+
+STRICT_EXCLUSION_FLAGS = {
+    "pooled_se_denominator_ambiguous",
+    "large_relative_se_lnrr_delta_approx",
+}
 
 
 def summarize(path: Path, minimum_studies: int) -> list[dict[str, object]]:
     groups: dict[tuple[str, str], dict[str, object]] = defaultdict(
         lambda: {"effects": 0, "studies": set(), "variance_effects": 0,
-                 "variance_studies": set(), "flagged": 0}
+                 "variance_studies": set(), "strict_effects": 0,
+                 "strict_studies": set(), "flagged": 0}
     )
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
@@ -46,6 +54,10 @@ def summarize(path: Path, minimum_studies: int) -> list[dict[str, object]]:
             if variance_status == "documented_or_reconstructed":
                 group["variance_effects"] += 1
                 group["variance_studies"].add(study)
+                flags = set(filter(None, row["quality_flags"].split(";")))
+                if not (flags & STRICT_EXCLUSION_FLAGS):
+                    group["strict_effects"] += 1
+                    group["strict_studies"].add(study)
     result = []
     for (pathway, outcome), group in sorted(groups.items()):
         n_studies = len(group["studies"])
@@ -56,9 +68,14 @@ def summarize(path: Path, minimum_studies: int) -> list[dict[str, object]]:
             "independent_studies": n_studies,
             "variance_screen_effect_rows": group["variance_effects"],
             "variance_screen_independent_studies": len(group["variance_studies"]),
+            "strict_screen_effect_rows": group["strict_effects"],
+            "strict_screen_independent_studies": len(group["strict_studies"]),
             "rows_with_quality_flags": group["flagged"],
             "meets_count_threshold": str(
                 len(group["variance_studies"]) >= minimum_studies
+            ).lower(),
+            "meets_strict_threshold": str(
+                len(group["strict_studies"]) >= minimum_studies
             ).lower(),
         })
     return result

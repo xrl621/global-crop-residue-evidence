@@ -6,7 +6,7 @@ file and must not be interpreted as one independent study per row. Each row is
 one treatment–control contrast for one outcome at a reported observation
 time, season, soil depth, or treatment dose. `study_id` is the field-experiment
 cluster used for statistical independence; multiple rows can share a control
-and a study. The current snapshot contains 438 effects from 26 independent
+and a study. The 2026-09-23 snapshot contains 464 effects from 29 independent
 field experiments.
 
 ## Scope and analysis rules
@@ -20,7 +20,7 @@ field experiments.
 - The sign of `lnrr` is treatment relative to the matched control. A positive
   yield `lnrr` is increased yield; a positive GHG `lnrr` is increased emissions.
 - Repeated years, seasons, doses, depths, and shared controls are dependent.
-  Never use the 438 rows as 438 independent studies. For a first pathway ×
+  Never use the 464 rows as 464 independent studies. For a first pathway ×
   outcome pooled model, require at least 10 independent `study_id` values.
 - GWP conversion factors and system boundaries differ across source papers.
   `gwp_version` and `system_boundary` must be harmonized before cross-paper
@@ -88,7 +88,7 @@ required for every exported row. The export validates positive means and
 variance, unique effect IDs, full-text review status, admission decision, and
 `lnrr` consistency with the arm means.
 
-In this snapshot, 13 rows lack a title, 6 lack a primary DOI, and 113 lack
+In this snapshot, 13 rows lack a title, 6 lack a primary DOI, and 149 lack
 both broad and Köppen climate fields. These gaps stay visible rather than
 being filled from unverified secondary metadata.
 
@@ -104,6 +104,17 @@ variances changed when exact primary-table values replaced secondary rounding;
 their means and lnRR did not change. `documented_or_reconstructed` does **not**
 mean automatic main-model eligibility: dependence, variance reconstruction,
 comparator and system boundaries still require review.
+
+Three independently initiated field trials were added from primary Tables 2–5
+in [the 2026-09-23 expansion audit](INDEPENDENT_TRIAL_EXPANSION_20260923.md).
+The Sharma 2023 rows carry `pooled_se_denominator_ambiguous`: the paper states
+three field replicates and reports SE for seven-year pooled treatment means,
+but does not explicitly define the pooled SE denominator. The reported SE is
+used directly for the delta-method variance; `treatment_sd` and `control_sd`
+are an n=3 representation, not a claim that the pooled SE was computed from
+exactly three independent annual observations. `describe_evidence.py` now
+reports a stricter screen excluding these rows and unusually large relative-SE
+rows, alongside the historical variance-origin count.
 
 ## Rebuild and provenance
 

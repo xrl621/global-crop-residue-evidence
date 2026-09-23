@@ -17,7 +17,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE = ROOT / "data/formal_analysis_v1/outputs/formal_validated_staging_v0.csv"
 DEFAULT_OUTPUT = ROOT / "literature/evidence_database.csv"
-PRIMARY_ADDENDA = [ROOT / "literature/primary_extractions/liu2016_direct_return.csv"]
+PRIMARY_ADDENDA = [
+    ROOT / "literature/primary_extractions/liu2016_direct_return.csv",
+    ROOT / "literature/primary_extractions/panneerselvam2024_yield.csv",
+    ROOT / "literature/primary_extractions/huang2013_yield_n2o.csv",
+    ROOT / "literature/primary_extractions/sharma2023_yield.csv",
+]
 
 FIELDS = [
     "effect_id", "study_id", "paper_doi", "paper_title", "citation",
@@ -202,17 +207,76 @@ def project(row: dict[str, str]) -> dict[str, str]:
 
 
 def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
-    """Project a verified table transcription with arm SE into the public schema."""
+    """Project a verified arm-level table transcription into the public schema."""
     effect_id = value(row, "effect_id")
     if not effect_id or value(row, "pathway") not in PATHWAYS:
         raise ValueError(f"Invalid primary addendum identity/pathway: {effect_id}")
+    study_id = value(row, "study_id")
+    if study_id not in {"rice_primary_53", "panneerselvam_cuttack_2021_2022", "huang_shangzhuang_2006_2013", "sharma_ludhiana_2011_2018"}:
+        raise ValueError(f"Primary addendum study needs explicit review: {effect_id}")
+    if study_id == "panneerselvam_cuttack_2021_2022" and not (
+        value(row, "paper_doi") == "10.1016/j.jenvman.2024.120916"
+        and value(row, "pathway") == "direct_return"
+        and value(row, "outcome") == "yield"
+        and value(row, "source_locator") == "Table 2"
+        and value(row, "treatment_arm").replace("RR+", "", 1) == value(row, "control_arm").replace("CC+", "", 1)
+        and value(row, "treatment_arm").startswith("RR+")
+        and value(row, "control_arm").startswith("CC+")
+        and value(row, "season") in {"Kharif_wet", "Rabi_dry"}
+    ):
+        raise ValueError(f"Panneerselvam matched-stratum signature changed: {effect_id}")
+    if study_id == "huang_shangzhuang_2006_2013" and not (
+        value(row, "paper_doi") == "10.5194/bg-10-7897-2013"
+        and value(row, "pathway") == "direct_return"
+        and (value(row, "outcome"), value(row, "source_locator")) in {("yield", "Table 3"), ("N2O", "Table 5")}
+        and (value(row, "treatment_arm"), value(row, "control_arm")) in {("SN0", "N0"), ("SNcon", "Ncon")}
+        and value(row, "crop_core") in {"wheat", "maize"}
+        and value(row, "nitrogen_rate") == (
+            "0 kg N ha-1" if value(row, "control_arm") == "N0"
+            else "300 kg N ha-1" if value(row, "crop_core") == "wheat"
+            else "260 kg N ha-1"
+        )
+    ):
+        raise ValueError(f"Huang fixed-N matched-arm signature changed: {effect_id}")
+    if study_id == "sharma_ludhiana_2011_2018" and not (
+        value(row, "paper_doi") == "10.1016/j.heliyon.2023.e17828"
+        and value(row, "pathway") == "direct_return"
+        and value(row, "outcome") == "yield"
+        and value(row, "crop_core") in {"rice", "wheat"}
+        and value(row, "source_locator") == ("Table 2" if value(row, "crop_core") == "rice" else "Table 3")
+        and (value(row, "treatment_arm"), value(row, "control_arm")) in {
+            ("CTRW25", "CTRW0"), ("CTRW25+GM", "CTRW0+GM")
+        }
+        and value(row, "experiment_year") == "2011-2018 pooled"
+    ):
+        raise ValueError(f"Sharma matched-tillage and matched-GM signature changed: {effect_id}")
     treatment_mean = number(row, "treatment_mean", positive=True)
     control_mean = number(row, "control_mean", positive=True)
-    treatment_se = number(row, "treatment_se")
-    control_se = number(row, "control_se")
     treatment_n = number(row, "treatment_n", positive=True)
     control_n = number(row, "control_n", positive=True)
-    if min(treatment_n, control_n) < 2 or min(treatment_se, control_se) < 0:
+    uses_se = bool(value(row, "treatment_se") or value(row, "control_se"))
+    uses_sd = bool(value(row, "treatment_sd") or value(row, "control_sd"))
+    if uses_se == uses_sd:
+        raise ValueError(f"Primary addendum must report either SE or SD: {effect_id}")
+    if (study_id == "panneerselvam_cuttack_2021_2022") != uses_sd:
+        raise ValueError(f"Primary paper uncertainty type changed: {effect_id}")
+    if treatment_n != 3 or control_n != 3:
+        raise ValueError(f"Primary paper field replicate count changed: {effect_id}")
+    if uses_se:
+        treatment_se = number(row, "treatment_se")
+        control_se = number(row, "control_se")
+        treatment_sd = treatment_se * math.sqrt(treatment_n)
+        control_sd = control_se * math.sqrt(control_n)
+        provenance = "primary table mean +/- SE, n=3; converted to arm SD"
+        tier = "A_primary_exact_pair_SE_converted"
+    else:
+        treatment_sd = number(row, "treatment_sd")
+        control_sd = number(row, "control_sd")
+        treatment_se = treatment_sd / math.sqrt(treatment_n)
+        control_se = control_sd / math.sqrt(control_n)
+        provenance = f"primary {value(row, 'source_locator')} mean +/- SD, n={compact(treatment_n)}; lnRR variance recomputed"
+        tier = "A_primary_exact_pair_SD"
+    if min(treatment_n, control_n) < 2 or min(treatment_sd, control_sd) < 0:
         raise ValueError(f"Invalid primary addendum uncertainty: {effect_id}")
     if not all(value(row, key) for key in (
         "study_id", "paper_doi", "outcome", "outcome_unit", "treatment_arm",
@@ -225,24 +289,42 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     for field in result:
         if field in row and field not in {"treatment_mean", "control_mean", "treatment_n", "control_n"}:
             result[field] = value(row, field)
+    if study_id == "rice_primary_53":
+        decision = "ADMIT_NPK_MATCHED_DIRECT_RETURN_VS_STRAW_REMOVAL"
+        dependence = "Same field trial as rice_primary_53 burning arm; cluster repeated years/outcomes and shared NPK control"
+    elif study_id == "panneerselvam_cuttack_2021_2022":
+        decision = "ADMIT_MATCHED_RESIDUE_RETENTION_WITHIN_MICROBIAL_STRATUM"
+        dependence = "One split-plot field trial; cluster 2021/2022 seasons and microbial strata by study_id"
+    elif study_id == "huang_shangzhuang_2006_2013":
+        decision = "ADMIT_FIXED_N_STRAW_RETURN_VS_REMOVAL"
+        dependence = "One field trial established 2006; cluster 2010-2013 seasons, crops, N strata and outcomes by study_id"
+    else:
+        decision = "ADMIT_MATCHED_TILLAGE_AND_GREEN_MANURE_STRAW_RETENTION"
+        dependence = "One 2011-established split-plot trial; cluster seven-year pooled rice/wheat outcomes and green-manure strata by study_id"
     result.update({
         "treatment_mean": compact(treatment_mean),
         "control_mean": compact(control_mean),
-        "treatment_sd": compact(treatment_se * math.sqrt(treatment_n)),
-        "control_sd": compact(control_se * math.sqrt(control_n)),
+        "treatment_sd": compact(treatment_sd),
+        "control_sd": compact(control_sd),
         "treatment_n": compact(treatment_n),
         "control_n": compact(control_n),
         "lnrr": compact(lnrr),
         "variance_lnrr": compact(variance),
         "percent_change": compact(math.expm1(lnrr) * 100),
-        "variance_provenance": "primary table mean +/- SE, n=3; converted to arm SD",
-        "analysis_tier": "A_primary_exact_pair_SE_converted",
+        "variance_provenance": provenance,
+        "analysis_tier": tier,
         "source_analysis_tier": "primary_direct_transcription",
-        "formal_decision": "ADMIT_NPK_MATCHED_DIRECT_RETURN_VS_STRAW_REMOVAL",
+        "formal_decision": decision,
         "variance_origin_status": "documented_or_reconstructed",
-        "independence_resolution": "Same field trial as rice_primary_53 burning arm; cluster repeated years/outcomes and shared NPK control",
+        "independence_resolution": dependence,
         "extraction_method": "numeric table transcription",
     })
+    if max(treatment_se / treatment_mean, control_se / control_mean) > 0.5:
+        result["quality_flags"] = "large_relative_se_lnrr_delta_approx"
+    if study_id == "sharma_ludhiana_2011_2018":
+        result["variance_provenance"] = "primary Tables 2-3 pooled seven-year mean +/- SE; three field replicates; pooled SE denominator unspecified"
+        result["quality_flags"] = ";".join(filter(None, [result["quality_flags"], "pooled_se_denominator_ambiguous"]))
+        result["sensitivity_note"] = "Exclude this study in sensitivity analysis because treatment-by-year interaction was reported and pooled-SE denominator is not explicit"
     return result
 
 
