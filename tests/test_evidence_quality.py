@@ -20,8 +20,8 @@ class EvidenceQualityTests(unittest.TestCase):
             cls.rows = list(csv.DictReader(stream))
 
     def test_snapshot_size_and_independent_units(self):
-        self.assertEqual(len(self.rows), 428)
-        self.assertEqual(len({row["effect_id"] for row in self.rows}), 428)
+        self.assertEqual(len(self.rows), 438)
+        self.assertEqual(len({row["effect_id"] for row in self.rows}), 438)
         self.assertEqual(len({row["study_id"] for row in self.rows}), 26)
 
     def test_reconciled_tiers_preserve_original(self):
@@ -79,6 +79,10 @@ class EvidenceQualityTests(unittest.TestCase):
 
     def test_study_count_gate_uses_variance_screen(self):
         summary = {(row["pathway"], row["outcome"]): row for row in summarize(EVIDENCE, 10)}
+        self.assertEqual(summary[("direct_return", "yield")]["independent_studies"], 7)
+        self.assertEqual(summary[("direct_return", "SOC")]["independent_studies"], 8)
+        self.assertEqual(summary[("direct_return", "CH4")]["independent_studies"], 4)
+        self.assertEqual(summary[("direct_return", "N2O")]["independent_studies"], 4)
         self.assertEqual(summary[("biochar_return", "yield")]["independent_studies"], 6)
         self.assertEqual(summary[("biochar_return", "yield")]["variance_screen_independent_studies"], 6)
         self.assertEqual(summary[("biochar_return", "SOC")]["variance_screen_independent_studies"], 5)
@@ -86,6 +90,17 @@ class EvidenceQualityTests(unittest.TestCase):
         self.assertEqual(summary[("biochar_return", "N2O")]["variance_screen_independent_studies"], 4)
         passing = [row for row in summary.values() if row["meets_count_threshold"] == "true"]
         self.assertEqual([(row["pathway"], row["outcome"]) for row in passing], [("open_burning", "yield")])
+
+    def test_liu_direct_return_addendum_preserves_shared_control(self):
+        added = [row for row in self.rows if row["effect_id"].startswith("rice_primary_53_") and row["pathway"] == "direct_return"]
+        self.assertEqual(len(added), 10)
+        by_id = {row["effect_id"]: row for row in self.rows}
+        for row in added:
+            burning = by_id[row["effect_id"].replace("_direct_", "_")]
+            for key in ("study_id", "paper_doi", "outcome", "experiment_year", "control_mean", "control_sd", "control_n", "shared_control_group"):
+                self.assertEqual(row[key], burning[key])
+            self.assertGreater(float(row["variance_lnrr"]), 0)
+            self.assertEqual(row["treatment_n"], "3")
 
     def test_tier_reconciliation_fails_closed_on_source_change(self):
         source_row = {

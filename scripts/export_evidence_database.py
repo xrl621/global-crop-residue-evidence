@@ -17,6 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE = ROOT / "data/formal_analysis_v1/outputs/formal_validated_staging_v0.csv"
 DEFAULT_OUTPUT = ROOT / "literature/evidence_database.csv"
+PRIMARY_ADDENDA = [ROOT / "literature/primary_extractions/liu2016_direct_return.csv"]
 
 FIELDS = [
     "effect_id", "study_id", "paper_doi", "paper_title", "citation",
@@ -200,12 +201,71 @@ def project(row: dict[str, str]) -> dict[str, str]:
     }
 
 
+def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
+    """Project a verified table transcription with arm SE into the public schema."""
+    effect_id = value(row, "effect_id")
+    if not effect_id or value(row, "pathway") not in PATHWAYS:
+        raise ValueError(f"Invalid primary addendum identity/pathway: {effect_id}")
+    treatment_mean = number(row, "treatment_mean", positive=True)
+    control_mean = number(row, "control_mean", positive=True)
+    treatment_se = number(row, "treatment_se")
+    control_se = number(row, "control_se")
+    treatment_n = number(row, "treatment_n", positive=True)
+    control_n = number(row, "control_n", positive=True)
+    if min(treatment_n, control_n) < 2 or min(treatment_se, control_se) < 0:
+        raise ValueError(f"Invalid primary addendum uncertainty: {effect_id}")
+    if not all(value(row, key) for key in (
+        "study_id", "paper_doi", "outcome", "outcome_unit", "treatment_arm",
+        "control_arm", "shared_control_group", "source_locator",
+    )):
+        raise ValueError(f"Incomplete primary addendum provenance: {effect_id}")
+    lnrr = math.log(treatment_mean / control_mean)
+    variance = (treatment_se / treatment_mean) ** 2 + (control_se / control_mean) ** 2
+    result = {field: "" for field in FIELDS}
+    for field in result:
+        if field in row and field not in {"treatment_mean", "control_mean", "treatment_n", "control_n"}:
+            result[field] = value(row, field)
+    result.update({
+        "treatment_mean": compact(treatment_mean),
+        "control_mean": compact(control_mean),
+        "treatment_sd": compact(treatment_se * math.sqrt(treatment_n)),
+        "control_sd": compact(control_se * math.sqrt(control_n)),
+        "treatment_n": compact(treatment_n),
+        "control_n": compact(control_n),
+        "lnrr": compact(lnrr),
+        "variance_lnrr": compact(variance),
+        "percent_change": compact(math.expm1(lnrr) * 100),
+        "variance_provenance": "primary table mean +/- SE, n=3; converted to arm SD",
+        "analysis_tier": "A_primary_exact_pair_SE_converted",
+        "source_analysis_tier": "primary_direct_transcription",
+        "formal_decision": "ADMIT_NPK_MATCHED_DIRECT_RETURN_VS_STRAW_REMOVAL",
+        "variance_origin_status": "documented_or_reconstructed",
+        "independence_resolution": "Same field trial as rice_primary_53 burning arm; cluster repeated years/outcomes and shared NPK control",
+        "extraction_method": "numeric table transcription",
+    })
+    return result
+
+
 def build_csv(source: Path) -> tuple[str, int, int]:
     with source.open("r", encoding="utf-8-sig", newline="") as stream:
         reader = csv.DictReader(stream)
         if not reader.fieldnames:
             raise ValueError("Source table has no header")
         records = [project(row) for row in reader]
+    for addendum in PRIMARY_ADDENDA:
+        with addendum.open("r", encoding="utf-8-sig", newline="") as stream:
+            records.extend(project_primary_addendum(row) for row in csv.DictReader(stream))
+    original = {row["effect_id"]: row for row in records if row["study_id"] == "rice_primary_53" and row["pathway"] == "open_burning"}
+    for row in records:
+        if row["study_id"] != "rice_primary_53" or row["pathway"] != "direct_return":
+            continue
+        burning_id = row["effect_id"].replace("_direct_", "_")
+        peer = original.get(burning_id)
+        if not peer or any(row[key] != peer[key] for key in (
+            "study_id", "paper_doi", "outcome", "experiment_year", "control_mean",
+            "control_sd", "control_n", "shared_control_group",
+        )):
+            raise ValueError(f"Primary addendum does not match shared NPK control: {row['effect_id']}")
     ids = [record["effect_id"] for record in records]
     if len(ids) != len(set(ids)):
         raise ValueError("effect_id must be unique")

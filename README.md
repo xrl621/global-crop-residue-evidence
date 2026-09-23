@@ -45,7 +45,7 @@ in the same commit. Older exploration notes remain available for provenance
 but are not automatically current conclusions.
 
 The project now includes a compact full-text-reviewed evidence snapshot at
-[`literature/evidence_database.csv`](literature/evidence_database.csv): 428 paired
+[`literature/evidence_database.csv`](literature/evidence_database.csv): 438 paired
 effects from 26 independent field experiments. The row is a treatment–control
 effect, **not** an independent study. See the
 [`evidence schema`](docs/evidence_schema.md) for definitions, limitations, and
@@ -57,6 +57,9 @@ legacy labels; the subsequent [primary-table recheck](docs/PRIMARY_TABLE_RECHECK
 resolved another 20 effects against two source papers. Original labels remain
 visible. Two figure-digitized SOC effects still lack reproducible row-level
 variance provenance and are held out of first-pass inverse-variance counts.
+The latest [direct-return primary extraction](docs/DIRECT_RETURN_PRIMARY_EXTRACTION_20260923.md)
+adds 10 effects from an already indexed field trial, without inflating the
+independent-study count.
 
 To regenerate the public snapshot from the local full-text-validated audit
 table, run `python scripts/export_evidence_database.py`; add `--check` to test

@@ -6,7 +6,7 @@ file and must not be interpreted as one independent study per row. Each row is
 one treatment–control contrast for one outcome at a reported observation
 time, season, soil depth, or treatment dose. `study_id` is the field-experiment
 cluster used for statistical independence; multiple rows can share a control
-and a study. The current snapshot contains 428 effects from 26 independent
+and a study. The current snapshot contains 438 effects from 26 independent
 field experiments.
 
 ## Scope and analysis rules
@@ -20,7 +20,7 @@ field experiments.
 - The sign of `lnrr` is treatment relative to the matched control. A positive
   yield `lnrr` is increased yield; a positive GHG `lnrr` is increased emissions.
 - Repeated years, seasons, doses, depths, and shared controls are dependent.
-  Never use the 428 rows as 428 independent studies. For a first pathway ×
+  Never use the 438 rows as 438 independent studies. For a first pathway ×
   outcome pooled model, require at least 10 independent `study_id` values.
 - GWP conversion factors and system boundaries differ across source papers.
   `gwp_version` and `system_boundary` must be harmonized before cross-paper
