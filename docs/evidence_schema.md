@@ -6,7 +6,7 @@ file and must not be interpreted as one independent study per row. Each row is
 one treatment–control contrast for one outcome at a reported observation
 time, season, soil depth, or treatment dose. `study_id` is the field-experiment
 cluster used for statistical independence; multiple rows can share a control
-and a study. The 2026-09-23 snapshot contains 488 effects from 30 independent
+and a study. The 2026-09-24 snapshot contains 510 effects from 32 independent
 field experiments.
 
 ## Scope and analysis rules
@@ -20,7 +20,7 @@ field experiments.
 - The sign of `lnrr` is treatment relative to the matched control. A positive
   yield `lnrr` is increased yield; a positive GHG `lnrr` is increased emissions.
 - Repeated years, seasons, doses, depths, and shared controls are dependent.
-  Never use the 488 rows as 488 independent studies. For a first pathway ×
+  Never use the 510 rows as 510 independent studies. For a first pathway ×
   outcome pooled model, require at least 10 independent `study_id` values.
 - GWP conversion factors and system boundaries differ across source papers.
   `gwp_version` and `system_boundary` must be harmonized before cross-paper
@@ -42,6 +42,7 @@ field experiments.
 | `effect_id` | Unique paired-effect identifier; primary key in this CSV. |
 | `study_id` | Independent field-experiment identifier; clustering key for meta-analysis. |
 | `paper_doi` | DOI of the primary article, blank when not verified in the source table. |
+| `source_url` | Stable primary-source page when the article has no verified DOI; blank for older DOI-linked records. |
 | `paper_title` | Primary article title as captured in the source table. |
 | `citation` | Short author–year citation when available. |
 | `publication_year` | Four-digit publication year when available. |
@@ -88,7 +89,8 @@ required for every exported row. The export validates positive means and
 variance, unique effect IDs, full-text review status, admission decision, and
 `lnrr` consistency with the arm means.
 
-In this snapshot, 13 rows lack a title, 6 lack a primary DOI, and 149 lack
+In this snapshot, 13 rows lack a title, 10 lack a primary DOI (four new Nayak
+rows have a verified source URL but no DOI), and 171 lack
 both broad and Köppen climate fields. These gaps stay visible rather than
 being filled from unverified secondary metadata.
 
@@ -149,6 +151,24 @@ definition. Accordingly, burning-yield counts are 19 rows/10 studies broadly,
 18/9 after source/uncertainty screening, and 16/8 after the known-straw-origin
 screen. The `primary_table_metadata_backfilled` marker identifies restored
 labels, not a newly discovered trial or a change in variance provenance.
+
+The 2026-09-24 [Nayak/Romasanta audit](NAYAK2022_AND_ROMASANTA2017_AUDIT_20260924.md)
+records an intermediate snapshot after Nayak 2022 added four yield
+contrasts from one two-year split-plot trial (two burning, two return), with a
+`source_url` because no DOI was verified. The source Table 3 reports
+residue-main-plot marginal SEm; the four nitrogen-management subplots are
+not treated as independent studies. Romasanta 2017 Table 4 has four old soil
+CH4/N2O records whose `±` type is undefined; the old SE-based numeric values
+remain traceable but carry `reported_error_type_ambiguous` and are held from
+the strict variance screen. The subsequent [Jijnasa joint extraction](JIJNASA2025_JOINT_YIELD_SOC_AUDIT_20260924.md)
+adds 18 effects from two papers reporting one trial. Current burning-yield
+counts are 25 rows/12 studies broadly, 24/11 under the strict uncertainty
+screen, and 20/9 after the known harvested-straw-origin screen. The latter
+now excludes both Mbah/Nneji and Shittu's mixed land-clearing vegetation, as
+documented in the Jijnasa audit. Direct-return yield is 62/13, 45/10, and
+41/9 respectively. No pathway-outcome passes the current 10-trial source gate.
+The new SOC rows measure
+concentration, not stock, and do not report soil depth.
 
 ## Rebuild and provenance
 

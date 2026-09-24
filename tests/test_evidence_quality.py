@@ -21,9 +21,9 @@ class EvidenceQualityTests(unittest.TestCase):
             cls.rows = list(csv.DictReader(stream))
 
     def test_snapshot_size_and_independent_units(self):
-        self.assertEqual(len(self.rows), 488)
-        self.assertEqual(len({row["effect_id"] for row in self.rows}), 488)
-        self.assertEqual(len({row["study_id"] for row in self.rows}), 30)
+        self.assertEqual(len(self.rows), 510)
+        self.assertEqual(len({row["effect_id"] for row in self.rows}), 510)
+        self.assertEqual(len({row["study_id"] for row in self.rows}), 32)
 
     def test_reconciled_tiers_preserve_original(self):
         reconciled = [
@@ -80,25 +80,25 @@ class EvidenceQualityTests(unittest.TestCase):
 
     def test_study_count_gate_uses_variance_screen(self):
         summary = {(row["pathway"], row["outcome"]): row for row in summarize(EVIDENCE, 10)}
-        self.assertEqual(summary[("direct_return", "yield")]["independent_studies"], 11)
-        self.assertEqual(summary[("direct_return", "yield")]["strict_screen_independent_studies"], 8)
-        self.assertEqual(summary[("direct_return", "SOC")]["independent_studies"], 9)
+        self.assertEqual(summary[("direct_return", "yield")]["independent_studies"], 13)
+        self.assertEqual(summary[("direct_return", "yield")]["strict_screen_independent_studies"], 10)
+        self.assertEqual(summary[("direct_return", "SOC")]["independent_studies"], 10)
         self.assertEqual(summary[("direct_return", "CH4")]["independent_studies"], 4)
         self.assertEqual(summary[("direct_return", "N2O")]["independent_studies"], 5)
-        self.assertEqual(summary[("biochar_return", "yield")]["independent_studies"], 6)
-        self.assertEqual(summary[("biochar_return", "yield")]["variance_screen_independent_studies"], 6)
-        self.assertEqual(summary[("biochar_return", "SOC")]["variance_screen_independent_studies"], 5)
+        self.assertEqual(summary[("biochar_return", "yield")]["independent_studies"], 7)
+        self.assertEqual(summary[("biochar_return", "yield")]["variance_screen_independent_studies"], 7)
+        self.assertEqual(summary[("biochar_return", "SOC")]["variance_screen_independent_studies"], 6)
         self.assertEqual(summary[("biochar_return", "CH4")]["variance_screen_independent_studies"], 4)
         self.assertEqual(summary[("biochar_return", "N2O")]["variance_screen_independent_studies"], 4)
         passing = [row for row in summary.values() if row["meets_count_threshold"] == "true"]
-        self.assertEqual([(row["pathway"], row["outcome"]) for row in passing], [("direct_return", "yield"), ("open_burning", "yield")])
+        self.assertEqual([(row["pathway"], row["outcome"]) for row in passing], [("direct_return", "SOC"), ("direct_return", "yield"), ("open_burning", "yield")])
         strictly_passing = [row for row in summary.values() if row["meets_strict_threshold"] == "true"]
-        self.assertEqual(strictly_passing, [])
-        self.assertEqual(summary[("direct_return", "yield")]["straw_origin_screen_independent_studies"], 7)
-        self.assertEqual(summary[("direct_return", "yield")]["straw_origin_screen_effect_rows"], 35)
-        self.assertEqual(summary[("open_burning", "yield")]["strict_screen_independent_studies"], 9)
-        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_independent_studies"], 8)
-        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_effect_rows"], 16)
+        self.assertEqual([(row["pathway"], row["outcome"]) for row in strictly_passing], [("direct_return", "yield"), ("open_burning", "yield")])
+        self.assertEqual(summary[("direct_return", "yield")]["straw_origin_screen_independent_studies"], 9)
+        self.assertEqual(summary[("direct_return", "yield")]["straw_origin_screen_effect_rows"], 41)
+        self.assertEqual(summary[("open_burning", "yield")]["strict_screen_independent_studies"], 11)
+        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_independent_studies"], 9)
+        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_effect_rows"], 20)
         self.assertFalse(any(row["meets_straw_origin_threshold"] == "true" for row in summary.values()))
 
     def test_rice_140_yield_labels_and_land_clearing_source_screen(self):
@@ -119,6 +119,9 @@ class EvidenceQualityTests(unittest.TestCase):
         land_clearing = [row for row in self.rows if row["study_id"] == "mbah_nneji_agbani_2007_2008"]
         self.assertEqual(len(land_clearing), 12)
         self.assertTrue(all("land_clearing_residue_not_harvest_straw" in row["quality_flags"] for row in land_clearing))
+        shittu = [row for row in self.rows if row["study_id"] == "shittu_ado_ekiti_2001_2002"]
+        self.assertEqual(len(shittu), 2)
+        self.assertTrue(all("land_clearing_residue_not_harvest_straw" in row["quality_flags"] for row in shittu))
 
     def test_new_primary_extractions_have_study_level_clusters_and_source_flags(self):
         by_study = Counter(row["study_id"] for row in self.rows)
@@ -126,6 +129,19 @@ class EvidenceQualityTests(unittest.TestCase):
         self.assertEqual(by_study["huang_shangzhuang_2006_2013"], 16)
         self.assertEqual(by_study["sharma_ludhiana_2011_2018"], 4)
         self.assertEqual(by_study["du_dingxi_2016_2022"], 24)
+        self.assertEqual(by_study["nayak_bhubaneswar_2020_2021"], 4)
+        self.assertEqual(by_study["jijnasa_bhubaneswar_2022_2024"], 18)
+        jijnasa = [row for row in self.rows if row["study_id"] == "jijnasa_bhubaneswar_2022_2024"]
+        self.assertEqual(Counter(row["outcome"] for row in jijnasa), {"yield": 12, "SOC": 6})
+        self.assertEqual(Counter(row["paper_doi"] for row in jijnasa), {"10.14719/pst.9983": 12, "10.14719/pst.10362": 6})
+        self.assertEqual(len({row["study_id"] for row in jijnasa}), 1)
+        self.assertTrue(all(row["shared_control_group"] for row in jijnasa))
+        self.assertTrue(all(row["soil_depth"] == "" and "soil_depth_unreported" in row["quality_flags"] for row in jijnasa if row["outcome"] == "SOC"))
+        nayak = [row for row in self.rows if row["study_id"] == "nayak_bhubaneswar_2020_2021"]
+        self.assertTrue(all(row["paper_doi"] == "" and row["source_url"].startswith("https://www.researchtrend.net/bfij/") for row in nayak))
+        self.assertEqual(Counter(row["pathway"] for row in nayak), {"open_burning": 2, "direct_return": 2})
+        self.assertTrue(all("marginal SEm" in row["variance_provenance"] for row in nayak))
+        self.assertEqual(len({row["study_id"] for row in nayak}), 1)
         sharma = [row for row in self.rows if row["study_id"] == "sharma_ludhiana_2011_2018"]
         self.assertTrue(all(row["quality_flags"] == "pooled_se_denominator_ambiguous" for row in sharma))
         self.assertTrue(all(row["paper_doi"] == "10.1016/j.heliyon.2023.e17828" for row in sharma))
@@ -148,7 +164,7 @@ class EvidenceQualityTests(unittest.TestCase):
     def test_legacy_undefined_error_type_is_excluded_from_strict_screen(self):
         flagged = [row for row in self.rows if "reported_error_type_ambiguous" in row["quality_flags"]]
         self.assertEqual(Counter(row["study_id"] for row in flagged),
-                         {"rice_primary_466": 45, "rice_primary_494": 24, "rice_primary_392": 2})
+                         {"rice_primary_466": 45, "rice_primary_494": 24, "rice_primary_392": 2, "rice_primary_69": 4})
         self.assertTrue(any(row["outcome"] == "yield" for row in flagged))
 
     def test_reviewed_legacy_burning_arms_are_visible_without_inventing_studies(self):
@@ -169,8 +185,8 @@ class EvidenceQualityTests(unittest.TestCase):
     def test_burning_descriptive_unit_is_independent_trial(self):
         trials = study_level(EVIDENCE)
         result = burning_summary(trials)
-        self.assertEqual((result["independent_trials"], result["effect_rows"]), (8, 16))
-        self.assertEqual((result["positive_trials"], result["negative_trials"]), (6, 2))
+        self.assertEqual((result["independent_trials"], result["effect_rows"]), (9, 20))
+        self.assertEqual((result["positive_trials"], result["negative_trials"]), (7, 2))
         self.assertEqual(len(trials["rice_primary_164"]["lnrr"]), 4)
         self.assertNotIn("rice_primary_392", trials)
         self.assertNotIn("mbah_nneji_agbani_2007_2008", trials)

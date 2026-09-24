@@ -23,10 +23,12 @@ PRIMARY_ADDENDA = [
     ROOT / "literature/primary_extractions/huang2013_yield_n2o.csv",
     ROOT / "literature/primary_extractions/sharma2023_yield.csv",
     ROOT / "literature/primary_extractions/du2024_yield_soc_gwp_ghgi.csv",
+    ROOT / "literature/primary_extractions/nayak2022_yield.csv",
+    ROOT / "literature/primary_extractions/jijnasa2025_yield_soc.csv",
 ]
 
 FIELDS = [
-    "effect_id", "study_id", "paper_doi", "paper_title", "citation",
+    "effect_id", "study_id", "paper_doi", "source_url", "paper_title", "citation",
     "publication_year", "experiment_year", "country", "location",
     "latitude", "longitude", "broad_climate", "koppen_climate",
     "crop_as_reported", "crop_core", "season",
@@ -85,6 +87,7 @@ RICE_140_YIELD_BACKFILL = {
 }
 
 LAND_CLEARING_STUDY = "mbah_nneji_agbani_2007_2008"
+SHITTU_LAND_CLEARING_STUDY = "shittu_ado_ekiti_2001_2002"
 
 # The reviewed staging records retain these labels under the older
 # *_residue_management columns. Keep the public projection source-specific and
@@ -220,6 +223,17 @@ def project(row: dict[str, str]) -> dict[str, str]:
         ):
             raise ValueError(f"Land-clearing source signature changed for {effect_id}")
         quality_flags.append("land_clearing_residue_not_harvest_straw")
+    if study_id == SHITTU_LAND_CLEARING_STUDY:
+        if not (
+            value(row, "primary_paper_doi") == "10.1300/J064v28n02_05"
+            and value(row, "analysis_pathway") == "open_burning"
+            and value(row, "analysis_outcome") == "yield"
+            and value(row, "crop") == "maize"
+            and value(row, "treatment_arm") == "plant residues burned in situ"
+            and value(row, "control_arm") == "plant residues baled and removed"
+        ):
+            raise ValueError(f"Shittu land-clearing residue signature changed for {effect_id}")
+        quality_flags.append("land_clearing_residue_not_harvest_straw")
 
     backfill = RICE_140_YIELD_BACKFILL.get(effect_id)
     if backfill:
@@ -261,6 +275,20 @@ def project(row: dict[str, str]) -> dict[str, str]:
         ):
             raise ValueError(f"Legacy burning metadata signature changed for {effect_id}")
         quality_flags.append("primary_table_metadata_backfilled")
+
+    if study_id == "rice_primary_69":
+        if not (
+            value(row, "primary_paper_doi") == "10.1016/j.agee.2016.12.042"
+            and value(row, "analysis_pathway") == "open_burning"
+            and value(row, "analysis_outcome") in {"CH4", "N2O"}
+            and value(row, "primary_table_locator") == "Table 4"
+            and value(row, "published_uncertainty_type") == "SE"
+            and value(row, "variance_provenance") == "primary Table 4 mean +/- SE, n=3; SD=SE*sqrt(3)"
+        ):
+            raise ValueError(f"Romasanta Table 4 uncertainty signature changed for {effect_id}")
+        # Unlike the time-series figures, Table 4 does not define its +/- type.
+        # Preserve legacy numerical rows but bar them from the strict screen.
+        quality_flags.extend(["reported_error_type_ambiguous", "primary_table_metadata_backfilled"])
 
     result = {
         "effect_id": effect_id,
@@ -328,6 +356,18 @@ def project(row: dict[str, str]) -> dict[str, str]:
         result["crop_as_reported"] = legacy_metadata["crop"]
         result["crop_core"] = legacy_metadata["crop"]
         result["treatment_arm"], result["control_arm"] = legacy_metadata["public_arms"]
+    if study_id == SHITTU_LAND_CLEARING_STUDY:
+        result["crop_core"] = "maize"
+        result["residue_as_reported"] = "mixed vegetation cleared from prior cocoa/kola/yam/maize site; not identifiable harvested maize straw"
+        result["sensitivity_note"] = "Exclude from harvested-crop-straw core: the source methods describe clearing March 2001 and managing mixed former vegetation residues"
+    if study_id == "rice_primary_69":
+        result["crop_as_reported"] = result["crop_core"] = "rice"
+        result["residue_as_reported"] = "rice straw"
+        result["treatment_arm"] = "SB: rice straw burned in field; ash incorporated"
+        result["control_arm"] = "CSRm: complete rice straw removal"
+        result["variance_provenance"] = "primary Table 4 reports mean +/- an undefined error type; legacy SE assumption retained for traceability, not strict pooling"
+        result["formal_decision"] = "ADMIT_FIELD_SOIL_ENDPOINT_TO_TRACEABLE_TABLE; HOLD_FROM_STRICT_MODEL_UNTIL_ERROR_TYPE_VERIFIED"
+        result["sensitivity_note"] = "Hold from strict inverse-variance analysis until Table 4 error type is verified; field-soil flux excludes the combustion pulse"
     return result
 
 
@@ -337,8 +377,73 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     if not effect_id or value(row, "pathway") not in PATHWAYS:
         raise ValueError(f"Invalid primary addendum identity/pathway: {effect_id}")
     study_id = value(row, "study_id")
-    if study_id not in {"rice_primary_53", "panneerselvam_cuttack_2021_2022", "huang_shangzhuang_2006_2013", "sharma_ludhiana_2011_2018", "du_dingxi_2016_2022"}:
+    if study_id not in {"rice_primary_53", "panneerselvam_cuttack_2021_2022", "huang_shangzhuang_2006_2013", "sharma_ludhiana_2011_2018", "du_dingxi_2016_2022", "nayak_bhubaneswar_2020_2021", "jijnasa_bhubaneswar_2022_2024"}:
         raise ValueError(f"Primary addendum study needs explicit review: {effect_id}")
+    if study_id == "jijnasa_bhubaneswar_2022_2024":
+        expected = {
+            ("yield", "Kharif_2022", "open_burning"): ("4.688", "4.541", "0.1085"),
+            ("yield", "Kharif_2022", "direct_return"): ("5.273", "4.541", "0.1085"),
+            ("yield", "Kharif_2022", "biochar_return"): ("5.055", "4.541", "0.1085"),
+            ("yield", "Kharif_2023", "open_burning"): ("5.012", "4.878", "0.1237"),
+            ("yield", "Kharif_2023", "direct_return"): ("5.486", "4.878", "0.1237"),
+            ("yield", "Kharif_2023", "biochar_return"): ("5.306", "4.878", "0.1237"),
+            ("yield", "Rabi_2023", "open_burning"): ("3.870", "3.718", "0.0898"),
+            ("yield", "Rabi_2023", "direct_return"): ("4.172", "3.718", "0.0898"),
+            ("yield", "Rabi_2023", "biochar_return"): ("4.028", "3.718", "0.0898"),
+            ("yield", "Rabi_2024", "open_burning"): ("3.939", "3.758", "0.0868"),
+            ("yield", "Rabi_2024", "direct_return"): ("4.459", "3.758", "0.0868"),
+            ("yield", "Rabi_2024", "biochar_return"): ("4.320", "3.758", "0.0868"),
+            ("SOC", "2022-23", "open_burning"): ("0.514", "0.490", "0.0072"),
+            ("SOC", "2022-23", "direct_return"): ("0.607", "0.490", "0.0072"),
+            ("SOC", "2022-23", "biochar_return"): ("0.558", "0.490", "0.0072"),
+            ("SOC", "2023-24", "open_burning"): ("0.557", "0.531", "0.0159"),
+            ("SOC", "2023-24", "direct_return"): ("0.660", "0.531", "0.0159"),
+            ("SOC", "2023-24", "biochar_return"): ("0.621", "0.531", "0.0159"),
+        }
+        key = (value(row, "outcome"), value(row, "experiment_year"), value(row, "pathway"))
+        correct_doi = "10.14719/pst.9983" if key[0] == "yield" else "10.14719/pst.10362"
+        correct_locator = "Table 2" if key[0] == "yield" else "Table 3a"
+        correct_arm = {
+            "open_burning": "S2: in-field rice straw burning",
+            "direct_return": "S3: in-situ rice straw incorporation",
+            "biochar_return": "S4: rice-straw biochar produced off-field and returned",
+        }.get(key[2])
+        if not (
+            key in expected
+            and value(row, "paper_doi") == correct_doi
+            and value(row, "source_locator") == correct_locator
+            and value(row, "crop_core") == "rice"
+            and value(row, "treatment_arm") == correct_arm
+            and value(row, "control_arm") == "S1: complete rice straw removal"
+            and value(row, "shared_control_group") == f"jijnasa_{key[1]}_S1"
+            and (value(row, "treatment_mean"), value(row, "control_mean"), value(row, "treatment_se")) == expected[key]
+            and value(row, "control_se") == value(row, "treatment_se")
+            and (key[0] != "SOC" or (value(row, "soc_measure") == "SOC concentration" and value(row, "soil_depth") == ""))
+        ):
+            raise ValueError(f"Jijnasa paired Table 2/3a signature changed: {effect_id}")
+    if study_id == "nayak_bhubaneswar_2020_2021" and not (
+        value(row, "paper_doi") == ""
+        and value(row, "source_url") == "https://www.researchtrend.net/bfij/integrated-nutrient-management-combined-with-starter-applied-residue-incorporation-enhances-the-growth-and-yield-of-transplanted-kharif-rice-oryza-sativa-l-7731"
+        and value(row, "pathway") in {"open_burning", "direct_return"}
+        and value(row, "outcome") == "yield"
+        and value(row, "crop_core") == "rice"
+        and value(row, "experiment_year") in {"2020", "2021"}
+        and value(row, "source_locator") == "Table 3, residue-management main-plot marginal means"
+        and (value(row, "treatment_arm"), value(row, "control_arm")) in {("C2: in-situ rice residue burning", "C1: rice residue removal"), ("C3: in-situ rice residue incorporation", "C1: rice residue removal")}
+        and value(row, "shared_control_group") == f"nayak_{value(row, 'experiment_year')}_C1"
+        and value(row, "treatment_se") == value(row, "control_se")
+        and (
+            value(row, "experiment_year"), value(row, "pathway"),
+            value(row, "treatment_mean"), value(row, "control_mean"),
+            value(row, "treatment_se"),
+        ) in {
+            ("2020", "open_burning", "4043", "3932", "62.0"),
+            ("2020", "direct_return", "4107", "3932", "62.0"),
+            ("2021", "open_burning", "4476", "4106", "114.9"),
+            ("2021", "direct_return", "4620", "4106", "114.9"),
+        }
+    ):
+        raise ValueError(f"Nayak source and matched main-plot signature changed: {effect_id}")
     if study_id == "panneerselvam_cuttack_2021_2022" and not (
         value(row, "paper_doi") == "10.1016/j.jenvman.2024.120916"
         and value(row, "pathway") == "direct_return"
@@ -429,9 +534,9 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     if min(treatment_n, control_n) < 2 or min(treatment_sd, control_sd) < 0:
         raise ValueError(f"Invalid primary addendum uncertainty: {effect_id}")
     if not all(value(row, key) for key in (
-        "study_id", "paper_doi", "outcome", "outcome_unit", "treatment_arm",
+        "study_id", "outcome", "outcome_unit", "treatment_arm",
         "control_arm", "shared_control_group", "source_locator",
-    )):
+    )) or not (value(row, "paper_doi") or value(row, "source_url")):
         raise ValueError(f"Incomplete primary addendum provenance: {effect_id}")
     lnrr = math.log(treatment_mean / control_mean)
     variance = (treatment_se / treatment_mean) ** 2 + (control_se / control_mean) ** 2
@@ -451,6 +556,12 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     elif study_id == "sharma_ludhiana_2011_2018":
         decision = "ADMIT_MATCHED_TILLAGE_AND_GREEN_MANURE_STRAW_RETENTION"
         dependence = "One 2011-established split-plot trial; cluster seven-year pooled rice/wheat outcomes and green-manure strata by study_id"
+    elif study_id == "nayak_bhubaneswar_2020_2021":
+        decision = "ADMIT_MATCHED_RESIDUE_MAIN_PLOT_MARGINAL_YIELD"
+        dependence = "One split-plot field trial with three blocks; two years and two contrasts sharing C1 within year are dependent"
+    elif study_id == "jijnasa_bhubaneswar_2022_2024":
+        decision = "ADMIT_MATCHED_RESIDUE_SUBPLOT_MARGINAL_EFFECT"
+        dependence = "One randomized split-plot trial with three blocks across two years; yield and SOC appear in separate papers; seasons/outcomes/three pathways share S1 within trial"
     else:
         decision = "ADMIT_MATCHED_N_STRAW_INCORPORATION_VS_NO_STRAW"
         dependence = "One 2016-established split-plot trial; cluster 2021/2022 years, N strata and yield/SOC/GWP/GHGI outcomes by study_id"
@@ -482,6 +593,18 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
         result["quality_flags"] = ";".join(filter(None, [result["quality_flags"], "source_coordinates_malformed"]))
         if value(row, "outcome") in {"GWP", "GHGI"}:
             result["sensitivity_note"] = "Soil CH4+N2O growing-season boundary only; source AR4 factors 25/298 require harmonization and do not include upstream or open-burning emissions"
+    if study_id == "nayak_bhubaneswar_2020_2021":
+        result["variance_provenance"] = "primary Table 3 residue-main-plot marginal SEm, n=3 blocks; converted to SD as SEm*sqrt(3); lnRR variance assumes zero arm covariance"
+        result["analysis_tier"] = "A_primary_marginal_SEm_split_plot"
+        result["sensitivity_note"] = "Residue x nitrogen interaction significant; main-plot marginal effects average four nitrogen-management strata. Repeated years and shared C1 need clustered analysis; test zero-covariance variance assumption."
+    if study_id == "jijnasa_bhubaneswar_2022_2024":
+        result["variance_provenance"] = f"primary {value(row, 'source_locator')} residue-subplot marginal SEm; n=3 blocks confirmed by companion DOI 10.14719/pst.10362; SD represented as SEm*sqrt(3); zero arm covariance assumed"
+        result["analysis_tier"] = "A_primary_marginal_SEm_split_plot"
+        result["sensitivity_note"] = "Across four rice-establishment methods, not four independent trials; repeat seasons and shared S1 require clustered sensitivity. Companion yield/SOC papers are one trial."
+        if value(row, "pathway") == "biochar_return":
+            result["quality_flags"] = ";".join(filter(None, [result["quality_flags"], "biochar_pyrolysis_process_unreported"]))
+        if value(row, "outcome") == "SOC":
+            result["quality_flags"] = ";".join(filter(None, [result["quality_flags"], "soil_depth_unreported"]))
     return result
 
 

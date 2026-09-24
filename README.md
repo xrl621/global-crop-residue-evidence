@@ -45,8 +45,8 @@ in the same commit. Older exploration notes remain available for provenance
 but are not automatically current conclusions.
 
 The project now includes a compact full-text-reviewed evidence snapshot at
-[`literature/evidence_database.csv`](literature/evidence_database.csv): 488 paired
-effects from 30 independent field experiments (2026-09-24 snapshot). The row is a treatment–control
+[`literature/evidence_database.csv`](literature/evidence_database.csv): 510 paired
+effects from 32 independent field experiments (2026-09-24 snapshot). The row is a treatment–control
 effect, **not** an independent study. See the
 [`evidence schema`](docs/evidence_schema.md) for definitions, limitations, and
 the study-level analysis rule. New literature can be logged in

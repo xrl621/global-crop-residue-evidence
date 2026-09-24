@@ -2,6 +2,20 @@
 
 本文件采用**追加式记录**。新决定写在最上方；旧决定即使被替代也不删除。每次改变研究范围、来源、准入、模型、图稿或结论，写明“原口径 → 新口径”、原因、受影响文件/分析和验证情况，并同步更新[当前项目框架](PROJECT_FRAMEWORK_AND_ANALYSIS.md)。数字若是时点快照，必须标注日期和数据层级。
 
+## 2026-09-24｜Jijnasa 两篇原文统一试验键、三路径产量与 SOC 同步入库
+
+**原口径 → 新口径：** 从 [Jijnasa 等产量论文](https://doi.org/10.14719/pst.9983) Table 2 恢复 4 季 × 焚烧/翻埋/稻草生物炭 × 同季移除对照的 12 条产量效应；从其[同一试验的土壤论文](https://doi.org/10.14719/pst.10362) Table 3a 恢复 2 年 × 三路径的 6 条 SOC 浓度效应。两篇论文同属 2022–2024 年 Odisha OUAT 的 3 重复裂区试验，统一 `study_id`，只新增 **1 项独立试验**，公开快照 **492/31 → 510/32**。SOC 未报告采样深度，生物炭未明确热解工艺，均加质量旗标。详见[联合审计](JIJNASA2025_JOINT_YIELD_SOC_AUDIT_20260924.md)。
+
+**门槛与结论影响：** 最初按既有原料旗标得到焚烧×产量 22 条/10 项；随后的[Shittu 原文 Methods 复核](https://www.researchgate.net/publication/233322391_Comparative_Effect_of_Different_Residue_Management_on_Maize_Yield_at_Ado-Ekiti_Nigeria)发现其两年度处理的是清地后混有可可、柯拉、山药、玉米的植被残体，并非可确认的收获后秸秆。2 条旧效应保留但加 `land_clearing_residue_not_harvest_straw`，**当前核心筛查回到 20 条/9 项**。直接还田×产量为 41 条/9 项，生物炭×产量 48 条/7 项；三路径仍不能做全球联合排名。**不恢复旧 +8.6% 合并值，也不发布新的全球平均估计。**新增同试验产量与 SOC 同向的场地级描述，不外推为跨地区结论。导出和单元测试通过。
+
+## 2026-09-24｜Odisha 水稻三臂原文入库与 Romasanta 误差来源纠错
+
+**原口径 → 新口径：** 从 [Nayak et al. 2022 期刊原文](https://www.researchtrend.net/bfij/integrated-nutrient-management-combined-with-starter-applied-residue-incorporation-enhances-the-growth-and-yield-of-transplanted-kharif-rice-oryza-sativa-l-7731) Table 3 提取 2020/2021 两年、焚烧及直接翻埋各相对移除的产量均值与主区 SEm，共 4 条新效应、**1** 项独立试验。无可核实 DOI，用 `source_url` 留原文链接，不发明 DOI。同作者 2023 年同设计论文与 Pachauri 2025 年重复表格不另计新试验。公开快照 **488/30 → 492/31**。
+
+**误差纠错：** Romasanta 2017 Table 4 的季节累计 CH₄/N₂O `±` 未定义 SD/SE；旧记录推定 SE，现对 4 条既有记录标 `reported_error_type_ambiguous` 并暂停严格逆方差合并，回填稻草与处理臂、明确土壤通量不含燃烧脉冲。原数值保留作历史追溯，不据此得出 GHG 结论。焚烧×产量当前 18 条/9 项、直接还田×产量 37 条/8 项通过已编码误差和原料筛查，均未过 ≥10 项门槛。见[原文数据及局限](NAYAK2022_AND_ROMASANTA2017_AUDIT_20260924.md)。
+
+**验证：** 导出一致性、14 项单元测试及门槛盘点通过；探索性研究等权方向为焚烧产量 9 项中 7 正、2 负，不能写成全球平均因果效应。
+
 ## 2026-09-24｜焚烧试验元数据回填与 `±` 误差口径再收紧
 
 **原口径 → 新口径：** 公开表中的 Hung 2022、Ma 2008、Liu 2016 焚烧试验已有原文处理对照审计，但部分作物/处理臂标签未投影；现按 DOI 和原审计臂名严格回填 35 条焚烧效应的标签，不改数值或独立试验数。Ma 2008 既有记录仅将 Table 1 的未定义 `±` 当 SD，其误差类型尚无明确依据；2 条效应加 `reported_error_type_ambiguous`，严格层暂缓。详见[本轮审计](BURNING_METADATA_AND_GATE_REAUDIT_20260924.md)。
