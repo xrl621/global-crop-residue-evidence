@@ -46,7 +46,7 @@ but are not automatically current conclusions.
 
 The project now includes a compact full-text-reviewed evidence snapshot at
 [`literature/evidence_database.csv`](literature/evidence_database.csv): 488 paired
-effects from 30 independent field experiments (2026-09-23 snapshot). The row is a treatment–control
+effects from 30 independent field experiments (2026-09-24 snapshot). The row is a treatment–control
 effect, **not** an independent study. See the
 [`evidence schema`](docs/evidence_schema.md) for definitions, limitations, and
 the study-level analysis rule. New literature can be logged in
@@ -66,8 +66,10 @@ adds 26 source-table effects from three new field trials. A further
 adds 24 effects from one new wheat trial. Direct-return × yield has 11 trials
 in the broad count, but only 8 after excluding three studies with unresolved
 reported-error semantics. The subsequent [straw-origin and Table 2 re-audit](docs/STRAW_ORIGIN_AND_RICE140_REAUDIT_20260923.md)
-flags a land-clearing-residue trial in both direct-return and burning pathways:
-after the source and known-origin screens, yield coverage is 7 and 9 trials,
+flags a land-clearing-residue trial in both direct-return and burning pathways.
+The [burning metadata and error-type re-audit](docs/BURNING_METADATA_AND_GATE_REAUDIT_20260924.md)
+then holds one more trial whose published `±` dispersion is not identified as
+SD or SE. After the source and known-origin screens, yield coverage is 7 and 8 trials,
 respectively. Neither reaches the prespecified 10-trial count gate. This is
 not yet a defensible pooled-result gate.
 

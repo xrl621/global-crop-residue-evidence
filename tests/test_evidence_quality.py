@@ -7,6 +7,7 @@ from pathlib import Path
 
 from scripts.describe_evidence import summarize
 from scripts.export_evidence_database import analysis_tier
+from scripts.analyze_open_burning_yield_exploratory import study_level, summarize as burning_summary
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -92,11 +93,12 @@ class EvidenceQualityTests(unittest.TestCase):
         passing = [row for row in summary.values() if row["meets_count_threshold"] == "true"]
         self.assertEqual([(row["pathway"], row["outcome"]) for row in passing], [("direct_return", "yield"), ("open_burning", "yield")])
         strictly_passing = [row for row in summary.values() if row["meets_strict_threshold"] == "true"]
-        self.assertEqual([(row["pathway"], row["outcome"]) for row in strictly_passing], [("open_burning", "yield")])
+        self.assertEqual(strictly_passing, [])
         self.assertEqual(summary[("direct_return", "yield")]["straw_origin_screen_independent_studies"], 7)
         self.assertEqual(summary[("direct_return", "yield")]["straw_origin_screen_effect_rows"], 35)
-        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_independent_studies"], 9)
-        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_effect_rows"], 17)
+        self.assertEqual(summary[("open_burning", "yield")]["strict_screen_independent_studies"], 9)
+        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_independent_studies"], 8)
+        self.assertEqual(summary[("open_burning", "yield")]["straw_origin_screen_effect_rows"], 16)
         self.assertFalse(any(row["meets_straw_origin_threshold"] == "true" for row in summary.values()))
 
     def test_rice_140_yield_labels_and_land_clearing_source_screen(self):
@@ -145,8 +147,33 @@ class EvidenceQualityTests(unittest.TestCase):
 
     def test_legacy_undefined_error_type_is_excluded_from_strict_screen(self):
         flagged = [row for row in self.rows if "reported_error_type_ambiguous" in row["quality_flags"]]
-        self.assertEqual(Counter(row["study_id"] for row in flagged), {"rice_primary_466": 45, "rice_primary_494": 24})
+        self.assertEqual(Counter(row["study_id"] for row in flagged),
+                         {"rice_primary_466": 45, "rice_primary_494": 24, "rice_primary_392": 2})
         self.assertTrue(any(row["outcome"] == "yield" for row in flagged))
+
+    def test_reviewed_legacy_burning_arms_are_visible_without_inventing_studies(self):
+        counts = Counter(row["study_id"] for row in self.rows)
+        expected = {"rice_primary_164": 20, "rice_primary_392": 2, "rice_primary_53": 13}
+        for study, count in expected.items():
+            self.assertEqual(counts[study], count + (10 if study == "rice_primary_53" else 0))
+            burning = [row for row in self.rows if row["study_id"] == study
+                       and row["pathway"] == "open_burning"]
+            self.assertEqual(len(burning), count)
+            self.assertTrue(all(row["crop_core"] == "rice" for row in burning))
+            self.assertTrue(all(row["treatment_arm"] and row["control_arm"] for row in burning))
+            self.assertTrue(all("primary_table_metadata_backfilled" in row["quality_flags"]
+                                for row in burning))
+        ma = [row for row in self.rows if row["study_id"] == "rice_primary_392"]
+        self.assertTrue(all("reported_error_type_ambiguous" in row["quality_flags"] for row in ma))
+
+    def test_burning_descriptive_unit_is_independent_trial(self):
+        trials = study_level(EVIDENCE)
+        result = burning_summary(trials)
+        self.assertEqual((result["independent_trials"], result["effect_rows"]), (8, 16))
+        self.assertEqual((result["positive_trials"], result["negative_trials"]), (6, 2))
+        self.assertEqual(len(trials["rice_primary_164"]["lnrr"]), 4)
+        self.assertNotIn("rice_primary_392", trials)
+        self.assertNotIn("mbah_nneji_agbani_2007_2008", trials)
 
     def test_liu_direct_return_addendum_preserves_shared_control(self):
         added = [row for row in self.rows if row["effect_id"].startswith("rice_primary_53_") and row["pathway"] == "direct_return"]

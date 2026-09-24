@@ -86,6 +86,42 @@ RICE_140_YIELD_BACKFILL = {
 
 LAND_CLEARING_STUDY = "mbah_nneji_agbani_2007_2008"
 
+# The reviewed staging records retain these labels under the older
+# *_residue_management columns. Keep the public projection source-specific and
+# fail closed if the reviewed contrast changes; a generic fallback would risk
+# assigning an inferred crop or comparator to a different trial.
+LEGACY_BURNING_METADATA = {
+    "rice_primary_164": {
+        "doi": "10.1007/s10333-021-00877-0",
+        "source_arms": ("Onfield_Burned", "Removed"),
+        "public_arms": (
+            "rice residues burned on each plot; ash incorporated",
+            "rice residues completely removed",
+        ),
+        "crop": "rice",
+    },
+    "rice_primary_392": {
+        "doi": "10.1007/s11104-008-9689-y",
+        "source_arms": ("Onfield_Burned", "Removed"),
+        "public_arms": (
+            "WB: 4.8 t ha-1 wheat straw burned in situ before rice",
+            "CK: no wheat straw applied before rice",
+        ),
+        "crop": "rice",
+    },
+    "rice_primary_53": {
+        "doi": "10.1007/s11356-015-5227-7",
+        "source_arms": (
+            "NPK plus in-situ rice-straw burning", "NPK; straw removed"
+        ),
+        "public_arms": (
+            "NPK plus in-situ rice-straw burning",
+            "NPK with rice straw removed",
+        ),
+        "crop": "rice",
+    },
+}
+
 
 def value(row: dict[str, str], *keys: str) -> str:
     for key in keys:
@@ -170,6 +206,8 @@ def project(row: dict[str, str]) -> dict[str, str]:
     provenance_lower = value(row, "variance_provenance").lower()
     if "footnote omits the label" in provenance_lower or "without defining se versus sd" in provenance_lower:
         quality_flags.append("reported_error_type_ambiguous")
+    if value(row, "published_uncertainty_type") == "reported plus-minus; treated as SD":
+        quality_flags.append("reported_error_type_ambiguous")
     if not value(row, "primary_paper_doi"):
         quality_flags.append("primary_doi_missing")
     if not value(row, "primary_table_locator"):
@@ -206,6 +244,23 @@ def project(row: dict[str, str]) -> dict[str, str]:
         ):
             raise ValueError(f"Rice 140 non-yield signature changed for {effect_id}")
         quality_flags.append("primary_non_yield_arm_and_value_recheck")
+
+    legacy_metadata = LEGACY_BURNING_METADATA.get(study_id)
+    if legacy_metadata:
+        source_arms = (
+            value(row, "treatment_residue_management"),
+            value(row, "control_residue_management"),
+        )
+        if not (
+            value(row, "primary_paper_doi") == legacy_metadata["doi"]
+            and value(row, "analysis_pathway") == "open_burning"
+            and source_arms == legacy_metadata["source_arms"]
+            and not any(value(row, key) for key in
+                        ("treatment_arm", "control_arm", "crop_core"))
+            and value(row, "crop") in {"", "rice"}
+        ):
+            raise ValueError(f"Legacy burning metadata signature changed for {effect_id}")
+        quality_flags.append("primary_table_metadata_backfilled")
 
     result = {
         "effect_id": effect_id,
@@ -269,6 +324,10 @@ def project(row: dict[str, str]) -> dict[str, str]:
         result["sensitivity_note"] = (
             (result["sensitivity_note"] + "; ") if result["sensitivity_note"] else ""
         ) + "crop and arms backfilled from primary Table 2; other outcomes not reconciled"
+    if legacy_metadata:
+        result["crop_as_reported"] = legacy_metadata["crop"]
+        result["crop_core"] = legacy_metadata["crop"]
+        result["treatment_arm"], result["control_arm"] = legacy_metadata["public_arms"]
     return result
 
 
