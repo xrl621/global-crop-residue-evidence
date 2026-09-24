@@ -131,12 +131,24 @@ rows carry `land_clearing_residue_not_harvest_straw`; they remain in the public
 evidence table but are held from the core harvested-crop-straw analysis.
 `describe_evidence.py` reports a `straw_origin_screen_*` count after the
 source/uncertainty screen, which gives 35 rows/7 studies for direct-return
-yield and 17 rows/9 studies for burning yield. This is only a known-origin
+yield and, after the 2026-09-24 error-type re-audit below, 16 rows/8 studies
+for burning yield. This is only a known-origin
 exclusion, not a full eligibility decision. Three `rice_primary_140` yield
 rows have primary Table 2 crop and arm labels backfilled under exact source
 signatures (`primary_table_metadata_backfilled`); their 12 non-yield rows
 carry `primary_non_yield_arm_and_value_recheck` and are held from the strict
 source screen until arm identities and values are reconciled.
+
+The [burning metadata and gate re-audit](BURNING_METADATA_AND_GATE_REAUDIT_20260924.md)
+backfills crop and arm labels for 35 previously reviewed burning effects from
+Hung 2022, Ma 2008 and Liu 2016. It does not change their numerical effects or
+study identities. Ma's two effects also carry `reported_error_type_ambiguous`
+because their legacy extraction treated an undefined published `±` as SD;
+the source/uncertainty screen now holds that trial pending a verified SD/SE
+definition. Accordingly, burning-yield counts are 19 rows/10 studies broadly,
+18/9 after source/uncertainty screening, and 16/8 after the known-straw-origin
+screen. The `primary_table_metadata_backfilled` marker identifies restored
+labels, not a newly discovered trial or a change in variance provenance.
 
 ## Rebuild and provenance
 
