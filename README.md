@@ -36,6 +36,17 @@ global-crop-residue-evidence/
 
 ## Status
 
+**2026-09-26: a complete descriptive stage analysis is now available.**
+Read the [results and next priorities](docs/STAGE_RESULTS_20260926.md) and
+[six-panel figure notes](figures/STAGE_20260926_CAPTIONS_AND_QA.md).
+The new analysis uses the public snapshot only: `python scripts/analyze_stage_evidence.py`.
+Reproducible [source-data tables](data/processed/stage_20260926/) retain every
+inclusion/exclusion decision and every plotted source effect ID. The screened
+descriptive set contains 389 effects from 24 trial keys, all in five Asian
+countries; it is **not** a representative global sample or a pooled causal estimate.
+The original 510-row snapshot is unchanged. Three assembled figures and six
+split panels are provided in [PNG/PDF/SVG](figures/stage_20260926/).
+
 The current research question, three-pathway scope, data layers, analysis
 gates, six-figure plan, and next milestones are documented in the
 **[project framework and analysis plan](docs/PROJECT_FRAMEWORK_AND_ANALYSIS.md)**
@@ -69,9 +80,12 @@ reported-error semantics. The subsequent [straw-origin and Table 2 re-audit](doc
 flags a land-clearing-residue trial in both direct-return and burning pathways.
 The [burning metadata and error-type re-audit](docs/BURNING_METADATA_AND_GATE_REAUDIT_20260924.md)
 then holds one more trial whose published `±` dispersion is not identified as
-SD or SE. After the source and known-origin screens, yield coverage is 7 and 8 trials,
-respectively. Neither reaches the prespecified 10-trial count gate. This is
-not yet a defensible pooled-result gate.
+SD or SE. Subsequent [Nayak and Jijnasa extraction audits](docs/JIJNASA2025_JOINT_YIELD_SOC_AUDIT_20260924.md)
+bring current source/core-origin-screened yield coverage to 9 direct-return,
+7 biochar and 9 burning trials. The new stage analysis additionally holds the
+biochar trial with missing arm labels, leaving 6 biochar trials for the yield
+figure. No pathway passes the project's prespecified first pooled-analysis
+count gate; that gate alone would not establish a defensible model.
 
 To regenerate the public snapshot from the local full-text-validated audit
 table, run `python scripts/export_evidence_database.py`; add `--check` to test
