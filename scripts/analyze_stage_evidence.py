@@ -21,7 +21,7 @@ except ModuleNotFoundError:
     from describe_evidence import STRICT_EXCLUSION_FLAGS, STRAW_ORIGIN_EXCLUSION_FLAGS
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_OUT = ROOT / "data/processed/stage_20260926"
+DEFAULT_OUT = ROOT / "data/processed/stage_20260927"
 PATHWAYS = ["direct_return", "biochar_return", "open_burning"]
 CROP_MAP = {
     "paddy in paddy-wheat rotation": "rice",

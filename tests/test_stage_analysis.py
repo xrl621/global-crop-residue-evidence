@@ -12,7 +12,7 @@ from scripts.analyze_stage_evidence import (
 class StageAnalysisTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.d = pd.read_csv(Path(__file__).resolve().parents[1] / "literature/evidence_database.csv",
+        cls.d = pd.read_csv(Path(__file__).resolve().parents[1] / "data/processed/stage_20260926/row_audit.csv",
                             keep_default_na=False)
         cls.d["crop_display"] = cls.d.apply(crop_label, axis=1)
         cls.d["soc_kind"] = cls.d.apply(soc_kind, axis=1)

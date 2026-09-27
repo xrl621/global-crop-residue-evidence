@@ -617,6 +617,12 @@ def build_csv(source: Path) -> tuple[str, int, int]:
     for addendum in PRIMARY_ADDENDA:
         with addendum.open("r", encoding="utf-8-sig", newline="") as stream:
             records.extend(project_primary_addendum(row) for row in csv.DictReader(stream))
+    try:
+        from scripts.expand_evidence_20260927 import repair_yang, additions
+    except ModuleNotFoundError:
+        from expand_evidence_20260927 import repair_yang, additions
+    repair_yang(records)
+    records.extend(additions(records))
     original = {row["effect_id"]: row for row in records if row["study_id"] == "rice_primary_53" and row["pathway"] == "open_burning"}
     for row in records:
         if row["study_id"] != "rice_primary_53" or row["pathway"] != "direct_return":

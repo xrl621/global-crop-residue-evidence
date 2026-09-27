@@ -36,7 +36,21 @@ global-crop-residue-evidence/
 
 ## Status
 
-**2026-09-26: a complete descriptive stage analysis is now available.**
+**2026-09-27: primary-source expansion and joint-outcome update completed.**
+The [expansion report](docs/DATA_EXPANSION_20260927.md) records 553 paired effects
+from 33 trial keys (43 new effects, one new independent trial). The descriptive
+set is now 437 effects / 26 trial keys; yield–SOC pairs increased from 15 to 33,
+and yield–soil-GWP pairs from 42 to 64. Ten Thailand mean-only effects are retained
+separately and are **not** added to the main analysis. The main set still covers
+five Asian countries, and one flagged study uses outdoor lysimeters.
+See [updated figures](figures/stage_20260927/),
+[captions and QA](figures/STAGE_20260927_CAPTIONS_AND_QA.md), and
+[source-level provenance](literature/primary_extractions/EXPANSION_20260927_PROVENANCE.md).
+Run `python scripts/analyze_stage_evidence.py` and
+`python scripts/audit_expansion_20260927.py`; the default output is now dated
+20260927, preserving the previous snapshot.
+
+**Historical 2026-09-26 analysis (frozen, superseded by the counts above):**
 Read the [results and next priorities](docs/STAGE_RESULTS_20260926.md) and
 [six-panel figure notes](figures/STAGE_20260926_CAPTIONS_AND_QA.md).
 The new analysis uses the public snapshot only: `python scripts/analyze_stage_evidence.py`.
@@ -55,9 +69,9 @@ document and append a dated entry to the **[project change log](docs/PROJECT_CHA
 in the same commit. Older exploration notes remain available for provenance
 but are not automatically current conclusions.
 
-The project now includes a compact full-text-reviewed evidence snapshot at
-[`literature/evidence_database.csv`](literature/evidence_database.csv): 510 paired
-effects from 32 independent field experiments (2026-09-24 snapshot). The row is a treatment–control
+The project includes a compact full-text-reviewed evidence snapshot at
+[`literature/evidence_database.csv`](literature/evidence_database.csv): 553 paired
+effects from 33 trial keys (2026-09-27 snapshot; not all are open-field trials). The row is a treatment–control
 effect, **not** an independent study. See the
 [`evidence schema`](docs/evidence_schema.md) for definitions, limitations, and
 the study-level analysis rule. New literature can be logged in

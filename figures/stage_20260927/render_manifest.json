@@ -1,0 +1,21 @@
+{
+  "matplotlib": "3.11.2",
+  "palette": [
+    "#f4cee1",
+    "#c5d9df",
+    "#e16db7",
+    "#908ebc",
+    "#af88bb",
+    "#dedbee",
+    "#f07590",
+    "#dfb9d5",
+    "#b099b5",
+    "#5394c3",
+    "#b8a89f"
+  ],
+  "panel_labels": false,
+  "titles": false,
+  "width_mm": 183,
+  "split_method": "crop final assembled figure without rescaling fonts or data",
+  "statistics": "descriptive; ranges are observed spread, not confidence intervals"
+}

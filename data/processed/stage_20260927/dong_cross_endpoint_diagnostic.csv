@@ -1,0 +1,25 @@
+year,arm,vector_yield_t_ha,gwp_kg_co2eq_ha,ghgi_kg_co2eq_kg_grain,ratio_of_reported_means_t_ha,relative_difference_pct,query_over_5pct,interpretation
+2015,N1C0,8.250412344354723,5176.6,0.63,8.216825396825397,0.4087581992712419,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2015,N1C1,8.700437853080949,7130.1,0.82,8.695243902439024,0.059733236930448186,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2015,N1C2,8.967114486527095,6755.2,0.76,8.888421052631578,0.8853477285734268,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2015,N1C3,8.867111309616135,6501.9,0.76,8.555131578947368,3.6466970471441096,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2015,N2C0,8.667100470743453,4220.6,0.55,7.6738181818181825,12.943781900888474,True,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2015,N2C1,8.800436544941142,6033.4,0.52,11.602692307692307,-24.15177174778078,True,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2015,N2C2,9.300465884648233,5114.8,0.55,9.299636363636363,0.008919929548145689,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2015,N2C3,8.98378093517046,5502.4,0.61,9.020327868852458,-0.40516192108932536,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2016,N1C0,7.075351469134441,4934.0,0.7,7.048571428571429,0.3799357193779551,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2016,N1C1,8.500427014208267,4423.6,0.52,8.506923076923078,-0.07636207188040922,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2016,N1C2,7.23369618639871,4149.3,0.57,7.279473684210527,-0.628857247071446,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2016,N1C3,8.250412344354723,4193.0,0.51,8.22156862745098,0.35082985024825764,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2016,N2C0,8.150404682392999,4674.1,0.57,8.200175438596492,-0.6069474558950683,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2016,N2C1,8.01706860819531,4466.2,0.56,7.975357142857143,0.5230043569337095,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2016,N2C2,9.25046205366737,4003.3,0.43,9.31,-0.6395053311775589,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2016,N2C3,7.967064777214447,4963.0,0.62,8.004838709677419,-0.4718887392110016,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2017,N1C0,7.35412876954501,3644.7,0.5,7.2894,0.8879848759158593,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2017,N1C1,8.060421108891425,5770.6,0.72,8.014722222222222,0.5701867813022288,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2017,N1C2,8.257274472025431,4775.1,0.58,8.232931034482759,0.295683729654872,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2017,N1C3,8.199946553145049,6051.3,0.74,8.177432432432433,0.27532016801903314,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2017,N2C0,8.504472529998448,5917.8,0.7,8.454,0.5970254317299251,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2017,N2C1,8.906839889293996,6209.2,0.7,8.870285714285714,0.4120969288442522,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2017,N2C2,9.121830797722344,4149.2,0.46,9.02,1.1289445423763311,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement
+2017,N2C3,9.034641410847469,6225.9,0.69,9.023043478260869,0.12853681370972314,False,QA only; ratio of reported means is not necessarily mean of ratios; no replacement

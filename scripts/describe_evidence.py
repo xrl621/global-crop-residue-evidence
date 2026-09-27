@@ -28,6 +28,7 @@ FIELDS = [
 ]
 
 STRICT_EXCLUSION_FLAGS = {
+    "rounded_zero_standard_error",
     "pooled_se_denominator_ambiguous",
     "large_relative_se_lnrr_delta_approx",
     "reported_error_type_ambiguous",

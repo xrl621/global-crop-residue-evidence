@@ -1,0 +1,8 @@
+study_id,outcome,added_effects,source_doi
+biochar_li2024SD_176,GHGI,4,10.1016/j.atmosenv.2018.12.003
+biochar_li2024SD_176,GWP,4,10.1016/j.atmosenv.2018.12.003
+dong_harbin_2015_2017,yield,18,10.3390/agronomy14123050
+sun_zhuanghang_2012_2016,CH4,4,10.1016/j.fcr.2020.107814
+sun_zhuanghang_2012_2016,GHGI,4,10.1016/j.fcr.2020.107814
+sun_zhuanghang_2012_2016,N2O,4,10.1016/j.fcr.2020.107814
+sun_zhuanghang_2012_2016,yield,5,10.1016/j.fcr.2020.107814

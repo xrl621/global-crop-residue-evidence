@@ -11,7 +11,7 @@ from scripts.analyze_open_burning_yield_exploratory import study_level, summariz
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EVIDENCE = ROOT / "literature/evidence_database.csv"
+EVIDENCE = ROOT / "data/processed/stage_20260926/row_audit.csv"  # Frozen regression fixture; current batch has separate tests.
 
 
 class EvidenceQualityTests(unittest.TestCase):

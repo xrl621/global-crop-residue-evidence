@@ -33,9 +33,11 @@ STUDY_NAMES = {
 }
 JOINT_LABELS = {"biochar_li2024SD_3": "Tai Lake trial", "du_dingxi_2016_2022": "Du 2024",
                 "korav_2024": "Korav 2024", "rice_primary_53": "Mono-rice trial",
-                "qin_huizhou_2012_2015": "Qin 2016", "rice_primary_164": "Hung 2022"}
+                "qin_huizhou_2012_2015": "Qin 2016", "rice_primary_164": "Hung 2022",
+                "dong_harbin_2015_2017": "Dong 2024", "biochar_li2024SD_176": "Yang 2019"}
 MARKERS = {"biochar_li2024SD_3": "o", "du_dingxi_2016_2022": "s", "korav_2024": "^",
-           "rice_primary_53": "D", "qin_huizhou_2012_2015": "o", "rice_primary_164": "^"}
+           "rice_primary_53": "D", "qin_huizhou_2012_2015": "o", "rice_primary_164": "^",
+           "dong_harbin_2015_2017": "v", "biochar_li2024SD_176": "P"}
 
 
 def offsets(n, width=0.12):
@@ -134,7 +136,7 @@ def plot_yield(data, output, align):
 def plot_joint(data, output, align):
     d = pd.read_csv(data / "joint_outcome_pairs.csv")
     fig, axes = setup(106)
-    fig.subplots_adjust(bottom=0.28)
+    fig.subplots_adjust(bottom=0.34)
     for ax, endpoint in zip(axes, ["SOC", "GWP"]):
         frame = d[d.endpoint == endpoint]
         for (study, pathway), group in frame.groupby(["study_id", "pathway"]):
@@ -195,8 +197,8 @@ def plot_comparisons(data, output, align):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data", type=Path, default=ROOT / "data/processed/stage_20260926")
-    parser.add_argument("--output", type=Path, default=ROOT / "figures/stage_20260926")
+    parser.add_argument("--data", type=Path, default=ROOT / "data/processed/stage_20260927")
+    parser.add_argument("--output", type=Path, default=ROOT / "figures/stage_20260927")
     parser.add_argument("--qa-scripts", type=Path)
     args = parser.parse_args()
     if args.qa_scripts:
