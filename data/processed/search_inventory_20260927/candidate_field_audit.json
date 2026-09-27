@@ -1,0 +1,33 @@
+{
+  "feedstock_scope": {
+    "": 7718,
+    "field_residue_candidate": 2999,
+    "outside_charter_feedstock": 739,
+    "unclear_review": 480,
+    "processing_residue_not_default_scope": 464
+  },
+  "admission_status": {
+    "pending_identity_scope_independence_and_source_audit": 6735,
+    "staging_not_approved": 4682,
+    "pending_crop_setting_control_and_overlap_review": 830,
+    "pending_primary_identity_unit_and_overlap_review": 153
+  },
+  "contrast_scope": {
+    "": 7718,
+    "biochar_increment_candidate": 3156,
+    "biochar_plus_cointervention": 1526
+  },
+  "variance_provenance": {
+    "secondary_reported; imputation_origin_unresolved": 5427,
+    "secondary_SD_n; dataset_contains_imputed_SD; row_level_origin_unresolved": 4682,
+    "": 2291
+  },
+  "view_dedup_status": {
+    "": 11470,
+    "provisional_cross_sheet_numeric_match; provenance_retained": 930
+  },
+  "cross_dataset_title_overlap": {
+    "False": 10689,
+    "True": 1711
+  }
+}

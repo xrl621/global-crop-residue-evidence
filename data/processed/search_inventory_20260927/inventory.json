@@ -1,0 +1,43 @@
+{
+  "as_of": "2026-09-27",
+  "main_layers": [
+    {
+      "layer": "main",
+      "rows": 553,
+      "trial_keys": 33,
+      "paper_identity_keys": 35,
+      "countries": [
+        "China",
+        "India",
+        "Nepal",
+        "Nigeria",
+        "Pakistan",
+        "Philippines",
+        "Vietnam"
+      ]
+    },
+    {
+      "layer": "screened_descriptive",
+      "rows": 437,
+      "trial_keys": 26,
+      "paper_identity_keys": 28,
+      "countries": [
+        "China",
+        "India",
+        "Nepal",
+        "Pakistan",
+        "Vietnam"
+      ]
+    }
+  ],
+  "expanded_candidate_rows": 12400,
+  "expanded_candidate_unique_nonempty_title_keys": 636,
+  "rice_raw_observations": 5322,
+  "rice_source_study_ids": 504,
+  "checksums": {
+    "literature\\evidence_database.csv": "7c2d51acc551d8bd1581e5595f2ed871c625c675d5b0ea04d2bc311652b1ecbe",
+    "data\\enrichment\\outputs\\additional_meta_v1\\expanded_public_effect_registry_NOT_FINAL.csv": "3bd12d0711165ee4335b19e7066cd65cdd95e8d50ae36bcd3c0bf6b15b2957bb",
+    "data\\external\\figshare_29817482_rice_ghg\\data_Full.csv": "86a5e916bdd02950f5de64c6055703e3c151ac32c8c5fa6db387849482fa2805"
+  },
+  "warning": "Different layers and datasets overlap; row counts cannot be summed into independent studies"
+}

@@ -1,0 +1,8 @@
+dataset,rows,source_dois,title_keys,source_study_ids,outcomes,repeated_view_true,source_exact_duplicate_true,possible_repeated_numeric_record_true,approved_for_main_analysis_true,core_crop_explicit_true
+BiocharDS,4682,10.6084/m9.figshare.c.6622375.v1,337,338,CH4|CO2|GHGI|GWP|N2O|SOC|yield,0,0,0,0,0
+Figshare_27932253,930,10.6084/m9.figshare.27932253.v2,120,120,MBC|SOC|TN|yield,0,0,0,0,0
+Figshare_28703030,1121,10.6084/m9.figshare.28703030.v5,0,52,N2O|NH3|N_leaching,0,0,0,0,0
+Figshare_33165164,3376,10.6084/m9.figshare.33165164.v2,122,122,CH4|CO2|GHGI|GWP|N2O|SOC|SOC_stock|yield|yield_absolute_stability|yield_relative_stability,0,0,0,0,2360
+Figshare_33684502,1308,10.6084/m9.figshare.33684502.v1,0,211,CH4|N2O|SOC|available_K|available_P,0,0,0,0,0
+Li2022_SOC,830,10.6084/m9.figshare.17060144,132,132,AG|BG|BX|CBH|C_acquiring_enzymes|DOC|EOC|LFOC|MBC|POC|SOC,0,0,822,0,0
+Lu2020,153,10.1371/journal.pone.0231740.s002,35,39,yield,0,0,0,0,0

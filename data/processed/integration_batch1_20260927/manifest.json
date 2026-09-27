@@ -1,0 +1,52 @@
+{
+  "batch": "20260927_batch1",
+  "input_sha256": {
+    "data\\enrichment\\outputs\\additional_meta_v1\\expanded_public_effect_registry_NOT_FINAL.csv": "3bd12d0711165ee4335b19e7066cd65cdd95e8d50ae36bcd3c0bf6b15b2957bb",
+    "literature\\evidence_database.csv": "7c2d51acc551d8bd1581e5595f2ed871c625c675d5b0ea04d2bc311652b1ecbe",
+    "data\\enrichment\\raw\\public_effect_sources_v1\\lu2020_yield_WUE.xlsx": "edfa10e996157e3b5e09ce4b5983dd019fe93ba65a99a71cc19250621d3adadf",
+    "data\\enrichment\\raw\\public_effect_sources_v1\\lu2020_source_references.docx": "a38f7add410ea95da0fe2a2d1625ffe8eb8d4abf0c0d7a2dc621b25e760831b2"
+  },
+  "source_candidate_records": 12400,
+  "primary_master_records": 553,
+  "integrated_records": 12953,
+  "primary_strict_records": 437,
+  "primary_trial_keys": 33,
+  "new_primary_trials": 0,
+  "paper_identity_clusters": 929,
+  "paper_identity_clusters_are_not_independent_trials": true,
+  "lu_source_records": 153,
+  "lu_reference_resolved_rows": 138,
+  "lu_source_imputed_rows": 108,
+  "lu_secondary_descriptive_records": 62,
+  "lu_secondary_descriptive_paper_clusters": 15,
+  "lu_numeric_consistent_rows": 153,
+  "lu_variance_consistent_rows": 153,
+  "cross_source_overlap_paper_clusters": 96,
+  "secondary_rows_on_existing_primary_papers": 224,
+  "source_numeric_conflicts": 17,
+  "li2022_repeated_worksheet_views": 0,
+  "li2022_current_numeric_duplicate_flags": 256,
+  "li2022_legacy_numeric_duplicate_flags": 822,
+  "canonical_records_after_within_source_view_dedup": 12953,
+  "limits": [
+    "Primary master unchanged",
+    "Secondary rows are not independent trials",
+    "No pooled global estimate",
+    "Lu source has 153 rows vs reported 146 yield comparisons; unresolved"
+  ],
+  "output_csv_sha256": {
+    "effects_integrated.csv": "696e6edc135bcde2d3877305b9a7615692ec9728b41846e1f4cb194683b6d18e",
+    "integration_coverage.csv": "071ba1b75a76d27ea567c83950c567663b7a8f0d6f482ad4bc55f76e62ab14e9",
+    "li2022_view_dedup_audit.csv": "0eaf74503ce594fbdc94b3e793b59e0ade5e5f1a3bf600833dc0772349a297b0",
+    "lu2020_paper_descriptive.csv": "211ec057b5b7d25de6a2e2502353c026719a4fd15050c1d8152fd8cc52608d30",
+    "lu2020_secondary_coverage.csv": "35df1057f0d63e9b8819610b693b5ad2f3a932fc5c4ddd383cb184e288629acb",
+    "lu2020_secondary_descriptive.csv": "f54a26d4658d1a8be6bcc7384e8251a42962f1d84b711d23df9a8d015ed6c022",
+    "lu2020_source_audit.csv": "c352aa3de9d900284888d3180ec9e6c50ba2bc9999478d164ab19534aa383a3d",
+    "metadata_corrections.csv": "17dd1828d8ba98cb51c79fd1b88fc3b2d48c6fcfe3233237a01c9258c8c666fa",
+    "papers.csv": "11777fa31bbb510a82c86775472cbd5755b2ce62db1463a30a6c1bfb49884f4c",
+    "provenance.csv": "cddf131871a51e9ccd6e68c4022318639e6ba588337d6292cae9047cfbbb1145",
+    "sources.csv": "f88d483077470af7bd49f352974c67dc0302be7dd6c1df2e8d3888f5ab95ad22",
+    "source_observations.csv": "9ac853daa7ce43914fdf06c89219c267307f79ab612117346b33ee2c8a5f5774",
+    "source_paper_aliases.csv": "09b0ff3b8d2286fa4013fa2ad010e131a7271305c2ec8f58456da1ec1fbaf41b"
+  }
+}

@@ -1,0 +1,13 @@
+# Local integrated third-party data: do not publish before source licences and
+# the source-data deposit plan have been checked for the full compilation.
+*.sqlite
+effects_integrated.csv
+papers.csv
+source_paper_aliases.csv
+source_observations.csv
+provenance.csv
+lu2020_source_audit.csv
+lu2020_secondary_descriptive.csv
+lu2020_paper_descriptive.csv
+metadata_corrections.csv
+li2022_view_dedup_audit.csv

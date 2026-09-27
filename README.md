@@ -36,6 +36,18 @@ global-crop-residue-evidence/
 
 ## Status
 
+**2026-09-27: bulk integration batch 1 (separate from primary admission).**
+The [inventory](docs/DATABASE_INVENTORY_AND_SEARCH_20260927.md) distinguishes
+12,400 existing secondary candidates from the 553-row reviewed master.
+The [bulk-integration report](docs/BULK_INTEGRATION_BATCH1_20260927.md) documents
+a local 12,953-record relational database, 96 cross-source paper-identity overlap
+groups, and source-level arithmetic/imputation checks on all 153 Lu2020 yield
+records. A separate 62-row / 15-paper-cluster secondary descriptive subset is
+available locally. **No new primary trial is claimed in this integration batch**;
+the 553/33 primary and 437/26 strict descriptive counts below remain unchanged.
+Run `python scripts/integrate_evidence_batch1.py` with the documented local inputs.
+The full third-party compilation and SQLite stay local pending licence review.
+
 **2026-09-27: primary-source expansion and joint-outcome update completed.**
 The [expansion report](docs/DATA_EXPANSION_20260927.md) records 553 paired effects
 from 33 trial keys (43 new effects, one new independent trial). The descriptive
