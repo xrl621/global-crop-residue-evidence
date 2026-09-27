@@ -36,6 +36,17 @@ global-crop-residue-evidence/
 
 ## Status
 
+**2026-09-27: rice arm integration batch 2 (candidate layer only).**
+The [batch-2 report](docs/BULK_INTEGRATION_BATCH2_RICE_20260927.md) documents
+213 reconstructed contrasts from 39 source StudyIDs, including 25 direct
+return-versus-burning contrasts and 846 positive-mean endpoint records.
+These are not additional independent trials or primary admissions.
+Source-ID collisions, shared controls, missing covariates and prior holds are
+explicit; 20 existing primary-reviewed means are linked separately from raw values.
+The primary 553/33 and strict descriptive 437/26 snapshots remain unchanged.
+Run `python scripts/integrate_rice_pairs_batch2.py` with documented local inputs;
+47 tests pass. Full third-party tables and SQLite stay local pending licence review.
+
 **2026-09-27: bulk integration batch 1 (separate from primary admission).**
 The [inventory](docs/DATABASE_INVENTORY_AND_SEARCH_20260927.md) distinguishes
 12,400 existing secondary candidates from the 553-row reviewed master.

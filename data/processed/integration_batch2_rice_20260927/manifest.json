@@ -1,0 +1,61 @@
+{
+  "source_doi": "10.6084/m9.figshare.29817482.v1",
+  "input_sha256": {
+    "data\\external\\figshare_29817482_rice_ghg\\data_Full.csv": "86a5e916bdd02950f5de64c6055703e3c151ac32c8c5fa6db387849482fa2805",
+    "literature\\evidence_database.csv": "7c2d51acc551d8bd1581e5595f2ed871c625c675d5b0ea04d2bc311652b1ecbe",
+    "data\\external\\figshare_29817482_rice_ghg\\candidate_study_metadata_openalex.csv": "b163bb457cac3d00a3620e3cb75181893227b160bf7be27f413fcbfb745e597a",
+    "data\\external\\figshare_29817482_rice_ghg\\residue_contrast_candidates.csv": "9a78bb35f9fd2035b50aecbbe6da0f47929e44a46b8093403ff71f331e6e5e22",
+    "data\\formal_analysis_v1\\outputs\\validated_staging\\study_117\\study_117_validated_means_held.csv": "2df973e3991a2c5b45c02b1e7b62bc599b2e64a66dac008729d2297e6d2fce13",
+    "data\\formal_analysis_v1\\outputs\\formal_review_ledger.csv": "9a42ece33fe3bd71062f1471b684a4bf002b50f78615e87c358dc955c7485c93",
+    "data\\formal_analysis_v1\\outputs\\validated_staging\\study_33\\FULLTEXT_REVIEW.md": "e6fb9802d7866a4ab5e091f8d3142248928ffdb58410d87d2df6154e42a2aee9",
+    "data\\formal_analysis_v1\\outputs\\validated_staging\\study_212\\FULLTEXT_REVIEW.md": "cc7c8b4a384fa730352200d3d69b307c33d11d0ef6ad4967cf0f31eec43ab7df"
+  },
+  "raw_observations": 5322,
+  "source_study_ids": 504,
+  "unique_source_ES_IDs": 4535,
+  "source_ID_collision_rows": 1573,
+  "full_row_duplicates": 0,
+  "matched_pairs": 213,
+  "pair_source_study_ids": 39,
+  "endpoint_audit_records": 1065,
+  "positive_mean_effect_candidates": 846,
+  "complete_recorded_metadata_pairs": 2,
+  "invalid_coordinate_pairs": 0,
+  "primary_overlap_pairs": 49,
+  "non_primary_source_study_ids": 30,
+  "no_linked_prior_review_non_primary_source_ids": 27,
+  "prior_review_linked_pairs": 56,
+  "primary_mean_overlay_records": 20,
+  "legacy_candidate_pairs": 137,
+  "legacy_ambiguous_id_pairs": 58,
+  "contrast_pair_counts": {
+    "direct_return_vs_removal": 167,
+    "direct_return_vs_burning": 25,
+    "burning_vs_removal": 21
+  },
+  "positive_endpoint_counts": {
+    "yield": 213,
+    "CH4": 209,
+    "N2O": 144,
+    "GWP": 140,
+    "GHGI": 140
+  },
+  "joint_yield_CH4_pairs": 209,
+  "joint_yield_N2O_pairs": 144,
+  "new_primary_trials": 0,
+  "primary_master_unchanged": true,
+  "raw_source_unchanged": true,
+  "final_analysis_admitted": false,
+  "missing_values_are_not_evidence_of_equal_management": true,
+  "all_input_files_unchanged": true,
+  "output_csv_sha256": {
+    "raw_observations.csv": "bc075e1d1430121ba0e774da3d628e5f2159df0f4a282852ce365a0aef04b159",
+    "pairs.csv": "e49b16004ca9caa0252e6ec98419ff2d285898fb0062b1eb1630fe9d76924129",
+    "effects.csv": "1d485fc659d202a87c6f457d9e8d363da03eb033e6b5cd1b90340e1bcc7b0ef6",
+    "pairing_rejections.csv": "d1ffaf843b73394e3f29d95ca3cd4a55cdc16eeb96a149efe0f16852ab1a115f",
+    "coverage.csv": "f8b2878a3ec99f791e0e6962a12de47682795e6795e31625c0a54036dae9381a",
+    "legacy_pair_id_audit.csv": "df9244e70b7da40cf9ebbdc16156f1c5e34155061f51014ad8e48b54f205e3d0",
+    "primary_review_frontier.csv": "67c9c535d1a369f8b686980973cf1bc153edeb4340a9c4189d8a2f4933ff1da4",
+    "joint_endpoint_candidates.csv": "e27e793779e66ea8ec358b4b6a32baa7b3d4872a81196a7e27480080d745b590"
+  }
+}

@@ -1,0 +1,9 @@
+# Full third-party arm tables and reconstructed contrasts stay local pending
+# source licence / publication-deposit review; scripts and summaries are tracked.
+*.sqlite
+raw_observations.csv
+pairs.csv
+effects.csv
+pairing_rejections.csv
+legacy_pair_id_audit.csv
+joint_endpoint_candidates.csv
