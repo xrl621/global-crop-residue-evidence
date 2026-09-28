@@ -36,6 +36,16 @@ global-crop-residue-evidence/
 
 ## Status
 
+**2026-09-28 global resource and management update.** The
+[three-crop theoretical residue baseline](docs/OMD2025_RESOURCE_GEOGRAPHY_20260928.md)
+uses OMD country-year data and MapSPAM production weights. The
+[cereal-management analysis](docs/SMERALD2023_MANAGEMENT_20260928.md) now
+recalculates the 1997–2021 Smerald default NetCDF and its modelled burning,
+feed/bedding, other off-field and left-on-field fractions. The two layers have
+different crop scopes and must not be silently combined into crop-specific
+burning estimates. Source hashes, scripts, summary tables, and aligned figures
+are included; original third-party gridded files remain local.
+
 **2026-09-28 global-patterns exploratory release.** The [global-patterns
 report](docs/GLOBAL_PATTERNS_20260928.md) adds a reproducible crop–climate–season
 context analysis and a separate, paper-balanced reanalysis of a public

@@ -1,0 +1,29 @@
+{
+  "dataset_doi": "10.35097/989",
+  "paper_doi": "10.1038/s41597-023-02587-0",
+  "source_file_md5": "f860dd189990126277d5911024347877",
+  "source_file_bytes": 31819861,
+  "units": "Mg/year, equal to metric tonnes/year",
+  "scope": "all cereals combined, not crop-specific",
+  "year_range": [
+    1997,
+    2021
+  ],
+  "active_cells_2020": 33160,
+  "assigned_cells_2020": 33160,
+  "assigned_production_fraction_2020": 0.9999999999999999,
+  "assigned_burnt_fraction_2020": 1.0,
+  "unassigned_cells_2020": 0,
+  "country_assignment_methods": {
+    "centre_within": 31296,
+    "nearest_within_150km": 1864
+  },
+  "source_license_conflict": "RADAR landing page says CC BY 4.0; embedded NetCDF global attribute says CC BY-SA 4.0. Preserve both and seek clarification before redistributing raw file.",
+  "limitations": [
+    "Management quantities are modelled, not direct observed burn/return amounts.",
+    "The default mean dataset combines input-source assumptions; 18 alternatives are not yet analysed.",
+    "Leaving residues on field is not equivalent to deliberate incorporation or measured SOC gain.",
+    "Country assignment uses Natural Earth polygons and a 150 km coastal nearest fallback.",
+    "The 2020 Köppen stratum is a 1991-2020 climatology, not 2020 weather."
+  ]
+}
