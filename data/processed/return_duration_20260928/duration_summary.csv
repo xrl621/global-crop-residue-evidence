@@ -1,0 +1,6 @@
+duration_bin,papers,comparisons,median_duration_years,asia_papers,maize_papers,rice_papers,wheat_papers,soybean_papers,both_positive,yield_only_positive,soc_only_positive,neither_positive,yield_median_percent,yield_bootstrap_lo_percent,yield_bootstrap_hi_percent,soc_median_percent,soc_bootstrap_lo_percent,soc_bootstrap_hi_percent
+1–2,68,370,2.000000,60,30,27,27,1,54,1,10,3,5.819389,4.040027,6.884587,7.279882,4.686851,8.870198
+>2–5,70,439,4.000000,58,37,22,33,2,53,5,9,3,7.222190,5.306338,9.755638,7.973798,5.180540,10.605534
+>5–10,39,237,7.000000,36,23,10,21,4,34,1,2,2,11.817435,9.533608,15.384615,10.153710,8.096591,19.359331
+>10–20,28,91,15.250000,24,11,11,15,1,22,0,6,0,11.458500,4.533237,22.297054,13.865367,9.669339,17.780248
+>20,13,48,25.000000,12,8,1,11,4,12,0,0,1,9.933552,5.309960,20.550961,17.814586,10.692415,25.806452

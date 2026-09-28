@@ -1,0 +1,23 @@
+{
+  "source_sha256": "5a08a8664b1e51088ac9e43eecc4c7e6821378dd99984dfe58d6dbc89e1a27de",
+  "matplotlib": "3.11.2",
+  "palette": [
+    "#f4cee1",
+    "#c5d9df",
+    "#e16db7",
+    "#908ebc",
+    "#af88bb",
+    "#dedbee",
+    "#f07590",
+    "#dfb9d5",
+    "#b099b5",
+    "#5394c3",
+    "#b8a89f"
+  ],
+  "width_mm": 183,
+  "height_mm": 92,
+  "panel_letters": false,
+  "split": "crop the aligned assembled canvas; PNG panels retain physical sizing",
+  "interval": "paper-level bootstrap percentile interval, 4000 resamples",
+  "n": "unique exact publication titles, not independent field trials"
+}

@@ -1,0 +1,29 @@
+{
+  "source": "data\\processed\\encarnation2026_residue_reanalysis\\selected_comparisons.csv",
+  "source_sha256": "435102f76948d3b93bc2221a62dc7257d863432be13996c110407d7f89d148b4",
+  "selected_comparisons": 1185,
+  "paper_titles": 218,
+  "papers_with_multiple_duration_values": 77,
+  "duration_assignment": "median Length_Year within exact Title",
+  "paper_response": "median log treatment/control ratio within exact Title",
+  "crop_counts": "non-exclusive paper membership; one paper can report multiple crops",
+  "bins_years": {
+    "1–2": "(0,2]",
+    ">2–5": "(2,5]",
+    ">5–10": "(5,10]",
+    ">10–20": "(10,20]",
+    ">20": "(20,inf)"
+  },
+  "interval": "percentile interval from 4000 paper-level bootstrap resamples per bin; not a formal meta-analysis CI",
+  "independent_unit": "publication Title; not treatment arm, year, or independent field trial",
+  "inference": "descriptive cross-paper association; duration is confounded with crop, region and management; no causal duration effect",
+  "source_layer": "third-party secondary compilation, not added to curated primary V1",
+  "software": {
+    "pandas": "2.2.2",
+    "numpy": "1.26.4"
+  },
+  "outputs_sha256": {
+    "duration_summary.csv": "5a08a8664b1e51088ac9e43eecc4c7e6821378dd99984dfe58d6dbc89e1a27de",
+    "duration_sensitivity.csv": "5e80883e9261f97ddb13a5e8a988812073bad63de02a3088a5eb13b80fa352ba"
+  }
+}
