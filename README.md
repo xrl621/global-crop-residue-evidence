@@ -36,6 +36,16 @@ global-crop-residue-evidence/
 
 ## Status
 
+**2026-09-28 global-patterns exploratory release.** The [global-patterns
+report](docs/GLOBAL_PATTERNS_20260928.md) adds a reproducible crop–climate–season
+context analysis and a separate, paper-balanced reanalysis of a public
+yield–topsoil-SOC dataset: 1,185 residue-return-versus-removal paired comparisons
+from 242 source-paper IDs. This is **not** an addition to the curated V1 master
+and does not establish global biochar, open-burning, GHG or policy effects.
+Rendered figures are in `figures/global_context_20260928/` and
+`figures/encarnation2026_residue_reanalysis/`.
+
+
 **2026-09-28 V1 analysis freeze — no further rolling database intake in this release.**
 The [V1 analysis report](docs/ANALYSIS_V1_FREEZE_20260928.md) reconciles
 607 reviewed effects / 34 trial keys, 485 strict effects / 27 keys, and

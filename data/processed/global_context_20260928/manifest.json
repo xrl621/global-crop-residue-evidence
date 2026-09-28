@@ -1,0 +1,20 @@
+{
+  "analysis": "global crop distribution, climate and maize calendar; no treatment-effect extrapolation",
+  "grid_rows": 85493,
+  "global_three_crop_harvested_area_ha": 581131524.181855,
+  "strict_effects": 485,
+  "strict_trial_keys": 27,
+  "maize_calendar_coverage_fraction": 0.9996492671857291,
+  "input_sha256": {
+    "data\\enrichment\\outputs\\mapspam2020_crop_system_koppen_0p5deg.csv.gz": "75fee9532a6544068731e9343a26d9fd35350c6ff9980aec9c83c602641878e9",
+    "data\\enrichment\\outputs\\mapspam_ggcmi_season_windows_0p5deg.csv.gz": "4cef861c06895863621765352ac6a96cbca97aba958c6841bd83aba93cf62f17",
+    "data\\enrichment\\outputs\\country_crop_spatial_policy_frame.csv": "a9ec1096751dc8acd06bb9ffadb1f72eb30716e75d4bc2fa912eb327378dfa92",
+    "data\\processed\\stage_20260928\\screened_effects.csv": "53c6b4afd4d4bde141ccbe93c9cfa0d17e4eb5dc3d9eb14bc278bcccf4be8acb"
+  },
+  "limitations": [
+    "Harvested area is not residue mass, managed area, or independent physical land area.",
+    "Country-with-trial coverage is an upper bound on site-level effect transportability.",
+    "GGCMI maturity day is a static multi-year modelled calendar, not annual observed harvest.",
+    "Rice dual seasons and wheat seasonal alternatives were not summed."
+  ]
+}

@@ -1,0 +1,21 @@
+continent,crop_code,harvested_area_ha_total,crop
+Africa,maiz,41456711.745255,Maize
+Africa,rice,15484251.323183011,Rice
+Africa,whea,9757039.101610243,Wheat
+Asia,maiz,65855723.19172559,Maize
+Asia,rice,140916887.01205796,Rice
+Asia,whea,99735268.11783798,Wheat
+Europe,maiz,19234674.20446643,Maize
+Europe,rice,742448.8000723779,Rice
+Europe,whea,62312662.76170841,Wheat
+North America,maiz,44264185.4355731,Maize
+North America,rice,1677286.5512829344,Rice
+North America,whea,25226261.640395455,Wheat
+Oceania,maiz,69611.3997423884,Maize
+Oceania,rice,23331.1999446121,Rice
+Oceania,whea,11014423.899559394,Wheat
+Seven seas (open ocean),maiz,94.899999887,Maize
+Seven seas (open ocean),rice,1.9000000279,Rice
+South America,maiz,29222888.396482516,Maize
+South America,rice,4079901.8988369945,Rice
+South America,whea,10057870.702120595,Wheat

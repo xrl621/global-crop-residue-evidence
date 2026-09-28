@@ -1,0 +1,4 @@
+crop_code,crop,global_harvested_area_ha,country_with_trial_area_ha,country_with_trial_area_share,outside_trial_country_area_share,strict_trial_keys,strict_trial_countries
+maiz,Maize,200103889.27324492,41809728.89191156,0.2089401112779959,0.7910598887220042,2,China
+rice,Rice,162924108.68537793,84563872.3081908,0.519038422186441,0.48096157781355897,17,China|India|Nepal|Vietnam
+whea,Wheat,218103526.2232321,63126403.50997768,0.28943320909615605,0.710566790903844,8,China|India|Pakistan

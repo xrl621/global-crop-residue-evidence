@@ -1,0 +1,13 @@
+agricultural management,continent,effect_rows,raw_study_labels,raw_title_strings,row_share_within_management
+Biochar,Africa,4,1,1,0.0053475935828877
+Biochar,Asia,719,105,109,0.9612299465240641
+Biochar,Europe,2,1,1,0.00267379679144385
+Biochar,North America,3,2,2,0.004010695187165776
+Biochar,Oceania,2,1,1,0.00267379679144385
+Biochar,unassigned,18,5,5,0.02406417112299465
+Straw return,Africa,9,2,2,0.005940594059405941
+Straw return,Asia,1482,244,260,0.9782178217821782
+Straw return,Europe,4,1,1,0.0026402640264026403
+Straw return,North America,6,3,3,0.0039603960396039604
+Straw return,South America,2,1,1,0.0013201320132013201
+Straw return,unassigned,12,3,4,0.007920792079207921

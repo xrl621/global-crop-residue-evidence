@@ -22,6 +22,11 @@ venv/
 data/raw/*
 !data/raw/.gitkeep
 
+# Third-party record-level rows and paper-level derivatives stay local; only
+# aggregate summaries and provenance manifests may be tracked.
+data/processed/encarnation2026_residue_reanalysis/selected_comparisons.csv
+data/processed/encarnation2026_residue_reanalysis/paper_medians_return_vs_removal.csv
+
 # Generated outputs
 outputs/*
 !outputs/.gitkeep

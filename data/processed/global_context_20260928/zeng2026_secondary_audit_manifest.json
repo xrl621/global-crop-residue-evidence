@@ -1,0 +1,24 @@
+{
+  "source": "Zeng et al. 2026, Resources Conservation and Recycling, DOI 10.1016/j.resconrec.2025.108703",
+  "source_repository": "https://github.com/Zengjia1998/Yield-N2O-meta",
+  "workbook_sha256": "a2d36c285f12773272bd8676550fbf39201e076314492d7bc3d64ba228a81ab4",
+  "workbook_rows": 6678,
+  "subset": {
+    "Biochar": {
+      "effect_rows": 748,
+      "raw_study_labels_not_independent_trial_count": 113,
+      "raw_keys_with_multiple_title_strings": 4,
+      "raw_keys_with_multiple_coordinates": 28,
+      "unassigned_coordinate_rows": 18
+    },
+    "Straw return": {
+      "effect_rows": 1515,
+      "raw_study_labels_not_independent_trial_count": 254,
+      "raw_keys_with_multiple_title_strings": 14,
+      "raw_keys_with_multiple_coordinates": 30,
+      "unassigned_coordinate_rows": 12
+    }
+  },
+  "decision": "Secondary geographic audit only. Do not append to reviewed 607-effect master: original comparator, overlapping papers, source identity and independent experimental units are not reconciled.",
+  "license_note": "No repository license observed; do not redistribute the raw workbook in this project."
+}

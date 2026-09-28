@@ -1,0 +1,51 @@
+{
+  "source_url": "https://github.com/davidencarnation/sustainable_ag_SOC_yield_meta_analysis",
+  "source_sha256": "1b8c94f52f3300d2a7fa77a01c46226fab9862d9c1a1ba67459d5bff075687b3",
+  "source_rows": 3051,
+  "source_papers": 510,
+  "pre_validity_residue_rows": 1280,
+  "post_validity_residue_rows": 1279,
+  "return_vs_removal_rows": 1185,
+  "return_vs_removal_papers": 242,
+  "implausible_ratio_rows_omitted_sensitivity": 8,
+  "plausible_sensitivity_papers": 241,
+  "plausible_sensitivity_summary": [
+    {
+      "dimension": "Scope",
+      "group": "Residue return vs removal",
+      "outcome": "Yield",
+      "papers": 241,
+      "comparisons": 1177,
+      "median_pct": 7.582136120690995,
+      "bootstrap_95_lo_pct": 6.2304166230453255,
+      "bootstrap_95_hi_pct": 9.446113308140596,
+      "paper_positive_fraction": 0.8340248962655602
+    },
+    {
+      "dimension": "Scope",
+      "group": "Residue return vs removal",
+      "outcome": "Topsoil SOC",
+      "papers": 241,
+      "comparisons": 1177,
+      "median_pct": 9.265636712492974,
+      "bootstrap_95_lo_pct": 8.059572184712291,
+      "bootstrap_95_hi_pct": 10.141891906798302,
+      "paper_positive_fraction": 0.9253112033195021
+    }
+  ],
+  "joint_study_median_signs": {
+    "papers": 242,
+    "positive_yield_and_soc_papers": 193,
+    "negative_yield_positive_soc_papers": 28,
+    "positive_yield_negative_soc_papers": 9,
+    "negative_yield_and_soc_papers": 9
+  },
+  "method": "Median log treatment/control ratio within Study_ID, then median across papers; 4000 paper-resampling bootstrap draws, no inverse-variance weighting.",
+  "limitations": [
+    "A Study_ID is a source paper, not necessarily an independent field site or trial.",
+    "The source is a secondary curated dataset; primary paper values have not all been rechecked.",
+    "Region and climate contrasts are descriptive, confounded and unevenly supported.",
+    "Only crop-residue retention/incorporation is covered; no biochar or N2O outcome here.",
+    "Source authors report cleaned data; some measurement uncertainties may be imputed."
+  ]
+}
