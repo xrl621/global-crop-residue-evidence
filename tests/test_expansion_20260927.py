@@ -24,11 +24,11 @@ class ExpansionTests(unittest.TestCase):
 
     def test_increment_is_not_pseudoreplication(self):
         d = self.data
-        self.assertEqual((len(d), d.study_id.nunique(), d.effect_id.nunique()), (553,33,553))
-        self.assertEqual((len(self.selected),self.selected.study_id.nunique()), (437,26))
+        self.assertEqual((len(d), d.study_id.nunique(), d.effect_id.nunique()), (607,34,607))
+        self.assertEqual((len(self.selected),self.selected.study_id.nunique()), (485,27))
         old = pd.read_csv(ROOT / "data/processed/stage_20260926/row_audit.csv")
-        self.assertEqual(set(d.study_id)-set(old.study_id), {"sun_zhuanghang_2012_2016"})
-        self.assertEqual(len(set(d.effect_id)-set(old.effect_id)),43)
+        self.assertEqual(set(d.study_id)-set(old.study_id), {"sun_zhuanghang_2012_2016", "xiong_moling_2008_2011"})
+        self.assertEqual(len(set(d.effect_id)-set(old.effect_id)),97)
 
     def test_old_numeric_measurements_unchanged(self):
         old = pd.read_csv(ROOT / "data/processed/stage_20260926/row_audit.csv").set_index("effect_id")

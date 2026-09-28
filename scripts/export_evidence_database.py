@@ -25,6 +25,7 @@ PRIMARY_ADDENDA = [
     ROOT / "literature/primary_extractions/du2024_yield_soc_gwp_ghgi.csv",
     ROOT / "literature/primary_extractions/nayak2022_yield.csv",
     ROOT / "literature/primary_extractions/jijnasa2025_yield_soc.csv",
+    ROOT / "literature/primary_extractions/xiong2015_rice_season_table2.csv",
 ]
 
 FIELDS = [
@@ -377,8 +378,30 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     if not effect_id or value(row, "pathway") not in PATHWAYS:
         raise ValueError(f"Invalid primary addendum identity/pathway: {effect_id}")
     study_id = value(row, "study_id")
-    if study_id not in {"rice_primary_53", "panneerselvam_cuttack_2021_2022", "huang_shangzhuang_2006_2013", "sharma_ludhiana_2011_2018", "du_dingxi_2016_2022", "nayak_bhubaneswar_2020_2021", "jijnasa_bhubaneswar_2022_2024"}:
+    if study_id not in {"rice_primary_53", "panneerselvam_cuttack_2021_2022", "huang_shangzhuang_2006_2013", "sharma_ludhiana_2011_2018", "du_dingxi_2016_2022", "nayak_bhubaneswar_2020_2021", "jijnasa_bhubaneswar_2022_2024", "xiong_moling_2008_2011"}:
         raise ValueError(f"Primary addendum study needs explicit review: {effect_id}")
+    if study_id == "xiong_moling_2008_2011":
+        system = value(row, "treatment_arm").split("-")[0]
+        year = value(row, "experiment_year")
+        season = value(row, "season")
+        outcome = value(row, "outcome")
+        expected_unit = {"CH4": "kg CH4 ha-1 rice-season-1", "N2O": "kg N2O-N ha-1 rice-season-1", "yield": "t rice grain ha-1"}.get(outcome)
+        if not (
+            value(row, "paper_doi") == "10.1038/srep17774"
+            and value(row, "pathway") == "direct_return"
+            and value(row, "crop_core") == "rice"
+            and year in {"2009", "2010", "2011"}
+            and (system, season) in {("UR", "single_rice"), ("DR", "early_rice"), ("DR", "late_rice")}
+            and value(row, "treatment_arm") in {f"{system}-S1", f"{system}-S2"}
+            and value(row, "control_arm") == f"{system}-S0"
+            and value(row, "effect_id") == f"xiong_{system}_{year}_{season}_{value(row, 'treatment_arm').split('-')[1]}_{outcome}"
+            and value(row, "shared_control_group") == f"xiong_{system}_{year}_{season}_S0_{outcome}"
+            and value(row, "source_locator") == f"Table 2, {int(year)-1}–{year} annual cycle, {season}"
+            and value(row, "outcome_unit") == expected_unit
+            and value(row, "nitrogen_rate") == ("250 kg N ha-1" if system == "UR" else "200 kg N ha-1")
+            and value(row, "quality_flags") == "straw_feedstock_species_unreported"
+        ):
+            raise ValueError(f"Xiong exact Table 2 within-system signature changed: {effect_id}")
     if study_id == "jijnasa_bhubaneswar_2022_2024":
         expected = {
             ("yield", "Kharif_2022", "open_burning"): ("4.688", "4.541", "0.1085"),
@@ -513,7 +536,7 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     uses_sd = bool(value(row, "treatment_sd") or value(row, "control_sd"))
     if uses_se == uses_sd:
         raise ValueError(f"Primary addendum must report either SE or SD: {effect_id}")
-    if (study_id == "panneerselvam_cuttack_2021_2022") != uses_sd:
+    if (study_id in {"panneerselvam_cuttack_2021_2022", "xiong_moling_2008_2011"}) != uses_sd:
         raise ValueError(f"Primary paper uncertainty type changed: {effect_id}")
     if treatment_n != 3 or control_n != 3:
         raise ValueError(f"Primary paper field replicate count changed: {effect_id}")
@@ -562,6 +585,9 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
     elif study_id == "jijnasa_bhubaneswar_2022_2024":
         decision = "ADMIT_MATCHED_RESIDUE_SUBPLOT_MARGINAL_EFFECT"
         dependence = "One randomized split-plot trial with three blocks across two years; yield and SOC appear in separate papers; seasons/outcomes/three pathways share S1 within trial"
+    elif study_id == "xiong_moling_2008_2011":
+        decision = "ADMIT_PRIMARY_EXACT_TABLE2_STRAW_VS_ZERO_SAME_SYSTEM_AND_SEASON"
+        dependence = "One fixed three-year randomized-block field trial; cluster years, seasons, two straw doses, outcomes and shared S0 controls by study_id"
     else:
         decision = "ADMIT_MATCHED_N_STRAW_INCORPORATION_VS_NO_STRAW"
         dependence = "One 2016-established split-plot trial; cluster 2021/2022 years, N strata and yield/SOC/GWP/GHGI outcomes by study_id"
@@ -584,7 +610,7 @@ def project_primary_addendum(row: dict[str, str]) -> dict[str, str]:
         "extraction_method": "numeric table transcription",
     })
     if max(treatment_se / treatment_mean, control_se / control_mean) > 0.5:
-        result["quality_flags"] = "large_relative_se_lnrr_delta_approx"
+        result["quality_flags"] = ";".join(filter(None, [result["quality_flags"], "large_relative_se_lnrr_delta_approx"]))
     if study_id == "sharma_ludhiana_2011_2018":
         result["variance_provenance"] = "primary Tables 2-3 pooled seven-year mean +/- SE; three field replicates; pooled SE denominator unspecified"
         result["quality_flags"] = ";".join(filter(None, [result["quality_flags"], "pooled_se_denominator_ambiguous"]))

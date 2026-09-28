@@ -35,8 +35,11 @@ class IntegrationTests(unittest.TestCase):
         r.update(treatment_mean=110.,treatment_n=3.5)
         self.assertTrue(math.isnan(mod.numeric_audit(r)[1]))
 
-    def test_input_master_not_changed(self):
-        self.assertEqual(mod.sha(mod.MASTER),'7c2d51acc551d8bd1581e5595f2ed871c625c675d5b0ea04d2bc311652b1ecbe')
+    def test_batch1_input_snapshot_remains_pinned(self):
+        # The primary master is append-only; batch 1 remains a frozen 2026-09-27 snapshot.
+        manifest=json.loads((ROOT/'data/processed/stage_20260927/manifest.json').read_text(encoding='utf-8'))
+        self.assertEqual(manifest['sha256'],'7c2d51acc551d8bd1581e5595f2ed871c625c675d5b0ea04d2bc311652b1ecbe')
+        self.assertEqual((manifest['all_rows'],manifest['all_trials']),(553,33))
 
     @unittest.skipUnless((mod.OUT/'evidence_integrated.sqlite').exists(),'Run local integration with documented third-party inputs first')
     def test_all_records_retained_and_tiers_separate(self):

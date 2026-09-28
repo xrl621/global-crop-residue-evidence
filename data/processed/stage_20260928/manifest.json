@@ -1,0 +1,46 @@
+{
+  "source": "literature/evidence_database.csv",
+  "sha256": "417e6682ccea4279a760a8df830a04ce56550e08a837affbae5e6f9f45277246",
+  "all_rows": 607,
+  "all_trials": 34,
+  "core_rows": 485,
+  "descriptive_rows": 485,
+  "descriptive_trials": 27,
+  "source_screen_excluded": 122,
+  "identity_excluded_after_screen": 0,
+  "duplicate_endpoint_pairing_exclusions": {
+    "SOC": [
+      "wei_2015_2008_H_SOC_0_20cm",
+      "wei_2015_2008_H_SOC_20_40cm",
+      "wei_2015_2008_L_SOC_0_20cm",
+      "wei_2015_2008_L_SOC_20_40cm",
+      "wei_2015_2008_M_SOC_0_20cm",
+      "wei_2015_2008_M_SOC_20_40cm",
+      "wei_2015_2009_H_SOC_0_20cm",
+      "wei_2015_2009_H_SOC_20_40cm",
+      "wei_2015_2009_L_SOC_0_20cm",
+      "wei_2015_2009_L_SOC_20_40cm",
+      "wei_2015_2009_M_SOC_0_20cm",
+      "wei_2015_2009_M_SOC_20_40cm",
+      "wei_2015_2010_H_SOC_0_20cm",
+      "wei_2015_2010_H_SOC_20_40cm",
+      "wei_2015_2010_L_SOC_0_20cm",
+      "wei_2015_2010_L_SOC_20_40cm",
+      "wei_2015_2010_M_SOC_0_20cm",
+      "wei_2015_2010_M_SOC_20_40cm",
+      "wei_2015_2011_H_SOC_0_20cm",
+      "wei_2015_2011_H_SOC_20_40cm",
+      "wei_2015_2011_L_SOC_0_20cm",
+      "wei_2015_2011_L_SOC_20_40cm",
+      "wei_2015_2011_M_SOC_0_20cm",
+      "wei_2015_2011_M_SOC_20_40cm"
+    ],
+    "GWP": []
+  },
+  "software": {
+    "python": "3.12.7",
+    "pandas": "2.2.2",
+    "numpy": "1.26.4"
+  },
+  "inference": "descriptive only; no CI, significance test, pathway ranking or global extrapolation"
+}

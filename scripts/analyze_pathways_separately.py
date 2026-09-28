@@ -15,8 +15,8 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = ROOT / 'data/processed/stage_20260927/screened_effects.csv'
-DEFAULT_OUT = ROOT / 'data/processed/pathway_endpoint_v1_20260928'
+DEFAULT_SOURCE = ROOT / 'data/processed/stage_20260928/screened_effects.csv'
+DEFAULT_OUT = ROOT / 'data/processed/pathway_endpoint_v2_20260928'
 PATHWAYS = ('direct_return', 'biochar_return', 'open_burning')
 CORE_CROPS = ('rice', 'maize', 'wheat')
 ENDPOINTS = ('yield', 'SOC_concentration', 'CH4', 'N2O',
@@ -157,7 +157,7 @@ def build(source=DEFAULT_SOURCE, out=DEFAULT_OUT):
         separate_boundary_or_crop_effects=len(excluded),
         output_trial_crop_units=len(trial),
         all_effects_accounted_for=len(core)+len(excluded)==len(d),
-        no_new_primary_admissions=True, no_cross_pathway_ranking=True,
+        analysis_adds_no_primary_admissions=True, no_cross_pathway_ranking=True,
         numeric_summary='unweighted_trial_level_descriptive_median_not_meta_estimate',
         secondary_rice_candidates_not_pooled=True,
         software=dict(pandas=pd.__version__, numpy=np.__version__),

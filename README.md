@@ -36,7 +36,23 @@ global-crop-residue-evidence/
 
 ## Status
 
-**2026-09-28: analyze each pathway and endpoint first.**
+**2026-09-28: one primary rice trial admitted after Table 2 audit.**
+The [source audit](docs/XIONG2015_PRIMARY_EXPANSION_20260928.md) adds 54
+paired effects from one three-year field experiment, bringing the reviewed
+master to **607 effects / 34 trial keys**. The updated strict descriptive set
+is **485 / 27**; 48 of the 54 new effects pass the existing screen, while six
+high-relative-error N₂O effects remain traceable but held. The updated
+[pathway–endpoint matrix](data/processed/pathway_endpoint_v2_20260928/pathway_outcome.csv)
+has 472 core effects / 25 trial keys plus 13 separately audited records.
+Two numeric discrepancies in a local secondary rice dataset were resolved
+against the publisher's primary Table 2. This is not a global pooled estimate;
+the straw feedstock species in this trial is unreported. Run
+`python scripts/extract_xiong2015_table2.py`,
+`python scripts/export_evidence_database.py --check`,
+`python scripts/analyze_stage_evidence.py`, and
+`python scripts/analyze_pathways_separately.py` to reproduce the public layer.
+
+**Historical 2026-09-28: analyze each pathway and endpoint first.**
 The [separate pathway–endpoint analysis](docs/PATHWAY_ENDPOINT_ANALYSIS_20260928.md)
 reorganizes the existing 437-effect strict descriptive snapshot into 18
 pathway–endpoint cells and a crop-level evidence grid. It does not require a
@@ -44,7 +60,7 @@ paper to report every outcome or all three technologies. Of 437 effects, 424
 fit the core crop/endpoint table; 13 remain in a separate-boundary audit.
 Trial-level descriptive directions and comparison-support counts are reproducible
 with `python scripts/analyze_pathways_separately.py`; they are not pooled estimates
-or rankings. The primary master remains 553 effects / 33 trial keys. 51 tests pass.
+or rankings. At that snapshot the primary master was 553 effects / 33 trial keys.
 
 **2026-09-27: rice arm integration batch 2 (candidate layer only).**
 The [batch-2 report](docs/BULK_INTEGRATION_BATCH2_RICE_20260927.md) documents
@@ -103,8 +119,8 @@ in the same commit. Older exploration notes remain available for provenance
 but are not automatically current conclusions.
 
 The project includes a compact full-text-reviewed evidence snapshot at
-[`literature/evidence_database.csv`](literature/evidence_database.csv): 553 paired
-effects from 33 trial keys (2026-09-27 snapshot; not all are open-field trials). The row is a treatment–control
+[`literature/evidence_database.csv`](literature/evidence_database.csv): 607 paired
+effects from 34 trial keys (2026-09-28 snapshot; not all are open-field trials). The row is a treatment–control
 effect, **not** an independent study. See the
 [`evidence schema`](docs/evidence_schema.md) for definitions, limitations, and
 the study-level analysis rule. New literature can be logged in

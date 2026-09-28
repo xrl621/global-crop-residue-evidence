@@ -62,8 +62,8 @@ class SeparatePathwayTests(unittest.TestCase):
             self.skipTest('Run pathway analysis first')
         import json
         m=json.loads((out/'manifest.json').read_text(encoding='utf-8'))
-        self.assertEqual((m['strict_input_effects'],m['strict_input_trial_keys']),(437,26))
-        self.assertEqual((m['core_effects'],m['separate_boundary_or_crop_effects']),(424,13))
+        self.assertEqual((m['strict_input_effects'],m['strict_input_trial_keys']),(485,27))
+        self.assertEqual((m['core_effects'],m['separate_boundary_or_crop_effects']),(472,13))
         self.assertTrue(m['all_effects_accounted_for'])
         self.assertTrue(m['no_cross_pathway_ranking'])
 
