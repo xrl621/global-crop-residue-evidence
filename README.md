@@ -51,6 +51,11 @@ the straw feedstock species in this trial is unreported. Run
 `python scripts/export_evidence_database.py --check`,
 `python scripts/analyze_stage_evidence.py`, and
 `python scripts/analyze_pathways_separately.py` to reproduce the public layer.
+Separately, a [Vietnam primary-paper audit](docs/HOANG2019_VIETNAM_DIRECT_COMPARISON_20260928.md)
+extracts 24 within-water-regime direct-return versus burning **mean-only**
+comparisons from one trial. Its arm-level SE/SD is not numerically reported,
+so these comparisons stay outside the 607-effect removal-referenced master and
+outside inverse-variance analysis.
 
 **Historical 2026-09-28: analyze each pathway and endpoint first.**
 The [separate pathway–endpoint analysis](docs/PATHWAY_ENDPOINT_ANALYSIS_20260928.md)
