@@ -1,0 +1,27 @@
+{
+  "omd_input_sha256": "0c95f45530631148f02e0a3906a53a60ceae4c1c18700ae05cc70906f6d0dec6",
+  "grid_source_sha256": "603c945830b1ea61dfe0f822673a738e3f70adac599560eb124d6601186bd2bd",
+  "grid_cells": 33676,
+  "positive_grid_cells": 33457,
+  "mapped_dry_t": 3706019228.819845,
+  "national_total_dry_t": 3706135408.0,
+  "mapped_share": 0.999968651712037,
+  "map": "0.5-degree crop allocation of national OMD residue by MapSPAM production weights; no interpolation",
+  "bar_and_matrix": "crop/continent absolute dry mass and crop-conditional climate shares",
+  "source_layer": "theoretical modeled resource, not collectable or burned residue",
+  "split": "crop final assembled Python canvas without rescaling; no panel letters or figure title",
+  "palette": [
+    "#f4cee1",
+    "#c5d9df",
+    "#e16db7",
+    "#908ebc",
+    "#af88bb",
+    "#dedbee",
+    "#f07590",
+    "#dfb9d5",
+    "#b099b5",
+    "#5394c3",
+    "#b8a89f"
+  ],
+  "matplotlib": "3.11.2"
+}
