@@ -1,0 +1,33 @@
+{
+  "omd_source_doi": "10.5281/zenodo.10450921",
+  "omd_paper_doi": "10.5194/essd-17-369-2025",
+  "mapspam_doi": "10.7910/DVN/SWPENT",
+  "omd_source_sha256": "0c95f45530631148f02e0a3906a53a60ceae4c1c18700ae05cc70906f6d0dec6",
+  "omd_crop_country_year_rows": 2409,
+  "omd_2020_country_crop_rows": 402,
+  "omd_2020_residue_t": 3706135408.0,
+  "allocated_country_crop_groups": 393,
+  "allocated_omd_residue_t": 3706019227.0,
+  "allocated_share_of_omd_residue": 0.999968651712037,
+  "grid_crop_system_rows": 85493,
+  "allocated_grid_crop_system_rows": 85052,
+  "max_national_mass_balance_error": 1.9735290637978792e-16,
+  "mapspam_production_rasters": [
+    {
+      "file": "spam2020-production-irrigated.tif",
+      "sha256": "f4e6e4db46dd4f4d27492fa96977baa4cc62f3f33c1a6d09669947c7312fa8fe"
+    },
+    {
+      "file": "spam2020-production-rainfed.tif",
+      "sha256": "8ccd5fc90fbdacaa1d4edc624c76c985ac54d7b5612b73db452539dfc4ffcb5d"
+    }
+  ],
+  "method": "Allocate OMD 2020 national crop residue dry tonnes over 0.5-degree crop-system cells in proportion to MapSPAM 2020 crop production within each country.",
+  "limitations": [
+    "Grid tonnes are modelled downscaling, not independent observations or measured crop-residue management.",
+    "OMD residue production is theoretical above-ground dry matter, not collectable or burned tonnes.",
+    "OMD and MapSPAM may differ in country definitions and source-statistics vintages; national OMD totals are conserved only for mapped groups.",
+    "The irrigation split is inherited from MapSPAM production, not separately measured by OMD.",
+    "Only maize has a single allocated GGCMI calendar; no rice/wheat residue tonnage is assigned to alternative seasons."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "resource_file_sha256": "aefe64cf82b19968973cc575c52dbcbafae32e921f2c8f77997ec9b22aaeb15e",
+  "literature_file_sha256": "435102f76948d3b93bc2221a62dc7257d863432be13996c110407d7f89d148b4",
+  "scope": "2020 OMD theoretical residue dry mass against unique titles reporting both yield and SOC for crop-residue return vs removal in Encarnation public data",
+  "paper_identity": "Exact source Title, deduplicated within crop and continent",
+  "region_mapping": {
+    "Africa": "Africa",
+    "Asia": "Asia",
+    "Europe": "Europe",
+    "North America": "Americas",
+    "Latin America": "Americas",
+    "Oceania": "Oceania"
+  },
+  "limitations": [
+    "The resource and literature shares are different denominators, not comparable effect sizes.",
+    "Source paper search/selection can bias geographic counts; this is not a formal bibliometric census.",
+    "One paper can contribute to multiple crops; crop paper totals must not be summed as independent papers.",
+    "OMD is modelled theoretical production; it is not burned, returned, or collectible residue.",
+    "No treatment effect is extrapolated by these ratios."
+  ]
+}

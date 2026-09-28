@@ -1,0 +1,16 @@
+continent_omd,crop_code,residue_allocated_t,country_crop_groups
+Africa,maiz,119488682.0,47
+Africa,rice,78157361.0,40
+Africa,whea,43282054.0,31
+Americas,maiz,644396750.0,34
+Americas,rice,50738578.0,26
+Americas,whea,196557421.0,15
+Asia,maiz,416480066.0,42
+Asia,rice,988321822.0,31
+Asia,whea,578203116.0,35
+Europe,maiz,139509134.0,31
+Europe,rice,5433269.0,11
+Europe,whea,417133212.0,37
+Oceania,maiz,533136.0,6
+Oceania,rice,81582.0,4
+Oceania,whea,27703044.0,3
