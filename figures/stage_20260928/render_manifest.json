@@ -1,0 +1,29 @@
+{
+  "matplotlib": "3.11.2",
+  "palette": [
+    "#f4cee1",
+    "#c5d9df",
+    "#e16db7",
+    "#908ebc",
+    "#af88bb",
+    "#dedbee",
+    "#f07590",
+    "#dfb9d5",
+    "#b099b5",
+    "#5394c3",
+    "#b8a89f"
+  ],
+  "input_sha256": {
+    "screened_effects.csv": "53c6b4afd4d4bde141ccbe93c9cfa0d17e4eb5dc3d9eb14bc278bcccf4be8acb",
+    "trial_responses.csv": "523bc0193ccb89788e6096c5e1cffe2aaa7f5954e67de88ae55c3c46e285e72f",
+    "yield_by_crop.csv": "c7cd7332879f596cf39b38ae05e951f27b4af1184f8edebcbe204b36f2fc5702",
+    "joint_outcome_pairs.csv": "fa98a62cfbb0d50312250f975575c5df358f9f1c502e6d1b91e120d5aa0dd85c",
+    "matched_pathway_pairs.csv": "693f4e3237e0d331dc23b343072534116c80f1a0b58f608f178b32e6429bbd6a",
+    "matched_pathway_trials.csv": "df9602d8416e659720e96ca7cd8a003021f62b608137d8a0e7967e4665955d57"
+  },
+  "panel_labels": false,
+  "titles": false,
+  "width_mm": 183,
+  "split_method": "crop final assembled figure without rescaling fonts or data",
+  "statistics": "descriptive; ranges are observed spread, not confidence intervals"
+}

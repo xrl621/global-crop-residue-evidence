@@ -36,6 +36,20 @@ global-crop-residue-evidence/
 
 ## Status
 
+**2026-09-28 V1 analysis freeze — no further rolling database intake in this release.**
+The [V1 analysis report](docs/ANALYSIS_V1_FREEZE_20260928.md) reconciles
+607 reviewed effects / 34 trial keys, 485 strict effects / 27 keys, and
+472 core pathway–endpoint effects / 25 keys. It reports descriptive findings,
+their independent-trial denominators and the limits on global inference.
+The [three aligned figure groups and six split panels](figures/STAGE_20260928_CAPTIONS_AND_QA.md)
+use the same frozen strict dataset. In particular, the yield–soil-GWP panel
+contains 64 paired records from **five** independent trials/papers, not 64
+independent studies; the yield–SOC panel has 33 records from another five
+trials, and the union is eight trials. This release does not claim a global
+pathway ranking, climate effect or policy impact. A new evidence intake
+requires a documented V2 decision addressing specific independent-trial or
+boundary gaps.
+
 **2026-09-28: one primary rice trial admitted after Table 2 audit.**
 The [source audit](docs/XIONG2015_PRIMARY_EXPANSION_20260928.md) adds 54
 paired effects from one three-year field experiment, bringing the reviewed

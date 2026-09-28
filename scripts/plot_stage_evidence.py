@@ -6,6 +6,7 @@ No panel letters, titles, fabricated values, inferential intervals or P values.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -22,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PALETTE = ["#f4cee1", "#c5d9df", "#e16db7", "#908ebc", "#af88bb", "#dedbee",
            "#f07590", "#dfb9d5", "#b099b5", "#5394c3", "#b8a89f"]
 PATHWAYS = ["direct_return", "biochar_return", "open_burning"]
-COLORS = dict(zip(PATHWAYS, [PALETTE[2], PALETTE[9], PALETTE[3]]))
+COLORS = dict(zip(PATHWAYS, [PALETTE[9], PALETTE[2], PALETTE[3]]))
 NAMES = {"direct_return": "Direct return", "biochar_return": "Biochar", "open_burning": "Burning"}
 STUDY_NAMES = {
     "amgain_bhairahawa_2019_2021": "Bhairahawa\n2019–2021",
@@ -156,7 +157,7 @@ def plot_joint(data, output, align):
                     transform=ax.transAxes, clip_on=False)
             ax.text(x + 0.045, y, JOINT_LABELS[study], transform=ax.transAxes,
                     ha="left", va="center", fontsize=6.5)
-        ax.text(0.5, 1.14, f"{frame.study_id.nunique()} trials · {len(frame)} matched records",
+        ax.text(0.5, 1.14, f"{frame.study_id.nunique()} independent trials · {len(frame)} paired records",
                 transform=ax.transAxes, ha="center", fontsize=7, color="#555555")
         ax.margins(x=0.15, y=0.12)
     export(fig, axes, "stage2_joint", output, align)
@@ -197,8 +198,8 @@ def plot_comparisons(data, output, align):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data", type=Path, default=ROOT / "data/processed/stage_20260927")
-    parser.add_argument("--output", type=Path, default=ROOT / "figures/stage_20260927")
+    parser.add_argument("--data", type=Path, default=ROOT / "data/processed/stage_20260928")
+    parser.add_argument("--output", type=Path, default=ROOT / "figures/stage_20260928")
     parser.add_argument("--qa-scripts", type=Path)
     args = parser.parse_args()
     if args.qa_scripts:
@@ -211,8 +212,14 @@ def main():
     args.output.mkdir(parents=True, exist_ok=True)
     for plot in [plot_yield, plot_joint, plot_comparisons]:
         plot(args.data, args.output, require_matplotlib_panel_alignment)
+    source_files = ["screened_effects.csv", "trial_responses.csv", "yield_by_crop.csv",
+                    "joint_outcome_pairs.csv", "matched_pathway_pairs.csv",
+                    "matched_pathway_trials.csv"]
+    input_sha256 = {name: hashlib.sha256((args.data / name).read_bytes()).hexdigest()
+                    for name in source_files}
     (args.output / "render_manifest.json").write_text(json.dumps({
         "matplotlib": matplotlib.__version__, "palette": PALETTE,
+        "input_sha256": input_sha256,
         "panel_labels": False, "titles": False, "width_mm": 183,
         "split_method": "crop final assembled figure without rescaling fonts or data",
         "statistics": "descriptive; ranges are observed spread, not confidence intervals"
