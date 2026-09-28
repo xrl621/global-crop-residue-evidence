@@ -1,0 +1,26 @@
+{
+  "input": "data\\processed\\stage_20260927\\screened_effects.csv",
+  "input_sha256": "7c98e37608b71f10bddcbcd2447cd16217e559a5b52262e1be0abf7de5ef2cc0",
+  "strict_input_effects": 437,
+  "strict_input_trial_keys": 26,
+  "core_effects": 424,
+  "core_trial_keys": 24,
+  "separate_boundary_or_crop_effects": 13,
+  "output_trial_crop_units": 73,
+  "all_effects_accounted_for": true,
+  "no_new_primary_admissions": true,
+  "no_cross_pathway_ranking": true,
+  "numeric_summary": "unweighted_trial_level_descriptive_median_not_meta_estimate",
+  "secondary_rice_candidates_not_pooled": true,
+  "software": {
+    "pandas": "2.2.2",
+    "numpy": "1.26.4"
+  },
+  "output_sha256": {
+    "comparison_support.csv": "78386ad923937f6ea49c0693ff4deea047eb143dc241c8094bc8aaff55887523",
+    "pathway_outcome.csv": "e91f4f8c4e40e081d93d43aae0f0f4580db2b14e89acc27c62335fa140e54ee4",
+    "pathway_outcome_crop_grid.csv": "ea78c66f77d5b2dd4f328de34c95b1024970ceb6f71a3953f4d51c156b436a2e",
+    "separate_boundary_audit.csv": "e0b80fd99bde0087c9dc750e94fcaef93fa108ccb0d739534463a68dc5ee1779",
+    "trial_level.csv": "5cc2e1beddc36661dc39c9b2f2a07e88c83690303a3b4b46d3844a11ca34b6ac"
+  }
+}

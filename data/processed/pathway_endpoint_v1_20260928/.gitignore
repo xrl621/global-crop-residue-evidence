@@ -1,0 +1,3 @@
+# Complete effect-level files remain local; publish summaries, provenance and code.
+trial_level.csv
+separate_boundary_audit.csv

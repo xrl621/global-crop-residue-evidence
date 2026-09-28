@@ -36,6 +36,16 @@ global-crop-residue-evidence/
 
 ## Status
 
+**2026-09-28: analyze each pathway and endpoint first.**
+The [separate pathway–endpoint analysis](docs/PATHWAY_ENDPOINT_ANALYSIS_20260928.md)
+reorganizes the existing 437-effect strict descriptive snapshot into 18
+pathway–endpoint cells and a crop-level evidence grid. It does not require a
+paper to report every outcome or all three technologies. Of 437 effects, 424
+fit the core crop/endpoint table; 13 remain in a separate-boundary audit.
+Trial-level descriptive directions and comparison-support counts are reproducible
+with `python scripts/analyze_pathways_separately.py`; they are not pooled estimates
+or rankings. The primary master remains 553 effects / 33 trial keys. 51 tests pass.
+
 **2026-09-27: rice arm integration batch 2 (candidate layer only).**
 The [batch-2 report](docs/BULK_INTEGRATION_BATCH2_RICE_20260927.md) documents
 213 reconstructed contrasts from 39 source StudyIDs, including 25 direct
