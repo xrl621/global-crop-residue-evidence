@@ -56,6 +56,9 @@ extracts 24 within-water-regime direct-return versus burning **mean-only**
 comparisons from one trial. Its arm-level SE/SD is not numerically reported,
 so these comparisons stay outside the 607-effect removal-referenced master and
 outside inverse-variance analysis.
+The [current candidate disposition overlay](docs/PRIMARY_REVIEW_FRONTIER_20260928.md)
+records source-level promotions, holds and a grass-straw scope exclusion
+without rewriting the frozen September 27 review queue.
 
 **Historical 2026-09-28: analyze each pathway and endpoint first.**
 The [separate pathway–endpoint analysis](docs/PATHWAY_ENDPOINT_ANALYSIS_20260928.md)
