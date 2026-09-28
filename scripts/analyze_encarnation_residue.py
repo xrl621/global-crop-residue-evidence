@@ -25,11 +25,14 @@ COMPARISONS = {
 
 
 def paper_medians(frame: pd.DataFrame, dimension: str | None = None) -> pd.DataFrame:
-    groups = ([dimension] if dimension else []) + ["Study_ID"]
+    # Source Study_ID is not a paper key: some papers have several IDs, while
+    # a few IDs contain row-wise DOI variants. Exact titles are stable here.
+    groups = ([dimension] if dimension else []) + ["Title"]
     return frame.groupby(groups, dropna=False, as_index=False).agg(
         yield_log_ratio=("yield_log_ratio", "median"),
         soc_log_ratio=("soc_log_ratio", "median"),
         observations=("Comparison_ID", "nunique"),
+        study_ids=("Study_ID", "nunique"),
     )
 
 
@@ -81,12 +84,23 @@ def build() -> None:
     ])
 
     retained = s[s.CRR_Comparison.str.startswith("Removed-")].copy()
+    assert retained.Title.notna().all()
     retained["Scope"] = "Residue return vs removal"
-    subsets = [retained, s.assign(Scope=s.Pathway)]
+    subsets = [
+        retained,
+        retained[retained.Region.eq("Asia")].assign(Scope="Asia-only return vs removal"),
+        retained[~retained.Region.eq("Asia")].assign(Scope="Non-Asia return vs removal"),
+        s.assign(Scope=s.Pathway),
+    ]
     summary = pd.concat([summarize(part, "Scope") for part in subsets], ignore_index=True)
     for dim in ["Main_Crop", "Combined_Climate_Class", "Region"]:
         summary = pd.concat([summary, summarize(retained, dim)], ignore_index=True)
     summary.to_csv(OUT / "paper_balanced_summaries.csv", index=False, float_format="%.5f")
+
+    support = (s.groupby(["CRR_Comparison", "Region"], as_index=False)
+               .agg(comparisons=("Comparison_ID", "nunique"),
+                    study_ids=("Study_ID", "nunique"), papers_by_title=("Title", "nunique")))
+    support.to_csv(OUT / "geographic_support.csv", index=False)
 
     p = paper_medians(retained)
     p.to_csv(OUT / "paper_medians_return_vs_removal.csv", index=False, float_format="%.8f")
@@ -102,16 +116,23 @@ def build() -> None:
     manifest = {
         "source_url": "https://github.com/davidencarnation/sustainable_ag_SOC_yield_meta_analysis",
         "source_sha256": hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
-        "source_rows": len(d), "source_papers": int(d.Study_ID.nunique()),
+        "source_rows": len(d), "source_study_ids": int(d.Study_ID.nunique()),
+        "source_distinct_titles": int(d.Title.nunique()),
         "pre_validity_residue_rows": initial, "post_validity_residue_rows": len(s),
-        "return_vs_removal_rows": len(retained), "return_vs_removal_papers": int(retained.Study_ID.nunique()),
+        "return_vs_removal_rows": len(retained),
+        "return_vs_removal_study_ids": int(retained.Study_ID.nunique()),
+        "return_vs_removal_doi_strings": int(retained.DOI.nunique()),
+        "return_vs_removal_papers_by_title": int(retained.Title.nunique()),
+        "burning_study_ids": int(s[s.CRR_Comparison.str.startswith("Burned-")].Study_ID.nunique()),
+        "burning_papers_by_title": int(s[s.CRR_Comparison.str.startswith("Burned-")].Title.nunique()),
         "implausible_ratio_rows_omitted_sensitivity": len(retained) - len(plausible),
-        "plausible_sensitivity_papers": int(plausible.Study_ID.nunique()),
+        "plausible_sensitivity_papers": int(plausible.Title.nunique()),
         "plausible_sensitivity_summary": summarize(plausible.assign(Scope="Residue return vs removal"), "Scope").to_dict(orient="records"),
-        "joint_study_median_signs": joint,
-        "method": "Median log treatment/control ratio within Study_ID, then median across papers; 4000 paper-resampling bootstrap draws, no inverse-variance weighting.",
+        "joint_paper_median_signs": joint,
+        "method": "Median log treatment/control ratio within exact source Title, then median across titles; 4000 paper-resampling bootstrap draws, no inverse-variance weighting.",
         "limitations": [
-            "A Study_ID is a source paper, not necessarily an independent field site or trial.",
+            "Study_ID is not a paper identity: several IDs share one title/DOI and some IDs contain row-wise DOI variants. The conservative paper key is exact Title.",
+            "A paper may contain several independent field sites; title-level aggregation is conservative for precision but is not a trial-level model.",
             "The source is a secondary curated dataset; primary paper values have not all been rechecked.",
             "Region and climate contrasts are descriptive, confounded and unevenly supported.",
             "Only crop-residue retention/incorporation is covered; no biochar or N2O outcome here.",

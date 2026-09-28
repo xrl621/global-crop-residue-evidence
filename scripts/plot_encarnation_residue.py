@@ -92,8 +92,8 @@ def panel(ax, summary: pd.DataFrame, dimension: str, groups: list[str], labels: 
                     markeredgecolor="white", markeredgewidth=0.4, zorder=3)
     ax.axvline(0, color="#999999", linewidth=0.7, zorder=1)
     ax.set_yticks(loc, labels)
-    ax.set_ylim(-0.6, len(groups)-0.4)
-    ax.set_xlim(-2, 40)
+    ax.set_ylim(-0.6, len(groups)-0.1)
+    ax.set_xlim(-7, 45)
     ax.set_xticks([0, 10, 20, 30, 40])
     ax.grid(axis="x", color="#e6e6e6", lw=0.5, zorder=0)
     ax.set_axisbelow(True)
@@ -104,7 +104,7 @@ def panel(ax, summary: pd.DataFrame, dimension: str, groups: list[str], labels: 
     ax.set_xlabel("Change vs residue removal (%)", fontsize=8)
     for i, group in enumerate(groups):
         n = int(d[d.group == group].papers.iloc[0])
-        ax.text(39.7, loc[i] + 0.32, f"{n} papers", ha="right", va="center",
+        ax.text(44.5, loc[i] + 0.42, f"{n} papers", ha="right", va="center",
                 fontsize=6.5, color="#666666")
 
 

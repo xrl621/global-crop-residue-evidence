@@ -1,0 +1,18 @@
+CRR_Comparison,Region,comparisons,study_ids,papers_by_title
+Burned-Incorporated,Africa,4,2,2
+Burned-Incorporated,Asia,32,8,8
+Burned-Incorporated,Europe,2,2,1
+Burned-Incorporated,North America,2,1,1
+Burned-Retained,Africa,10,2,2
+Burned-Retained,Asia,10,4,4
+Burned-Retained,North America,24,4,4
+Burned-Retained,Oceania,10,4,3
+Removed-Incorporated,Africa,23,8,8
+Removed-Incorporated,Asia,689,144,129
+Removed-Incorporated,Europe,28,2,2
+Removed-Incorporated,Latin America,2,1,1
+Removed-Incorporated,North America,4,1,1
+Removed-Retained,Africa,78,14,12
+Removed-Retained,Asia,301,77,73
+Removed-Retained,Europe,8,1,1
+Removed-Retained,North America,52,12,8

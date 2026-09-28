@@ -1,43 +1,47 @@
 dimension,group,outcome,papers,comparisons,median_pct,bootstrap_95_lo_pct,bootstrap_95_hi_pct,paper_positive_fraction
-Scope,Residue return vs removal,Yield,242,1185,7.58221,6.28401,9.47815,0.83471
-Scope,Residue return vs removal,Topsoil SOC,242,1185,9.22115,7.84296,10.09687,0.92562
-Scope,Incorporated vs burned,Yield,13,40,1.23758,-1.77995,3.77974,0.53846
-Scope,Incorporated vs burned,Topsoil SOC,13,40,9.65681,1.19608,12.97879,0.84615
-Scope,Incorporated vs removed,Yield,156,746,7.32391,6.09558,9.51019,0.83974
-Scope,Incorporated vs removed,Topsoil SOC,156,746,9.22115,7.84153,10.57035,0.94231
-Scope,Surface-retained vs burned,Yield,14,54,-0.63776,-7.43355,8.49057,0.42857
-Scope,Surface-retained vs burned,Topsoil SOC,14,54,2.51069,-0.57504,21.76129,0.71429
-Scope,Surface-retained vs removed,Yield,104,439,7.69295,4.82759,11.11551,0.81731
-Scope,Surface-retained vs removed,Topsoil SOC,104,439,8.27472,6.24334,10.41974,0.88462
-Main_Crop,Maize,Yield,117,473,9.53361,7.59804,11.53846,0.87179
-Main_Crop,Maize,Topsoil SOC,117,473,9.37021,7.56279,10.98552,0.93162
-Main_Crop,Rice,Yield,82,295,5.26668,4.27099,6.89561,0.85366
-Main_Crop,Rice,Topsoil SOC,82,295,7.95825,5.34064,10.15371,0.90244
+Scope,Residue return vs removal,Yield,218,1185,7.58221,6.28401,9.49555,0.83486
+Scope,Residue return vs removal,Topsoil SOC,218,1185,9.27696,7.85000,10.15072,0.92661
+Scope,Asia-only return vs removal,Yield,190,990,7.62466,6.17757,9.53931,0.85263
+Scope,Asia-only return vs removal,Topsoil SOC,190,990,9.47707,8.33964,10.75476,0.94737
+Scope,Non-Asia return vs removal,Yield,28,195,7.05590,0.95761,19.48774,0.71429
+Scope,Non-Asia return vs removal,Topsoil SOC,28,195,5.41256,0.60698,7.97856,0.78571
+Scope,Incorporated vs burned,Yield,12,40,0.77429,-3.00654,4.55437,0.58333
+Scope,Incorporated vs burned,Topsoil SOC,12,40,10.05824,0.91083,17.38901,0.83333
+Scope,Incorporated vs removed,Yield,141,746,7.23933,6.04483,9.44611,0.84397
+Scope,Incorporated vs removed,Topsoil SOC,141,746,9.26564,7.82603,10.57035,0.94326
+Scope,Surface-retained vs burned,Yield,13,54,-0.13004,-7.43355,8.49057,0.46154
+Scope,Surface-retained vs burned,Topsoil SOC,13,54,1.74167,0.61981,24.23208,0.76923
+Scope,Surface-retained vs removed,Yield,94,439,7.69295,4.99457,10.89375,0.80851
+Scope,Surface-retained vs removed,Topsoil SOC,94,439,8.27472,6.54122,10.80215,0.88298
+Main_Crop,Maize,Yield,109,473,9.54501,7.66721,11.04101,0.87156
+Main_Crop,Maize,Topsoil SOC,109,473,9.42393,7.65505,10.98552,0.93578
+Main_Crop,Rice,Yield,71,295,5.00000,4.25806,6.25000,0.84507
+Main_Crop,Rice,Topsoil SOC,71,295,8.05957,5.17772,10.15371,0.90141
 Main_Crop,Soybean,Yield,12,34,15.42733,10.98370,25.63550,0.91667
 Main_Crop,Soybean,Topsoil SOC,12,34,16.69955,1.85174,33.39985,0.83333
-Main_Crop,Wheat,Yield,120,383,7.48152,6.17192,11.39841,0.79167
-Main_Crop,Wheat,Topsoil SOC,120,383,9.73411,8.70984,11.29409,0.93333
-Combined_Climate_Class,Subtropical Dry,Yield,45,210,6.53210,4.41176,12.81582,0.82222
-Combined_Climate_Class,Subtropical Dry,Topsoil SOC,45,210,11.36228,8.40574,13.64315,0.88889
-Combined_Climate_Class,Subtropical Moist,Yield,35,170,5.07915,4.06506,9.16767,0.91429
-Combined_Climate_Class,Subtropical Moist,Topsoil SOC,35,170,7.85703,3.77670,10.15371,0.94286
-Combined_Climate_Class,Temperate Dry,Yield,33,183,7.58214,4.02587,13.33333,0.87879
-Combined_Climate_Class,Temperate Dry,Topsoil SOC,33,183,9.64491,5.82606,12.04933,0.90909
-Combined_Climate_Class,Temperate Moist,Yield,89,461,8.92121,6.33764,10.81560,0.85393
-Combined_Climate_Class,Temperate Moist,Topsoil SOC,89,461,9.29204,7.67486,10.57035,0.96629
-Combined_Climate_Class,Tropical Dry,Yield,10,35,17.54533,3.34569,33.92804,0.80000
-Combined_Climate_Class,Tropical Dry,Topsoil SOC,10,35,8.43373,3.01501,33.44407,0.90000
-Combined_Climate_Class,Tropical Moist,Yield,29,124,7.58228,0.00000,24.92837,0.65517
-Combined_Climate_Class,Tropical Moist,Topsoil SOC,29,124,3.84155,2.08658,15.88557,0.86207
+Main_Crop,Wheat,Yield,107,383,7.47466,5.30996,10.83690,0.79439
+Main_Crop,Wheat,Topsoil SOC,107,383,9.68886,8.32394,10.82001,0.93458
+Combined_Climate_Class,Subtropical Dry,Yield,40,210,6.17757,4.34135,10.26303,0.82500
+Combined_Climate_Class,Subtropical Dry,Topsoil SOC,40,210,11.20062,7.85807,14.46772,0.90000
+Combined_Climate_Class,Subtropical Moist,Yield,34,170,5.12048,4.34796,9.16767,0.91176
+Combined_Climate_Class,Subtropical Moist,Topsoil SOC,34,170,8.01216,4.09732,11.06965,0.94118
+Combined_Climate_Class,Temperate Dry,Yield,32,183,7.78873,4.43470,13.18390,0.87500
+Combined_Climate_Class,Temperate Dry,Topsoil SOC,32,183,9.47568,5.40482,12.75018,0.90625
+Combined_Climate_Class,Temperate Moist,Yield,84,461,9.10371,6.37116,10.81560,0.85714
+Combined_Climate_Class,Temperate Moist,Topsoil SOC,84,461,9.45019,8.05957,10.77845,0.96429
+Combined_Climate_Class,Tropical Dry,Yield,9,35,18.98680,-3.65482,33.92804,0.77778
+Combined_Climate_Class,Tropical Dry,Topsoil SOC,9,35,8.30304,0.57295,33.44407,0.88889
+Combined_Climate_Class,Tropical Moist,Yield,25,124,9.51019,0.00000,41.77391,0.64000
+Combined_Climate_Class,Tropical Moist,Topsoil SOC,25,124,5.31191,2.02692,19.25287,0.88000
 Combined_Climate_Class,,Yield,1,2,10.70521,,,1.00000
 Combined_Climate_Class,,Topsoil SOC,1,2,18.38724,,,1.00000
-Region,Africa,Yield,18,101,10.53315,5.13022,25.87157,0.83333
-Region,Africa,Topsoil SOC,18,101,5.24479,1.82110,24.80806,0.83333
-Region,Asia,Yield,208,990,7.62466,6.17731,9.53931,0.85096
-Region,Asia,Topsoil SOC,208,990,9.39838,8.36483,10.72358,0.94712
+Region,Africa,Yield,16,101,10.05198,6.53210,34.32661,0.81250
+Region,Africa,Topsoil SOC,16,101,5.49022,2.94998,35.36394,0.87500
+Region,Asia,Yield,190,990,7.62466,6.09558,9.55561,0.85263
+Region,Asia,Topsoil SOC,190,990,9.47707,8.36483,10.72358,0.94737
 Region,Europe,Yield,3,36,-0.44094,,,0.33333
 Region,Europe,Topsoil SOC,3,36,0.50248,,,1.00000
 Region,Latin America,Yield,1,2,-1.12786,,,0.00000
 Region,Latin America,Topsoil SOC,1,2,-3.79508,,,0.00000
-Region,North America,Yield,12,56,5.97824,-0.08041,28.53471,0.75000
-Region,North America,Topsoil SOC,12,56,6.90103,0.59479,22.49706,0.75000
+Region,North America,Yield,8,56,5.97824,-1.77834,33.92804,0.75000
+Region,North America,Topsoil SOC,8,56,7.85593,-1.48514,18.82612,0.62500
