@@ -127,6 +127,51 @@ def all_crop_ranking(raw: pd.DataFrame, focal_total_t: float) -> pd.DataFrame:
     return ranking
 
 
+def aligned_panel_slots(fig, map_ax, cbar_ax, rank_ax, continent_ax, climate_ax):
+    """Fixed row/column page boxes for lossless 2×2 panel reassembly."""
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    content = {
+        "resource_map": Bbox.union([map_ax.get_tightbbox(renderer),
+                                    cbar_ax.get_tightbbox(renderer)]),
+        "crop_scope": rank_ax.get_tightbbox(renderer),
+        "continent_mix": continent_ax.get_tightbbox(renderer),
+        "climate_mix": climate_ax.get_tightbbox(renderer),
+    }
+    left_right = max(content[name].x1 for name in ("resource_map", "continent_mix"))
+    right_left = min(content[name].x0 for name in ("crop_scope", "climate_mix"))
+    bottom_top = max(content[name].y1 for name in ("continent_mix", "climate_mix"))
+    top_bottom = min(content[name].y0 for name in ("resource_map", "crop_scope"))
+    if left_right >= right_left or bottom_top >= top_bottom:
+        raise ValueError("Figure panels have no safe vertical or horizontal split gutter")
+    top_delta = max(abs(content["resource_map"].y1 - content["crop_scope"].y1),
+                    abs(content["resource_map"].y0 - content["crop_scope"].y0))
+    if top_delta * 72 / fig.dpi > 1.5:
+        raise ValueError("Map and crop ranking are not vertically aligned")
+    x_cut = (left_right + right_left) / 2
+    y_cut = (bottom_top + top_bottom) / 2
+    fw, fh = fig.bbox.width, fig.bbox.height
+    display = {
+        "resource_map": Bbox.from_extents(0, y_cut, x_cut, fh),
+        "crop_scope": Bbox.from_extents(x_cut, y_cut, fw, fh),
+        "continent_mix": Bbox.from_extents(0, 0, x_cut, y_cut),
+        "climate_mix": Bbox.from_extents(x_cut, 0, fw, y_cut),
+    }
+    slots = {name: box.transformed(fig.dpi_scale_trans.inverted())
+             for name, box in display.items()}
+    return slots, {"x_cut_fraction": x_cut / fw, "y_cut_fraction": y_cut / fh,
+                   "top_left_width_mm": slots["resource_map"].width * 25.4,
+                   "top_right_width_mm": slots["crop_scope"].width * 25.4,
+                   "top_row_height_mm": slots["resource_map"].height * 25.4,
+                   "bottom_row_height_mm": slots["continent_mix"].height * 25.4,
+                   "top_outer_top_delta_pt": abs(content["resource_map"].y1 -
+                                                   content["crop_scope"].y1) * 72 / fig.dpi,
+                   "top_outer_bottom_delta_pt": abs(content["resource_map"].y0 -
+                                                      content["crop_scope"].y0) * 72 / fig.dpi,
+                   "horizontal_gutter_pt": (right_left - left_right) * 72 / fig.dpi,
+                   "vertical_gutter_pt": (top_bottom - bottom_top) * 72 / fig.dpi}
+
+
 def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None):
     if qa_scripts:
         sys.path.insert(0, str(qa_scripts))
@@ -148,7 +193,7 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
     width, height = 183 / 25.4, 173 / 25.4
     fig = plt.figure(figsize=(width, height))
     gs = fig.add_gridspec(2, 2, height_ratios=[.85, 1.25], left=.18,
-                          right=.975, top=.97, bottom=.105, hspace=.38, wspace=.30)
+                          right=.975, top=.97, bottom=.105, hspace=.08, wspace=.30)
     top = gs[0, :].subgridspec(1, 2, width_ratios=[1.65, 1], wspace=.38)
     map_ax = fig.add_subplot(top[0, 0])
     rank_ax = fig.add_subplot(top[0, 1])
@@ -203,6 +248,22 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
                          map_box.width, map_box.height])
     cbar.ax.set_position([bar_box.x0, map_bottom - .014 - bar_box.height,
                           bar_box.width, bar_box.height])
+    # Match the outer visual height of the ranking to map plus colorbar.
+    for _ in range(2):
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        target = Bbox.union([map_ax.get_tightbbox(renderer),
+                             cbar.ax.get_tightbbox(renderer)])
+        current = rank_ax.get_tightbbox(renderer)
+        pos = rank_ax.get_position()
+        height = pos.height * target.height / current.height
+        rank_ax.set_position([pos.x0, pos.y0 + (pos.height - height) / 2,
+                              pos.width, height])
+        fig.canvas.draw()
+        current = rank_ax.get_tightbbox(fig.canvas.get_renderer())
+        shift = (target.y0 + target.y1 - current.y0 - current.y1) / (2 * fig.bbox.height)
+        pos = rank_ax.get_position()
+        rank_ax.set_position([pos.x0, pos.y0 + shift, pos.width, pos.height])
 
     # Paired rows: where each crop's mass sits, then its within-region climate mix.
     regional = (strata.groupby(["crop_code", "continent_omd"], observed=True)
@@ -271,9 +332,11 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
     fig.savefig(base.with_suffix(".svg"))
     fig.savefig(base.with_suffix(".png"), dpi=600)
     fig.savefig(base.with_suffix(".tiff"), dpi=600)
-    # Crop the final canvas only; do not redraw panels or change their type size.
-    fw, fh = fig.get_size_inches()
-    renderer = fig.canvas.get_renderer()
+    # Fixed slot dimensions, not independently tight-cropped panels, preserve alignment.
+    slots, slot_layout = aligned_panel_slots(fig, map_ax, cbar.ax, rank_ax,
+                                             continent_ax, climate_ax)
+    (out / "panel_slots.json").write_text(json.dumps(slot_layout, indent=2),
+                                            encoding="utf-8")
     axes = [(map_ax, "resource_map"), (rank_ax, "crop_scope"),
             (continent_ax, "continent_mix"),
             (climate_ax, "climate_mix")]
@@ -282,13 +345,7 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
         for j, (panel, _) in enumerate(axes):
             panel.set_visible(j == index)
         cbar.ax.set_visible(index == 0)
-        tight = [ax.get_tightbbox(renderer)]
-        if index == 0:
-            tight.append(cbar.ax.get_tightbbox(renderer))
-        box = Bbox.union(tight).transformed(fig.dpi_scale_trans.inverted())
-        pad = .07
-        box = Bbox.from_extents(max(0, box.x0 - pad), max(0, box.y0 - pad),
-                                min(fw, box.x1 + pad), min(fh, box.y1 + pad))
+        box = slots[name]
         fig.savefig(out / f"{name}.png", dpi=600, bbox_inches=box, pad_inches=0)
         fig.savefig(out / f"{name}.pdf", bbox_inches=box, pad_inches=0)
         fig.savefig(out / f"{name}.svg", bbox_inches=box, pad_inches=0)
@@ -315,7 +372,8 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
         "bar_and_matrix": "15 crop-continent regional shares paired with 75 conditional climate shares",
         "strata_source": "crop_continent_climate_source.csv",
         "source_layer": "theoretical modeled resource, not collectable or burned residue",
-        "split": "crop final assembled Python canvas to PNG, editable-text PDF and SVG without rescaling; no panel letters or figure title",
+        "split": "fixed 2x2 row-column slots from final Python canvas to PNG, editable-text PDF and SVG without rescaling; no panel letters or figure title",
+        "split_layout": "panel_slots.json",
         "palette": PALETTE, "matplotlib": matplotlib.__version__,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
 

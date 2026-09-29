@@ -1,0 +1,12 @@
+{
+  "x_cut_fraction": 0.6092359606771247,
+  "y_cut_fraction": 0.6423440027020674,
+  "top_left_width_mm": 111.49018080391383,
+  "top_right_width_mm": 71.50981919608617,
+  "top_row_height_mm": 61.87448753254237,
+  "bottom_row_height_mm": 111.12551246745763,
+  "top_outer_top_delta_pt": 0.6740278027764361,
+  "top_outer_bottom_delta_pt": 0.6740278027764771,
+  "horizontal_gutter_pt": 13.766921940007792,
+  "vertical_gutter_pt": 41.45412104073935
+}
