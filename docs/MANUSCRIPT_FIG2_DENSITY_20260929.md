@@ -1,5 +1,7 @@
 # 正文 Fig 2 候选：直接还田的产量–SOC 联合响应分布
 
+**历史单图版：** 当前正文 Fig. 2 已扩为[总体＋三作物组图](MANUSCRIPT_FIG2_MULTIPANEL_20260929.md)。本页保留单图与拆分边缘分布文件，供版式回退和溯源。
+
 **当前版式：** 一张连续的联合分布图，不再把总体、作物、气候、地区和样本数排成多个清单式面板。图面只保留坐标、零效应参考线、标题层散点、视觉密度线以及两个边缘分布；统计口径和例外点处理移入图注。旧三面板分层图保留在[上一版说明](MANUSCRIPT_FIG2_JOINT_20260929.md)，其作物与气候结果可作为后续独立结果图的素材，不再占正文 Fig 2。
 
 [整图 PNG](../figures/manuscript_fig2_joint_density_20260929/fig2_joint_density.png) · [可编辑 SVG](../figures/manuscript_fig2_joint_density_20260929/fig2_joint_density.svg) · [PDF](../figures/manuscript_fig2_joint_density_20260929/fig2_joint_density.pdf)。先在同一画布组好整图，再按[固定槽位](../figures/manuscript_fig2_joint_density_20260929/panel_slots.json)拆出[中央散点](../figures/manuscript_fig2_joint_density_20260929/paired_scatter.svg)、[上缘产量分布](../figures/manuscript_fig2_joint_density_20260929/yield_marginal.svg)和[右缘 SOC 分布](../figures/manuscript_fig2_joint_density_20260929/soc_marginal.svg)，均有 SVG/PDF/PNG；拆件需要按槽位尺寸保留白边拼合。图面无总标题、a/b/c 编号、样本数字贴标或重复图例。粉色上缘曲线对应产量变化分布，蓝色右缘曲线对应表层 SOC 储量变化分布；虚线标出全部标题的中位响应。紫色等密度线只用于显示散点集中位置，**不是置信区间**。浅粉色右上象限标识两终点均高于移除对照。

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "applicable": true,
+  "auditable": true,
+  "verdict": "PASS",
+  "backend": "python-matplotlib",
+  "summary": {
+    "fail": 0,
+    "warn": 0,
+    "comparisons": 1,
+    "exemptions": 0
+  },
+  "tolerances": {
+    "alignment_pt": 1.5,
+    "gutter_pt": 1.5
+  },
+  "layout": {
+    "schema_version": 1,
+    "backend": "python-matplotlib",
+    "figure": {
+      "width_pt": 518.740157480315,
+      "height_pt": 439.37007874015745
+    },
+    "panels": [
+      {
+        "id": "Maize",
+        "bbox_pt": [
+          365.7118110236221,
+          300.9685039370079,
+          503.17795275590555,
+          404.2204724409449
+        ]
+      },
+      {
+        "id": "Rice",
+        "bbox_pt": [
+          365.7118110236221,
+          177.9448818897638,
+          503.17795275590555,
+          281.1968503937008
+        ]
+      },
+      {
+        "id": "Wheat",
+        "bbox_pt": [
+          365.7118110236221,
+          54.92125984251968,
+          503.17795275590555,
+          158.17322834645668
+        ]
+      }
+    ],
+    "row_groups": [],
+    "column_groups": [
+      {
+        "id": "column-1",
+        "panels": [
+          "Maize",
+          "Rice",
+          "Wheat"
+        ]
+      }
+    ],
+    "boundary_groups": [],
+    "exemptions": []
+  },
+  "findings": []
+}

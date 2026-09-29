@@ -1,0 +1,45 @@
+{
+  "global_source_sha256": "a4a88984cf37e2389e9926ca0e5a1658d74d6b3950305333e68f5cc42544ef18",
+  "crop_source_sha256": "6fc5e191bbb20280060c5389f7ced3499d0640090c0247bbda7c0fa71bc331b9",
+  "global_titles": 215,
+  "global_plotted": 213,
+  "crop_title_units": 287,
+  "unique_titles_across_crops": 215,
+  "by_crop": {
+    "Maize": {
+      "crop_title_units": 109,
+      "plotted": 107,
+      "both_positive": 91,
+      "median_yield_pct": 9.545008687756535,
+      "median_soc_pct": 9.423934728933865
+    },
+    "Rice": {
+      "crop_title_units": 71,
+      "plotted": 70,
+      "both_positive": 56,
+      "median_yield_pct": 5.0,
+      "median_soc_pct": 8.05957218471228
+    },
+    "Wheat": {
+      "crop_title_units": 107,
+      "plotted": 107,
+      "both_positive": 82,
+      "median_yield_pct": 7.474658124775783,
+      "median_soc_pct": 9.688862103948548
+    }
+  },
+  "palette": {
+    "global": "#908ebc",
+    "yield": "#e16db7",
+    "soc": "#5394c3",
+    "maize": "#e16db7",
+    "rice": "#5394c3",
+    "wheat": "#908ebc",
+    "joint": "#f4cee1",
+    "zero": "#77747c",
+    "contour": "#b099b5"
+  },
+  "interpretation": "descriptive secondary compilation, not trial-level causal/meta estimate",
+  "kde": "visual smoothing of visible points, not uncertainty",
+  "out_of_view_rule": "axis window only; all units remain in source and descriptive counts"
+}

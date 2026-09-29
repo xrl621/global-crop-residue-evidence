@@ -1,0 +1,33 @@
+{
+  "full_canvas_mm": [
+    183,
+    155
+  ],
+  "slots_fraction_xyxy": {
+    "global_joint": [
+      0,
+      0,
+      0.675,
+      1
+    ],
+    "maize_joint": [
+      0.675,
+      0.665,
+      1,
+      1
+    ],
+    "rice_joint": [
+      0.675,
+      0.385,
+      1,
+      0.665
+    ],
+    "wheat_joint": [
+      0.675,
+      0,
+      1,
+      0.385
+    ]
+  },
+  "reassembly": "place pieces at their original slot rectangles without trimming transparent/white margins"
+}
