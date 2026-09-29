@@ -1,6 +1,6 @@
-# 正文 Fig. 2 组图：还田／地表保留的产量–SOC 联合响应
+# 旧正文 Fig. 2 候选：还田／地表保留的产量–SOC 联合响应
 
-**当前版（2026-09-29）。** 从单一总体联合分布扩为一张完整组图：总体为主视觉，玉米、水稻、小麦为同尺度的作物分层小图。图中无总标题、无 a/b/c 编号；[整版 PNG](../figures/manuscript_fig2_multipanel_20260929/fig2_multipanel.png)、[SVG](../figures/manuscript_fig2_multipanel_20260929/fig2_multipanel.svg)、[PDF](../figures/manuscript_fig2_multipanel_20260929/fig2_multipanel.pdf)。整版 183 × 155 mm，另有 600 dpi TIFF。
+**状态更正（2026-09-29）：已完成的还田专题组图，非正文 Fig. 2 的完整科学内容。** 用户指出四块散点都在重复一条路径，不能代替三路径×产量／SOC／GHG 主问题；[正文 Fig. 2 已重新定义](MANUSCRIPT_FIG2_REDESIGN_20260929.md)。本页及图片保留供 Extended Data／补充图或后续作物专题使用，不能再称正文 Fig. 2 定稿。从单一总体联合分布扩为一张组图：总体为主视觉，玉米、水稻、小麦为同尺度的作物分层小图。图中无总标题、无 a/b/c 编号；[整版 PNG](../figures/manuscript_fig2_multipanel_20260929/fig2_multipanel.png)、[SVG](../figures/manuscript_fig2_multipanel_20260929/fig2_multipanel.svg)、[PDF](../figures/manuscript_fig2_multipanel_20260929/fig2_multipanel.pdf)。整版 183 × 155 mm，另有 600 dpi TIFF。
 
 四块内容先在同一画布排版，再按[固定槽位](../figures/manuscript_fig2_multipanel_20260929/panel_slots.json)拆出无编号可编辑文件：[总体](../figures/manuscript_fig2_multipanel_20260929/global_joint.svg)、[玉米](../figures/manuscript_fig2_multipanel_20260929/maize_joint.svg)、[水稻](../figures/manuscript_fig2_multipanel_20260929/rice_joint.svg)、[小麦](../figures/manuscript_fig2_multipanel_20260929/wheat_joint.svg)；每块同时有 PDF 和 PNG。拼接时保留槽位白边，不要自动紧裁。
 

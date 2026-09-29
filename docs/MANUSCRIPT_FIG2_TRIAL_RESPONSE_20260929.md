@@ -1,6 +1,6 @@
 # 补充图候选：三种秸秆路径的逐终点响应与样本审核
 
-**状态：** 2026-09-29 从正文 Fig 2 候选降为补充图／数据审核图；保留原文件、筛选账本与复算方式供追溯。当前[正文 Fig 2 候选](MANUSCRIPT_FIG2_DENSITY_20260929.md)聚焦还田—移除的产量与 SOC 联合分布。本图不是全球合并效应或三路径优劣排名。
+**状态：** 2026-09-29 从正文 Fig 2 候选降为补充图／数据审核图；保留原文件、筛选账本与复算方式供追溯。[正文 Fig. 2 的现行科学问题](MANUSCRIPT_FIG2_REDESIGN_20260929.md)已重设为三路径的产量、SOC 与田间气体权衡，尚无定稿图。本图不是全球合并效应或三路径优劣排名。
 
 [整图预览](../figures/manuscript_fig2_trial_response_20260929/fig2_trial_response.png)；整图 [PDF](../figures/manuscript_fig2_trial_response_20260929/fig2_trial_response.pdf) / [SVG](../figures/manuscript_fig2_trial_response_20260929/fig2_trial_response.svg)。四个无编号独立面板依次为产量、SOC 浓度、土壤 CH₄、土壤 N₂O；各自均有 PDF/SVG/PNG，保持从同一 183 × 132 mm 画布切出的固定槽位与白边，见[组版尺寸](../figures/manuscript_fig2_trial_response_20260929/panel_slots.json)。配色沿用项目色板。
 
