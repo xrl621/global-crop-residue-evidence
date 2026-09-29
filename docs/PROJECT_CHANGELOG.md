@@ -2,6 +2,14 @@
 
 本文件采用**追加式记录**。新决定写在最上方；旧决定即使被替代也不删除。每次改变研究范围、来源、准入、模型、图稿或结论，写明“原口径 → 新口径”、原因、受影响文件/分析和验证情况，并同步更新[当前项目框架](PROJECT_FRAMEWORK_AND_ANALYSIS.md)。数字若是时点快照，必须标注日期和数据层级。
 
+## 2026-09-29｜建立 Fig. 2 独立试验晋级矩阵与非亚洲补证前沿
+
+**原口径 → 新口径：** 完整三路径统计已经回答“现在有什么”，但仍缺一个固定执行表回答“离正式分析还缺什么” → 新增[晋级矩阵与补证前沿](FIG2_PROMOTION_MATRIX_20260929.md)、12 格[缺口 CSV](../data/processed/fig2_promotion_20260929/pathway_endpoint_promotion.csv)、[候选原始研究表](../literature/fig2_targeted_candidates_20260929.csv)和复算测试。脚本直接读取最新三路径统计包，不改主库效应。
+
+**当前基线：** direct return 的 yield/SOC/CH₄/N₂O 独立试验数为 11/5/3/3；biochar 为 8/4/4/4；open burning 为 9/5/2/2。10 项只是计数筛查门，不是 Meta 放行。候选前沿覆盖美国玉米长期秸秆保留/移除、California 水稻焚烧/翻埋、澳大利亚长期焚烧/保留和埃塞俄比亚 maize-straw biochar；所有候选仍是 `candidate_unverified_not_in_master`。
+
+**边界与验证：** 10 个候选 DOI 与当前公开 607 行主库字符串核对均未命中；California 两篇标记 possible shared trial，Roper 2021 标记 legacy boundary，SOC stock 不混入 SOC concentration。公开主库仍为 607/34，严格层 485/27，核心层 472/25。执行上先核 Yuan 2018 / Li 2023 的 N₂O+yield，再做 California 去重、Australia burning 表格和 Ethiopia maize-straw biochar 提取。
+
 ## 2026-09-29｜一次性复算 Fig. 2 三路径×四终点与多终点共现
 
 **原口径 → 新口径：** 三路径四终点的比较条数与试验方向散在图注、旧审核图和逐路径表，缺一份可直接用于新 Fig. 2 的完整数值底稿 → 新增[12 格阶段统计报告](MANUSCRIPT_FIG2_THREE_PATHWAY_STATISTICS_20260929.md)、复算脚本、逐试验方向、同试验共报告和同元数据键配对候选表。没有新增原始效应，339 条比较／25 个试验键不变。

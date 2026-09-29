@@ -1,0 +1,13 @@
+pathway,endpoint,independent_trial_keys,treatment_comparisons,countries,crops,target_independent_trials,gap_to_10,count_gate_status,inference_guardrail
+direct_return,yield,11,62,"China|India|Nepal","maize|rice|wheat",10,0,COUNT_GATE_MET_BOUNDARY_REVIEW_REQUIRED,screening_target_only_not_model_readiness
+direct_return,SOC_concentration,5,37,"China|India","rice|wheat",10,5,NEAR_COUNT_GATE,screening_target_only_not_model_readiness
+direct_return,CH4,3,23,"China","rice",10,7,CRITICAL_INDEPENDENT_TRIAL_GAP,screening_target_only_not_model_readiness
+direct_return,N2O,3,20,"China","maize|rice|wheat",10,7,CRITICAL_INDEPENDENT_TRIAL_GAP,screening_target_only_not_model_readiness
+biochar_return,yield,8,66,"China|India","rice|wheat",10,2,NEAR_COUNT_GATE,screening_target_only_not_model_readiness
+biochar_return,SOC_concentration,4,34,"China|India","maize|rice",10,6,CRITICAL_INDEPENDENT_TRIAL_GAP,screening_target_only_not_model_readiness
+biochar_return,CH4,4,28,"China","rice",10,6,CRITICAL_INDEPENDENT_TRIAL_GAP,screening_target_only_not_model_readiness
+biochar_return,N2O,4,28,"China","rice",10,6,CRITICAL_INDEPENDENT_TRIAL_GAP,screening_target_only_not_model_readiness
+open_burning,yield,9,20,"China|India|Nepal|Pakistan|Vietnam","rice|wheat",10,1,NEAR_COUNT_GATE,screening_target_only_not_model_readiness
+open_burning,SOC_concentration,5,9,"China|India","rice|wheat",10,5,NEAR_COUNT_GATE,screening_target_only_not_model_readiness
+open_burning,CH4,2,6,"China|Vietnam","rice",10,8,CRITICAL_INDEPENDENT_TRIAL_GAP,screening_target_only_not_model_readiness
+open_burning,N2O,2,6,"China|Vietnam","rice",10,8,CRITICAL_INDEPENDENT_TRIAL_GAP,screening_target_only_not_model_readiness
