@@ -290,6 +290,8 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
         box = Bbox.from_extents(max(0, box.x0 - pad), max(0, box.y0 - pad),
                                 min(fw, box.x1 + pad), min(fh, box.y1 + pad))
         fig.savefig(out / f"{name}.png", dpi=600, bbox_inches=box, pad_inches=0)
+        fig.savefig(out / f"{name}.pdf", bbox_inches=box, pad_inches=0)
+        fig.savefig(out / f"{name}.svg", bbox_inches=box, pad_inches=0)
     plt.close(fig)
     for svg in out.glob("*.svg"):
         svg.write_text("\n".join(line.rstrip() for line in svg.read_text(encoding="utf-8").splitlines()) + "\n",
@@ -313,7 +315,7 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
         "bar_and_matrix": "15 crop-continent regional shares paired with 75 conditional climate shares",
         "strata_source": "crop_continent_climate_source.csv",
         "source_layer": "theoretical modeled resource, not collectable or burned residue",
-        "split": "crop final assembled Python canvas without rescaling; no panel letters or figure title",
+        "split": "crop final assembled Python canvas to PNG, editable-text PDF and SVG without rescaling; no panel letters or figure title",
         "palette": PALETTE, "matplotlib": matplotlib.__version__,
     }, ensure_ascii=False, indent=2), encoding="utf-8")
 

@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "applicable": true,
+  "auditable": true,
+  "verdict": "PASS",
+  "backend": "python-matplotlib",
+  "summary": {
+    "fail": 0,
+    "warn": 0,
+    "comparisons": 1,
+    "exemptions": 0
+  },
+  "tolerances": {
+    "alignment_pt": 1.5,
+    "gutter_pt": 1.5
+  },
+  "layout": {
+    "schema_version": 1,
+    "backend": "python-matplotlib",
+    "figure": {
+      "width_pt": 518.740157480315,
+      "height_pt": 490.3937007874016
+    },
+    "panels": [
+      {
+        "id": "map",
+        "bbox_pt": [
+          93.3732283464567,
+          379.5081982399259,
+          309.15169721431886,
+          463.4220472440945
+        ],
+        "grid_id": "matplotlib-grid-1",
+        "row_start": 0,
+        "row_stop": 1,
+        "col_start": 0,
+        "col_stop": 3
+      },
+      {
+        "id": "ranking",
+        "bbox_pt": [
+          374.9968239264209,
+          331.3993893620441,
+          505.7716535433071,
+          475.68188976377957
+        ],
+        "grid_id": "matplotlib-grid-2",
+        "row_start": 0,
+        "row_stop": 1,
+        "col_start": 1,
+        "col_stop": 2
+      },
+      {
+        "id": "continent",
+        "bbox_pt": [
+          93.3732283464567,
+          51.491338582677216,
+          272.67689147552215,
+          263.6714862322882
+        ],
+        "grid_id": "matplotlib-grid-3",
+        "row_start": 1,
+        "row_stop": 2,
+        "col_start": 0,
+        "col_stop": 1
+      },
+      {
+        "id": "climate",
+        "bbox_pt": [
+          326.46799041424174,
+          51.491338582677216,
+          505.7716535433071,
+          263.6714862322882
+        ],
+        "grid_id": "matplotlib-grid-3",
+        "row_start": 1,
+        "row_stop": 2,
+        "col_start": 1,
+        "col_stop": 2
+      }
+    ],
+    "row_groups": [
+      {
+        "id": "row-1",
+        "panels": [
+          "continent",
+          "climate"
+        ]
+      }
+    ],
+    "column_groups": [],
+    "boundary_groups": [],
+    "exemptions": []
+  },
+  "findings": []
+}
