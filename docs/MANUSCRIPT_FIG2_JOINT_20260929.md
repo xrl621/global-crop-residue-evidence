@@ -1,6 +1,6 @@
-# 正文 Fig 2 候选：直接还田的产量–表层 SOC 联合响应
+# Fig 2 旧版分层图：直接还田的产量–表层 SOC 联合响应
 
-**状态：** 2026-09-29 正文组图候选，供科学叙事和版式评议；不是已完成的三路径主模型。Fig 1 说明三种谷物理论秸秆资源在哪里；Fig 2 回答公开配对文献中，直接还田相对秸秆移除是否经常同时对应产量与表层 SOC 储量增加，以及该关联在不同作物和气候类别下如何分布。生物炭、露天焚烧和 GHG 留待独立的严格分析，不能在本图中暗示已比较。
+**状态：** 2026-09-29 保留的旧版分层组图，已不作为正文 Fig 2；[新版正文候选](MANUSCRIPT_FIG2_DENSITY_20260929.md)把同一核心结论收敛为联合分布图。此处作物和气候分层结果可供后续独立结果图使用，不因旧图存在就自动占用正文图位。生物炭、露天焚烧和 GHG 留待独立的严格分析，不能在本图中暗示已比较。
 
 [整图 PNG](../figures/manuscript_fig2_joint_20260929/fig2_joint.png) · [PDF](../figures/manuscript_fig2_joint_20260929/fig2_joint.pdf) · [可编辑 SVG](../figures/manuscript_fig2_joint_20260929/fig2_joint.svg)。三块面板在 183 × 125 mm 画布中先排版，再按[固定槽位](../figures/manuscript_fig2_joint_20260929/panel_slots.json)导出无 a/b/c 编号的 `paired_response`、`crop_response`、`climate_response` 各自 PDF/SVG/PNG。面板文件名是内部存档名，最终图中没有编号或总标题。配色采用用户指定色板中的粉、蓝、淡紫和灰褐。
 

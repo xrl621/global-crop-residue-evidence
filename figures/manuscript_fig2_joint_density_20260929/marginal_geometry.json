@@ -1,0 +1,21 @@
+{
+  "hero_bbox_fraction": [
+    0.14,
+    0.15000000000000002,
+    0.6302211302211302,
+    0.6468058968058968
+  ],
+  "yield_marginal_bbox_fraction": [
+    0.14,
+    0.8102211302211303,
+    0.6302211302211302,
+    0.11977886977886976
+  ],
+  "soc_marginal_bbox_fraction": [
+    0.7832923832923834,
+    0.15000000000000002,
+    0.11670761670761665,
+    0.6468058968058968
+  ],
+  "alignment": "exact shared edges; marginal strips intentionally excluded from comparative-panel audit"
+}

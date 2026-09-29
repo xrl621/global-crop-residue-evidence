@@ -1,0 +1,23 @@
+{
+  "pdf": "D:\\秸秆处理ML\\figures\\manuscript_fig2_joint_density_20260929\\yield_marginal.pdf",
+  "auditable": false,
+  "verdict": "NOT AUDITABLE",
+  "page_count": 1,
+  "visible_text_box_count": 0,
+  "text_trace_count": 0,
+  "stroke_path_count": 2,
+  "filled_region_count": 3,
+  "image_region_count": 0,
+  "summary": {
+    "fail": 0,
+    "warn": 0,
+    "contained_fill_overlays": 0,
+    "contained_image_overlays": 0
+  },
+  "thresholds": {
+    "text_inset_pt": 0.6,
+    "min_overlap_ratio": 0.05,
+    "clipping_tolerance_pt": 0.5
+  },
+  "findings": []
+}

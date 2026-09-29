@@ -1,0 +1,36 @@
+{
+  "source_sha256": "a4a88984cf37e2389e9926ca0e5a1658d74d6b3950305333e68f5cc42544ef18",
+  "source_titles": 215,
+  "titles_visible": 213,
+  "out_of_window_titles": 2,
+  "quadrant_counts": [
+    [
+      172,
+      7
+    ],
+    [
+      27,
+      9
+    ]
+  ],
+  "yield_median_percent": 7.582136120690993,
+  "soc_median_percent": 9.265636712492967,
+  "spearman_rho": 0.1985354624208882,
+  "spearman_p_descriptive": 0.0034635721551289286,
+  "fisher_sign_odds_ratio": 8.19047619047619,
+  "fisher_p_descriptive": 0.00019431775370684537,
+  "source_level": "secondary compilation, paper-title balanced; not independent field-trial meta-analysis",
+  "kde_role": "descriptive visual smoothing only; no uncertainty or causal interpretation",
+  "palette": {
+    "yield": "#e16db7",
+    "soc": "#5394c3",
+    "points": "#908ebc",
+    "quadrant": "#f4cee1",
+    "contour": "#b099b5",
+    "zero": "#7b7780"
+  },
+  "canvas_mm": [
+    183,
+    140
+  ]
+}
