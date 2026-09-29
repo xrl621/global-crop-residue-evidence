@@ -1,0 +1,25 @@
+dimension,group,outcome,papers,median_percent,bootstrap_95_lo_percent,bootstrap_95_hi_percent,positive_papers,bootstrap_unit
+All,Three cereals,Yield,215,7.582136120690993,6.124749528385048,9.44611330814059,179,unique paper title
+All,Three cereals,Topsoil SOC stock,215,9.265636712492968,7.842963645056742,10.153710168595174,199,unique paper title
+Crop,Maize,Yield,109,9.545008687756535,7.667210440456766,11.041009463722393,95,unique paper title
+Crop,Maize,Topsoil SOC stock,109,9.423934728933872,7.655051948484415,10.985515025230844,102,unique paper title
+Crop,Rice,Yield,71,5.0,4.258064516129024,6.249999999999996,60,unique paper title
+Crop,Rice,Topsoil SOC stock,71,8.059572184712286,5.177716981214667,10.153710168595174,64,unique paper title
+Crop,Wheat,Yield,107,7.474658124775788,5.3099598806546044,10.836898572748863,85,unique paper title
+Crop,Wheat,Topsoil SOC stock,107,9.688862103948548,8.420938913261562,11.280214059568737,100,unique paper title
+Region,Asia,Yield,187,7.582136120690993,6.066418251778801,9.44611330814059,159,unique paper title
+Region,Asia,Topsoil SOC stock,187,9.423934728933872,8.32394053121625,10.692415171841107,177,unique paper title
+Region,Outside Asia,Yield,28,7.055903142068501,1.296943162092794,19.487738122644718,20,unique paper title
+Region,Outside Asia,Topsoil SOC stock,28,5.412564010486806,0.6069839682685999,7.978560775550234,22,unique paper title
+Climate,Temperate Moist,Yield,83,8.921213465958523,6.389202078166077,10.815603981325332,71,unique paper title
+Climate,Temperate Moist,Topsoil SOC stock,83,9.530237404854615,8.059572184712286,10.802145527288802,80,unique paper title
+Climate,Temperate Dry,Yield,31,7.582136120690993,4.434700113578978,9.933552105302796,27,unique paper title
+Climate,Temperate Dry,Topsoil SOC stock,31,9.306718217487337,4.98650093472576,12.049327868190144,28,unique paper title
+Climate,Subtropical Moist,Yield,34,5.120477528735133,4.347960326384136,9.167671893848036,31,unique paper title
+Climate,Subtropical Moist,Topsoil SOC stock,34,8.012159045523418,3.8261578312306512,10.16173528983316,32,unique paper title
+Climate,Subtropical Dry,Yield,39,6.124749528385048,4.270986745213556,9.428903523906056,32,unique paper title
+Climate,Subtropical Dry,Topsoil SOC stock,39,10.985515025230844,7.313169155034798,13.643151223951635,35,unique paper title
+Climate,Tropical Moist,Yield,25,9.510187667666418,0.0,41.77391282937212,16,unique paper title
+Climate,Tropical Moist,Topsoil SOC stock,25,5.311912839973944,2.026917427176443,19.252873563218408,22,unique paper title
+Climate,Tropical Dry,Yield,9,18.986800165352648,-3.65482233502537,33.92804044008324,7,unique paper title
+Climate,Tropical Dry,Topsoil SOC stock,9,8.303041762856518,0.5729538100552336,33.44407130214945,8,unique paper title

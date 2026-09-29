@@ -1,0 +1,23 @@
+{
+  "analysis_manifest_sha256": "0e87ec937d3053b67c4211de2c138c4334b39520f0f9e8b6c5c07ca3e84e5f9a",
+  "secondary_source_sha256": "435102f76948d3b93bc2221a62dc7257d863432be13996c110407d7f89d148b4",
+  "panel_roles": [
+    "paired title-level joint response",
+    "crop-specific title-bootstrap intervals",
+    "climate-stratified descriptive intervals"
+  ],
+  "scatter_pairs_displayed": 213,
+  "scatter_pairs_outside_axis": 2,
+  "source_layer": "secondary paper-balanced cereal return vs removal; no biochar or burning",
+  "no_global_causal_or_three_pathway_ranking": true,
+  "palette": {
+    "Yield": "#e16db7",
+    "Topsoil SOC stock": "#5394c3",
+    "Both positive": "#908ebc",
+    "Other": "#b8a89f"
+  },
+  "dimensions_mm": [
+    183,
+    125
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "source": "selected_comparisons.csv",
+  "source_sha256": "435102f76948d3b93bc2221a62dc7257d863432be13996c110407d7f89d148b4",
+  "source_comparisons": 1279,
+  "focal_return_comparisons": 1151,
+  "focal_paper_titles": 215,
+  "paper_crop_units": 287,
+  "papers_in_multiple_crops": 72,
+  "climate_title_units": 221,
+  "titles_in_multiple_climates": 4,
+  "climate_title_counts": {
+    "Temperate Moist": 83,
+    "Subtropical Dry": 39,
+    "Subtropical Moist": 34,
+    "Temperate Dry": 31,
+    "Tropical Moist": 25,
+    "Tropical Dry": 9
+  },
+  "region_title_counts": {
+    "Asia": 187,
+    "Outside Asia": 28
+  },
+  "raw_ratio_over_10_or_under_point_1_rows": 8,
+  "plausible_ratio_papers": 214,
+  "main_rule": "within-title median paired log ratios, then across-title median",
+  "uncertainty": "4000 title-resampling bootstrap draws; 95% percentile interval",
+  "inference": "secondary-data descriptive association; not primary-trial causal meta-analysis"
+}

@@ -1,0 +1,17 @@
+dimension,group,category,papers,denominator_papers,percent
+All,Three cereals,Both positive,172,215,80.0
+All,Three cereals,Yield only positive,7,215,3.255813953488372
+All,Three cereals,SOC only positive,27,215,12.558139534883722
+All,Three cereals,Neither positive,9,215,4.186046511627907
+Crop,Maize,Both positive,91,109,83.4862385321101
+Crop,Maize,Yield only positive,4,109,3.669724770642202
+Crop,Maize,SOC only positive,11,109,10.091743119266056
+Crop,Maize,Neither positive,3,109,2.752293577981652
+Crop,Rice,Both positive,56,71,78.87323943661971
+Crop,Rice,Yield only positive,4,71,5.633802816901409
+Crop,Rice,SOC only positive,8,71,11.267605633802818
+Crop,Rice,Neither positive,3,71,4.225352112676056
+Crop,Wheat,Both positive,82,107,76.63551401869158
+Crop,Wheat,Yield only positive,3,107,2.803738317757009
+Crop,Wheat,SOC only positive,18,107,16.822429906542055
+Crop,Wheat,Neither positive,4,107,3.738317757009345

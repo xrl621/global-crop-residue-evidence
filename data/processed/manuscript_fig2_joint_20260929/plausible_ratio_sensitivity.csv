@@ -1,0 +1,3 @@
+dimension,group,outcome,papers,median_percent,bootstrap_95_lo_percent,bootstrap_95_hi_percent,positive_papers,bootstrap_unit
+Sensitivity,Raw ratios within 0.1–10,Yield,214,7.457026910616728,6.095579881270048,9.286508757836911,178,unique paper title
+Sensitivity,Raw ratios within 0.1–10,Topsoil SOC stock,214,9.276964084828847,7.849995090522306,10.26257929925026,198,unique paper title
