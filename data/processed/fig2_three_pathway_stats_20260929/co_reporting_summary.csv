@@ -1,0 +1,4 @@
+pathway,has_yield_soc,has_yield_ch4,has_yield_n2o,has_all_four
+biochar_return,3,4,4,2
+direct_return,3,3,3,1
+open_burning,4,2,2,1

@@ -1,0 +1,15 @@
+{
+  "trial_source_sha256": "92d56b416cfb3a3b0a0bb15d880228be78642780c3712df046a9d6a356d3e1b4",
+  "effect_source_sha256": "53c6b4afd4d4bde141ccbe93c9cfa0d17e4eb5dc3d9eb14bc278bcccf4be8acb",
+  "trial_crop_units": 62,
+  "treatment_comparisons": 339,
+  "distinct_trial_keys": 25,
+  "trial_pathway_endpoint_summaries": 60,
+  "distinct_trial_pathway_groups": 32,
+  "exact_metadata_candidate_groups": 71,
+  "primary_summary_unit": "trial-by-crop for endpoint distributions; study_id for direction and co-report counts",
+  "interval_policy": "IQR is descriptive distribution, not confidence interval",
+  "no_meta_analysis": true,
+  "no_cross_pathway_ranking": true,
+  "no_full_lifecycle_ghg_claim": true
+}
