@@ -16,7 +16,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, LogNorm
-from matplotlib.patches import Patch
 from matplotlib.transforms import Bbox
 import numpy as np
 import pandas as pd
@@ -31,18 +30,16 @@ CROPS = [("maiz", "Maize"), ("rice", "Rice"), ("whea", "Wheat")]
 CONTINENTS = ["Asia", "Americas", "Europe", "Africa", "Oceania"]
 CLIMATES = ["A", "B", "C", "D", "E"]
 CLIMATE_LABELS = ["Tropical", "Arid", "Temperate", "Cold", "Polar"]
-CONTINENT_COLOR = dict(zip(CONTINENTS, [
-    PALETTE[3], PALETTE[9], PALETTE[2], PALETTE[10], PALETTE[5],
-]))
+CROP_COLOR = {"maiz": PALETTE[9], "rice": PALETTE[2], "whea": PALETTE[3]}
 
 
 def load():
     grid = pd.read_csv(SOURCE / "crop_grid_residue_2020.csv.gz",
                        usecols=["grid_id", "latitude", "longitude", "crop_code",
-                                "residue_allocated_t", "allocation_status"])
+                                "residue_allocated_t", "allocation_status",
+                                "continent_omd", "koppen_major_group"])
     continent = pd.read_csv(SOURCE / "crop_continent_residue_2020.csv")
     climate = pd.read_csv(SOURCE / "crop_climate_residue_2020.csv")
-    annual = pd.read_csv(SOURCE / "global_crop_residue_2015_2020.csv")
     manifest = json.loads((SOURCE / "manifest.json").read_text(encoding="utf-8"))
     if grid.crop_code.nunique() != 3 or len(grid) != manifest["grid_crop_system_rows"]:
         raise ValueError("Unexpected gridded crop coverage")
@@ -58,7 +55,7 @@ def load():
         raise ValueError("Continent summary differs from grid")
     if not np.isclose(climate.residue_allocated_t.sum(), total, rtol=1e-7):
         raise ValueError("Climate summary differs from grid")
-    return grid, continent, climate, annual, manifest
+    return grid, continent, climate, manifest
 
 
 def grid_image(grid):
@@ -75,15 +72,33 @@ def grid_image(grid):
     return image, len(cells), int(positive.sum())
 
 
+def crop_continent_climate(grid):
+    """Return all 75 strata, conserving allocated mass without imputing gaps."""
+    assigned = grid.loc[grid.residue_allocated_t.notna()].copy()
+    outside = assigned.loc[~assigned.continent_omd.isin(CONTINENTS) |
+                           ~assigned.koppen_major_group.isin(CLIMATES)]
+    if not outside.empty and outside.residue_allocated_t.sum() > 0:
+        raise ValueError("Positive allocated mass lacks continent or climate")
+    grouped = assigned.groupby(["crop_code", "continent_omd", "koppen_major_group"],
+                               observed=True).residue_allocated_t.sum()
+    index = pd.MultiIndex.from_product(
+        [[crop for crop, _ in CROPS], CONTINENTS, CLIMATES],
+        names=["crop_code", "continent_omd", "koppen_major_group"])
+    strata = grouped.reindex(index, fill_value=0).rename("residue_allocated_t").reset_index()
+    if len(strata) != 75 or not np.isclose(strata.residue_allocated_t.sum(),
+                                          grid.residue_allocated_t.sum(), rtol=1e-7):
+        raise ValueError("Crop–continent–climate grouping lost mass")
+    return strata
+
+
 def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None):
     if qa_scripts:
         sys.path.insert(0, str(qa_scripts))
     from audit_panel_alignment import require_matplotlib_panel_alignment
 
-    grid, continent, climate, annual, manifest = load()
+    grid, continent, climate, manifest = load()
     image, cells, positive_cells = grid_image(grid)
-    crop_gt = (annual[annual.Year.eq(2020)].set_index("crop_code")
-               .residue_production_t / 1e9)
+    strata = crop_continent_climate(grid)
     plt.rcParams.update({
         "font.family": "sans-serif", "font.sans-serif": ["Arial", "DejaVu Sans"],
         "font.size": 7.2, "axes.labelsize": 7.3, "xtick.labelsize": 6.8,
@@ -91,10 +106,10 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
         "axes.spines.top": False, "axes.spines.right": False,
         "pdf.fonttype": 42, "svg.fonttype": "none",
     })
-    width, height = 183 / 25.4, 133 / 25.4
+    width, height = 183 / 25.4, 173 / 25.4
     fig = plt.figure(figsize=(width, height))
-    gs = fig.add_gridspec(2, 2, height_ratios=[1.35, 1], left=.09,
-                          right=.975, top=.95, bottom=.13, hspace=.55, wspace=.38)
+    gs = fig.add_gridspec(2, 2, height_ratios=[.85, 1.25], left=.18,
+                          right=.975, top=.97, bottom=.105, hspace=.38, wspace=.30)
     map_ax = fig.add_subplot(gs[0, :])
     continent_ax = fig.add_subplot(gs[1, 0])
     climate_ax = fig.add_subplot(gs[1, 1])
@@ -122,55 +137,60 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
         spine.set_visible(False)
     cbar.set_label("Allocated theoretical residue per 0.5° cell (dry t)", fontsize=6.8)
 
-    # Crop-level absolute mass and continent decomposition.
-    for i, (crop, name) in enumerate(CROPS):
-        sub = continent[continent.crop_code.eq(crop)].set_index("continent_omd")
-        left = 0
-        for region in CONTINENTS:
-            mass = sub.loc[region, "residue_allocated_t"] / 1e9 if region in sub.index else 0
-            continent_ax.barh(i, mass, left=left, height=.55,
-                              color=CONTINENT_COLOR[region], edgecolor="none", linewidth=0)
-            if mass >= .12:
-                continent_ax.text(left + mass / 2, i, f"{mass:.2f}", ha="center", va="center",
-                                  color="#22222a", fontsize=6.1)
-            left += mass
-        continent_ax.text(left + .023, i, f"{crop_gt[crop]:.2f}", va="center",
-                          fontsize=6.8, color="#333333")
-    continent_ax.set_yticks(range(3), [name for _, name in CROPS])
-    continent_ax.set_ylim(2.5, -.5)
-    continent_ax.set_xlim(0, 1.55)
-    continent_ax.set_xticks([0, .5, 1.0, 1.5])
-    continent_ax.set_xlabel("Theoretical residue (Gt dry)")
+    # Paired rows: where each crop's mass sits, then its within-region climate mix.
+    regional = (strata.groupby(["crop_code", "continent_omd"], observed=True)
+                .residue_allocated_t.sum())
+    row_keys = [(crop, region) for crop, _ in CROPS for region in CONTINENTS]
+    row_labels = [f"{name} · {region}" for crop, name in CROPS for region in CONTINENTS]
+    region_share = np.array([100 * regional.loc[crop, region] /
+                             regional.loc[crop].sum() for crop, region in row_keys])
+    y = np.arange(len(row_keys))
+    continent_ax.barh(y, region_share, height=.76,
+                      color=[CROP_COLOR[crop] for crop, _ in row_keys],
+                      edgecolor="none")
+    for i, value in enumerate(region_share):
+        if value >= 2:
+            continent_ax.text(value + 1, i, f"{value:.0f}", va="center",
+                              fontsize=6.1, color="#333333")
+    continent_ax.set_yticks(y, row_labels)
+    continent_ax.set_ylim(14.5, -.5)
+    continent_ax.set_xlim(0, 102)
+    continent_ax.set_xticks([0, 25, 50, 75, 100])
+    continent_ax.set_xlabel("Share of each crop's global residue (%)")
     continent_ax.set_axisbelow(True)
     continent_ax.tick_params(axis="y", length=0)
-    continent_ax.legend(handles=[Patch(color=CONTINENT_COLOR[r], label=r)
-                                 for r in CONTINENTS],
-                        loc="lower left", bbox_to_anchor=(0, 1.04), ncol=3,
-                        fontsize=6.25, handlelength=.9, columnspacing=.55,
-                        handletextpad=.25, borderaxespad=0)
+    for cut in (4.5, 9.5):
+        continent_ax.axhline(cut, color="#b5b1b9", linewidth=.65)
 
-    # Climate shares are fractions of each crop's theoretical mass, not effect.
-    matrix = (climate.pivot(index="crop_code", columns="koppen_major_group",
-                            values="residue_allocated_t")
-              .reindex(index=[code for code, _ in CROPS], columns=CLIMATES).fillna(0))
-    matrix = 100 * matrix.div(matrix.sum(axis=1), axis=0)
+    # Each of 15 rows has its own denominator; the adjacent bar supplies its weight.
+    matrix = np.array([[100 * strata.loc[
+        strata.crop_code.eq(crop) & strata.continent_omd.eq(region) &
+        strata.koppen_major_group.eq(climate_code), "residue_allocated_t"].sum() /
+        regional.loc[crop, region] for climate_code in CLIMATES]
+        for crop, region in row_keys])
+    if not np.allclose(matrix.sum(axis=1), 100, atol=1e-7):
+        raise ValueError("Climate shares do not sum to 100 within each row")
     heat = LinearSegmentedColormap.from_list("project_climate", ["#ffffff", PALETTE[0], PALETTE[2]])
-    climate_ax.imshow(matrix.to_numpy(), cmap=heat, vmin=0, vmax=50, aspect="auto")
+    climate_ax.imshow(matrix, cmap=heat, vmin=0, vmax=100, aspect="auto")
     climate_ax.set_xticks(range(5), CLIMATE_LABELS, rotation=24, ha="right",
                           rotation_mode="anchor")
-    climate_ax.set_yticks(range(3), [name for _, name in CROPS])
+    climate_ax.set_yticks(y, [])
     climate_ax.tick_params(length=0, pad=3)
-    climate_ax.set_xlabel("Share of crop's theoretical residue (%)")
-    for row in range(3):
+    climate_ax.set_xlabel("Climate share within crop–continent (%)")
+    for row in range(15):
         for col in range(5):
-            value = matrix.iloc[row, col]
-            climate_ax.text(col, row, f"{value:.0f}", ha="center", va="center",
-                            fontsize=7.1, color="white" if value >= 36 else "#24242a")
+            value = matrix[row, col]
+            label = f"{value:.0f}" if value >= 1 else "·"
+            climate_ax.text(col, row, label, ha="center", va="center",
+                            fontsize=6.5, color="white" if value >= 58 else "#24242a")
+    for cut in (4.5, 9.5):
+        climate_ax.axhline(cut, color="#b5b1b9", linewidth=.65)
     for spine in climate_ax.spines.values():
         spine.set_visible(False)
 
     fig.canvas.draw()
     out.mkdir(parents=True, exist_ok=True)
+    strata.to_csv(out / "crop_continent_climate_source.csv", index=False)
     require_matplotlib_panel_alignment(
         fig, json_out=str(out / "fig1_resource.alignment.json"),
         exclude_axes=[cbar.ax], tolerance_pt=1.5, gutter_tolerance_pt=1.5,
@@ -210,7 +230,8 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
         "national_total_dry_t": manifest["omd_2020_residue_t"],
         "mapped_share": manifest["allocated_share_of_omd_residue"],
         "map": "0.5-degree crop allocation of national OMD residue by MapSPAM production weights; no interpolation",
-        "bar_and_matrix": "crop/continent absolute dry mass and crop-conditional climate shares",
+        "bar_and_matrix": "15 crop-continent regional shares paired with 75 conditional climate shares",
+        "strata_source": "crop_continent_climate_source.csv",
         "source_layer": "theoretical modeled resource, not collectable or burned residue",
         "split": "crop final assembled Python canvas without rescaling; no panel letters or figure title",
         "palette": PALETTE, "matplotlib": matplotlib.__version__,
