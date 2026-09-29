@@ -1,7 +1,8 @@
 """Fig. 2: global paired response and three crop-specific joint-response views.
 
 This is a descriptive visualization of a published secondary compilation.
-Each global point is one source title; each crop point is one crop-title unit.
+Small pale points are treatment contrasts; larger coloured points are source
+title or crop-by-title summaries. The two layers are never pooled as peers.
 """
 from __future__ import annotations
 
@@ -24,6 +25,7 @@ from scipy.stats import gaussian_kde
 ROOT = Path(__file__).resolve().parents[1]
 GLOBAL_SOURCE = ROOT / "data/processed/manuscript_fig2_joint_20260929/paper_global.csv"
 CROP_SOURCE = ROOT / "data/processed/manuscript_fig2_joint_20260929/paper_crop.csv"
+COMPARISON_SOURCE = ROOT / "data/processed/encarnation2026_residue_reanalysis/selected_comparisons.csv"
 OUT = ROOT / "figures/manuscript_fig2_multipanel_20260929"
 XLIM = (-45.0, 90.0)
 YLIM = (-20.0, 65.0)
@@ -31,12 +33,36 @@ PALETTE = {
     "global": "#908ebc", "yield": "#e16db7", "soc": "#5394c3",
     "maize": "#e16db7", "rice": "#5394c3", "wheat": "#908ebc",
     "joint": "#f4cee1", "zero": "#77747c", "contour": "#b099b5",
+    "comparisons": "#b8a89f",
 }
 
 
-def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
+def load_data() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     paper = pd.read_csv(GLOBAL_SOURCE)
     crop = pd.read_csv(CROP_SOURCE)
+    if not COMPARISON_SOURCE.exists():
+        raise FileNotFoundError(
+            "Local secondary-comparison source is missing; regenerate it from "
+            "the cited open compilation before rendering the comparison layer")
+    comparison = pd.read_csv(COMPARISON_SOURCE)
+    return_paths = {"Incorporated vs removed", "Surface-retained vs removed"}
+    comparison = comparison.loc[
+        comparison.Pathway.isin(return_paths) &
+        comparison.Main_Crop.isin(("Maize", "Rice", "Wheat"))].copy()
+    needed_comparison = {"Comparison_ID", "Title", "Main_Crop",
+                         "yield_log_ratio", "soc_log_ratio"}
+    if not needed_comparison <= set(comparison):
+        raise ValueError("Missing comparison source columns")
+    if comparison.Comparison_ID.duplicated().any():
+        raise ValueError("Comparison IDs are duplicated")
+    if len(comparison) != 1151 or comparison.Title.nunique() != 215:
+        raise ValueError("Underlying paired comparison count changed")
+    if not np.isfinite(comparison[["yield_log_ratio", "soc_log_ratio"]]).all().all():
+        raise ValueError("Non-finite comparison log ratios")
+    comparison["yield_pct"] = 100 * np.expm1(comparison.yield_log_ratio)
+    comparison["soc_pct"] = 100 * np.expm1(comparison.soc_log_ratio)
+    comparison["visible"] = (comparison.yield_pct.between(*XLIM) &
+                             comparison.soc_pct.between(*YLIM))
     for table, needed in ((paper, {"Title", "yield_lnrr", "soc_lnrr"}),
                           (crop, {"Title", "Main_Crop", "yield_lnrr", "soc_lnrr"})):
         if not needed <= set(table):
@@ -55,7 +81,21 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
         raise ValueError(f"Crop-title source changed: {observed}")
     if crop.duplicated(["Main_Crop", "Title"]).any():
         raise ValueError("Crop-title source contains duplicate units")
-    return paper, crop
+    if int(comparison.visible.sum()) != 1108:
+        raise ValueError("The recorded comparison-level visual window changed")
+    # Ensure the faint layer and the paper-level points come from identical
+    # source rows, rather than quietly mixing versions of the compilation.
+    check_global = comparison.groupby("Title")[["yield_log_ratio", "soc_log_ratio"]].median()
+    paper_check = paper.set_index("Title")[["yield_lnrr", "soc_lnrr"]]
+    if (not check_global.index.equals(paper_check.index) or
+        not np.allclose(check_global.to_numpy(), paper_check.to_numpy(), rtol=0, atol=1e-12)):
+        raise ValueError("Global paper points do not match the comparison source")
+    check_crop = comparison.groupby(["Main_Crop", "Title"])[["yield_log_ratio", "soc_log_ratio"]].median()
+    crop_check = crop.set_index(["Main_Crop", "Title"])[["yield_lnrr", "soc_lnrr"]]
+    if (not check_crop.index.equals(crop_check.index) or
+        not np.allclose(check_crop.to_numpy(), crop_check.to_numpy(), rtol=0, atol=1e-12)):
+        raise ValueError("Crop-paper points do not match the comparison source")
+    return paper, crop, comparison
 
 
 def clean_axis(ax, *, xlabels=True, ylabels=True) -> None:
@@ -74,7 +114,12 @@ def clean_axis(ax, *, xlabels=True, ylabels=True) -> None:
     ax.axvline(0, color=PALETTE["zero"], linewidth=.65, zorder=1)
 
 
-def point_cloud(ax, frame: pd.DataFrame, color: str, *, small: bool) -> None:
+def point_cloud(ax, frame: pd.DataFrame, comparisons: pd.DataFrame,
+                color: str, *, small: bool) -> None:
+    raw = comparisons.loc[comparisons.visible]
+    ax.scatter(raw.yield_pct, raw.soc_pct, s=6 if small else 9,
+               color=PALETTE["comparisons"], alpha=.26 if small else .24,
+               linewidths=0, zorder=2)
     shown = frame.loc[frame.visible]
     x, y = shown.yield_pct.to_numpy(), shown.soc_pct.to_numpy()
     density = gaussian_kde(np.vstack([x, y]))
@@ -86,8 +131,8 @@ def point_cloud(ax, frame: pd.DataFrame, color: str, *, small: bool) -> None:
     if len(levels) >= 2:
         ax.contour(grid_x, grid_y, surface, levels=levels, colors=color,
                    linewidths=[.7] * len(levels), alpha=.8, zorder=2)
-    ax.scatter(x, y, s=7 if small else 14, c=color, alpha=.58,
-               edgecolors="white", linewidths=.17 if small else .25, zorder=3)
+    ax.scatter(x, y, s=9 if small else 17, c=color, alpha=.80,
+               edgecolors="white", linewidths=.20 if small else .3, zorder=3)
     if small:
         ax.scatter([frame.yield_pct.median()], [frame.soc_pct.median()],
                    marker="D", s=19, facecolor=color, edgecolor="white",
@@ -98,7 +143,7 @@ def plot(out: Path, qa_scripts: Path) -> None:
     sys.path.insert(0, str(qa_scripts))
     from audit_panel_alignment import require_matplotlib_panel_alignment
 
-    paper, crop = load_data()
+    paper, crop, comparison = load_data()
     out.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({
         "font.family": "sans-serif", "font.sans-serif": ["Arial", "DejaVu Sans"],
@@ -115,7 +160,7 @@ def plot(out: Path, qa_scripts: Path) -> None:
     clean_axis(main)
     main.set_xlabel("Yield change vs removal (%)", labelpad=4)
     main.set_ylabel("Topsoil SOC stock change vs removal (%)", labelpad=5)
-    point_cloud(main, paper, PALETTE["global"], small=False)
+    point_cloud(main, paper, comparison, PALETTE["global"], small=False)
 
     for ax in (top, right):
         ax.spines[:].set_visible(False)
@@ -141,7 +186,8 @@ def plot(out: Path, qa_scripts: Path) -> None:
     for ax, name in zip(crop_axes, crop_names):
         sub = crop.loc[crop.Main_Crop.eq(name)]
         clean_axis(ax, xlabels=(name == "Wheat"))
-        point_cloud(ax, sub, PALETTE[name.lower()], small=True)
+        raw_sub = comparison.loc[comparison.Main_Crop.eq(name)]
+        point_cloud(ax, sub, raw_sub, PALETTE[name.lower()], small=True)
         ax.text(0, 1.035, name, transform=ax.transAxes, ha="left", va="bottom",
                 fontsize=7.6, weight="normal", color="#242228", clip_on=False)
     crop_axes[-1].set_xlabel("Yield change (%)", labelpad=3)
@@ -222,10 +268,18 @@ def plot(out: Path, qa_scripts: Path) -> None:
     (out / "render_manifest.json").write_text(json.dumps({
         "global_source_sha256": hashlib.sha256(GLOBAL_SOURCE.read_bytes()).hexdigest(),
         "crop_source_sha256": hashlib.sha256(CROP_SOURCE.read_bytes()).hexdigest(),
+        "comparison_source_sha256": hashlib.sha256(COMPARISON_SOURCE.read_bytes()).hexdigest(),
+        "comparison_rows": len(comparison),
+        "comparison_rows_plotted": int(comparison.visible.sum()),
+        "comparison_rows_outside_view": int((~comparison.visible).sum()),
         "global_titles": len(paper), "global_plotted": int(paper.visible.sum()),
         "crop_title_units": len(crop), "unique_titles_across_crops": crop.Title.nunique(),
         "by_crop": by_crop, "palette": PALETTE,
         "interpretation": "descriptive secondary compilation, not trial-level causal/meta estimate",
+        "point_layers": {
+            "light_small": "paired treatment contrasts; dependent within source titles",
+            "colored_large": "title-balanced medians or crop-by-title medians",
+        },
         "kde": "visual smoothing of visible points, not uncertainty",
         "out_of_view_rule": "axis window only; all units remain in source and descriptive counts",
     }, indent=2), encoding="utf-8")

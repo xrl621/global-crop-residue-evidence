@@ -1,6 +1,10 @@
 {
   "global_source_sha256": "a4a88984cf37e2389e9926ca0e5a1658d74d6b3950305333e68f5cc42544ef18",
   "crop_source_sha256": "6fc5e191bbb20280060c5389f7ced3499d0640090c0247bbda7c0fa71bc331b9",
+  "comparison_source_sha256": "435102f76948d3b93bc2221a62dc7257d863432be13996c110407d7f89d148b4",
+  "comparison_rows": 1151,
+  "comparison_rows_plotted": 1108,
+  "comparison_rows_outside_view": 43,
   "global_titles": 215,
   "global_plotted": 213,
   "crop_title_units": 287,
@@ -37,9 +41,14 @@
     "wheat": "#908ebc",
     "joint": "#f4cee1",
     "zero": "#77747c",
-    "contour": "#b099b5"
+    "contour": "#b099b5",
+    "comparisons": "#b8a89f"
   },
   "interpretation": "descriptive secondary compilation, not trial-level causal/meta estimate",
+  "point_layers": {
+    "light_small": "paired treatment contrasts; dependent within source titles",
+    "colored_large": "title-balanced medians or crop-by-title medians"
+  },
   "kde": "visual smoothing of visible points, not uncertainty",
   "out_of_view_rule": "axis window only; all units remain in source and descriptive counts"
 }
