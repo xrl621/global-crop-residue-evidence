@@ -22,6 +22,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/processed/omd2025_residue_geography"
+OMD_RAW = ROOT / "data/external/omd2025_crop_residues/Crop residues.csv"
 WORLD = ROOT / "data/ne_110m/ne_110m_admin_0_countries.shp"
 OUT = ROOT / "figures/manuscript_fig1_20260928"
 PALETTE = ["#f4cee1", "#c5d9df", "#e16db7", "#908ebc", "#af88bb",
@@ -31,6 +32,14 @@ CONTINENTS = ["Asia", "Americas", "Europe", "Africa", "Oceania"]
 CLIMATES = ["A", "B", "C", "D", "E"]
 CLIMATE_LABELS = ["Tropical", "Arid", "Temperate", "Cold", "Polar"]
 CROP_COLOR = {"maiz": PALETTE[9], "rice": PALETTE[2], "whea": PALETTE[3]}
+OMD_DISPLAY = {
+    "Maize": "Maize", "Wheat": "Wheat", "Rice, paddy": "Rice",
+    "Soybeans": "Soybean", "Barley": "Barley",
+    "Groundnuts, with shell": "Groundnut", "Sorghum": "Sorghum",
+    "Potatoes": "Potato", "Millet": "Millet", "Beans, dry": "Dry beans",
+    "Oats": "Oats", "Rye": "Rye",
+}
+OMD_FOCAL = {"Maize": "maiz", "Wheat": "whea", "Rice, paddy": "rice"}
 
 
 def load():
@@ -91,6 +100,33 @@ def crop_continent_climate(grid):
     return strata
 
 
+def all_crop_ranking(raw: pd.DataFrame, focal_total_t: float) -> pd.DataFrame:
+    """Summarize all OMD 2020 categories; keep focal and non-focal scopes separate."""
+    current = raw.loc[raw.Year.eq(2020), ["Item", "Resid production (tonnes/year)"]].copy()
+    current["Resid production (tonnes/year)"] = pd.to_numeric(
+        current["Resid production (tonnes/year)"], errors="raise")
+    if set(current.Item) != set(OMD_DISPLAY):
+        raise ValueError("OMD 2020 crop categories changed")
+    if current.iloc[:, 1].lt(0).any():
+        raise ValueError("Negative OMD residue mass")
+    ranking = (current.groupby("Item", as_index=False)
+               .agg(residue_production_t=("Resid production (tonnes/year)",
+                                          lambda values: values.sum(min_count=1)),
+                    source_rows=("Resid production (tonnes/year)", "size"),
+                    numeric_source_rows=("Resid production (tonnes/year)", "count"))
+               .sort_values("residue_production_t", ascending=False).reset_index(drop=True))
+    if ranking.residue_production_t.isna().any():
+        raise ValueError("A crop has no reported OMD residue mass")
+    ranking["missing_source_rows"] = ranking.source_rows - ranking.numeric_source_rows
+    ranking["display_crop"] = ranking.Item.map(OMD_DISPLAY)
+    ranking["focal_crop_code"] = ranking.Item.map(OMD_FOCAL).fillna("")
+    ranking["share_of_all_omd_crops_pct"] = 100 * ranking.residue_production_t / ranking.residue_production_t.sum()
+    focal = ranking.loc[ranking.focal_crop_code.ne(""), "residue_production_t"].sum()
+    if not np.isclose(focal, focal_total_t, rtol=1e-9):
+        raise ValueError("Three-crop OMD total differs from the mapped source")
+    return ranking
+
+
 def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None):
     if qa_scripts:
         sys.path.insert(0, str(qa_scripts))
@@ -99,6 +135,9 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
     grid, continent, climate, manifest = load()
     image, cells, positive_cells = grid_image(grid)
     strata = crop_continent_climate(grid)
+    if hashlib.sha256(OMD_RAW.read_bytes()).hexdigest() != manifest["omd_source_sha256"]:
+        raise ValueError("OMD raw file differs from frozen geography input")
+    ranking = all_crop_ranking(pd.read_csv(OMD_RAW), manifest["omd_2020_residue_t"])
     plt.rcParams.update({
         "font.family": "sans-serif", "font.sans-serif": ["Arial", "DejaVu Sans"],
         "font.size": 7.2, "axes.labelsize": 7.3, "xtick.labelsize": 6.8,
@@ -110,7 +149,9 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
     fig = plt.figure(figsize=(width, height))
     gs = fig.add_gridspec(2, 2, height_ratios=[.85, 1.25], left=.18,
                           right=.975, top=.97, bottom=.105, hspace=.38, wspace=.30)
-    map_ax = fig.add_subplot(gs[0, :])
+    top = gs[0, :].subgridspec(1, 2, width_ratios=[1.65, 1], wspace=.38)
+    map_ax = fig.add_subplot(top[0, 0])
+    rank_ax = fig.add_subplot(top[0, 1])
     continent_ax = fig.add_subplot(gs[1, 0])
     climate_ax = fig.add_subplot(gs[1, 1])
     world = gpd.read_file(WORLD)
@@ -125,17 +166,43 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
     world.boundary.plot(ax=map_ax, color="#a5a5a5", linewidth=.24, zorder=2)
     map_ax.set_xlim(-180, 180)
     map_ax.set_ylim(-58, 82)
-    map_ax.set_aspect("auto")
+    map_ax.set_aspect("equal", adjustable="box")
     map_ax.axis("off")
     cbar = fig.colorbar(raster, ax=map_ax, orientation="horizontal",
-                        fraction=.046, pad=.07, shrink=.64, anchor=(.5, 1))
+                        fraction=.055, pad=.10, shrink=.78, anchor=(.5, 1))
     cbar.set_ticks([1, 1_000, 1_000_000])
     cbar.set_ticklabels(["1", "1,000", "1,000,000"])
-    cbar.ax.tick_params(labelsize=6.5, length=0, pad=16)
+    cbar.ax.minorticks_off()
+    cbar.ax.tick_params(labelsize=6.2, length=0, pad=11)
     cbar.outline.set_visible(False)
     for spine in cbar.ax.spines.values():
         spine.set_visible(False)
-    cbar.set_label("Allocated theoretical residue per 0.5° cell (dry t)", fontsize=6.8)
+    cbar.set_label("Three focal cereals: dry t per 0.5° cell", fontsize=6.4)
+
+    rank_colors = [CROP_COLOR.get(code, PALETTE[1]) for code in ranking.focal_crop_code]
+    rank_mass_gt = ranking.residue_production_t.to_numpy() / 1e9
+    rank_y = np.arange(len(ranking))
+    rank_ax.barh(rank_y, rank_mass_gt, height=.70, color=rank_colors, edgecolor="none")
+    rank_ax.set_yticks(rank_y, ranking.display_crop)
+    rank_ax.set_ylim(11.5, -.5)
+    rank_ax.set_xlim(0, 1.52)
+    rank_ax.set_xticks([0, .5, 1.0, 1.5])
+    rank_ax.set_xlabel("OMD crop residues (Gt dry)")
+    rank_ax.tick_params(axis="y", length=0, labelsize=6.1, pad=2)
+    rank_ax.tick_params(axis="x", labelsize=6.1)
+    for i, mass in enumerate(rank_mass_gt):
+        rank_ax.text(mass + .025, i, f"{mass:.2f}", va="center", fontsize=6.1,
+                     color="#333333")
+    # Keep the correctly proportioned map and its colorbar as one compact group.
+    fig.canvas.draw()
+    map_box, rank_box, bar_box = (axis.get_position() for axis in
+                                   (map_ax, rank_ax, cbar.ax))
+    map_bottom = rank_box.y1 - .025 - map_box.height
+    map_ax.set_aspect("auto")
+    map_ax.set_position([map_box.x0, map_bottom,
+                         map_box.width, map_box.height])
+    cbar.ax.set_position([bar_box.x0, map_bottom - .014 - bar_box.height,
+                          bar_box.width, bar_box.height])
 
     # Paired rows: where each crop's mass sits, then its within-region climate mix.
     regional = (strata.groupby(["crop_code", "continent_omd"], observed=True)
@@ -191,9 +258,13 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
     fig.canvas.draw()
     out.mkdir(parents=True, exist_ok=True)
     strata.to_csv(out / "crop_continent_climate_source.csv", index=False)
+    ranking.to_csv(out / "omd_all_12_crop_residue_2020.csv", index=False)
     require_matplotlib_panel_alignment(
         fig, json_out=str(out / "fig1_resource.alignment.json"),
         exclude_axes=[cbar.ax], tolerance_pt=1.5, gutter_tolerance_pt=1.5,
+        panel_ids={map_ax: "map", rank_ax: "ranking", continent_ax: "continent",
+                   climate_ax: "climate"},
+        row_groups=[["continent", "climate"]],
         require_panel_labels=False, strict=True)
     base = out / "fig1_resource"
     fig.savefig(base.with_suffix(".pdf"))
@@ -203,7 +274,8 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
     # Crop the final canvas only; do not redraw panels or change their type size.
     fw, fh = fig.get_size_inches()
     renderer = fig.canvas.get_renderer()
-    axes = [(map_ax, "resource_map"), (continent_ax, "continent_mix"),
+    axes = [(map_ax, "resource_map"), (rank_ax, "crop_scope"),
+            (continent_ax, "continent_mix"),
             (climate_ax, "climate_mix")]
     for index, (ax, name) in enumerate(axes):
         # Keep other axes invisible so that off-panel artists are not exported.
@@ -228,8 +300,16 @@ def plot(source: Path = SOURCE, out: Path = OUT, qa_scripts: Path | None = None)
         "grid_cells": cells, "positive_grid_cells": positive_cells,
         "mapped_dry_t": float(grid.residue_allocated_t.sum()),
         "national_total_dry_t": manifest["omd_2020_residue_t"],
+        "all_12_omd_crops_dry_t": float(ranking.residue_production_t.sum()),
+        "all_12_omd_2020_source_rows": int(ranking.source_rows.sum()),
+        "all_12_omd_2020_missing_mass_rows": int(ranking.missing_source_rows.sum()),
+        "focal_3_share_of_all_12": float(ranking.loc[ranking.focal_crop_code.ne(""),
+                                                "residue_production_t"].sum() /
+                                       ranking.residue_production_t.sum()),
         "mapped_share": manifest["allocated_share_of_omd_residue"],
-        "map": "0.5-degree crop allocation of national OMD residue by MapSPAM production weights; no interpolation",
+        "map": "Only three focal cereals: 0.5-degree national OMD allocation by MapSPAM production weights; no interpolation",
+        "crop_ranking": "All 12 OMD crop-residue categories, national 2020 theoretical dry tonnes; includes non-straw residues",
+        "crop_ranking_source": "omd_all_12_crop_residue_2020.csv",
         "bar_and_matrix": "15 crop-continent regional shares paired with 75 conditional climate shares",
         "strata_source": "crop_continent_climate_source.csv",
         "source_layer": "theoretical modeled resource, not collectable or burned residue",

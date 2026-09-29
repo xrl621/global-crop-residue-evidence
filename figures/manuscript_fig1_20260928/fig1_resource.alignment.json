@@ -23,12 +23,12 @@
     },
     "panels": [
       {
-        "id": "a",
+        "id": "map",
         "bbox_pt": [
           93.3732283464567,
-          348.13615940864537,
-          505.7716535433071,
-          475.68188976377957
+          379.5081982399259,
+          309.15169721431886,
+          463.4220472440945
         ],
         "grid_id": "matplotlib-grid-1",
         "row_start": 0,
@@ -37,28 +37,42 @@
         "col_stop": 3
       },
       {
-        "id": "b",
+        "id": "ranking",
+        "bbox_pt": [
+          374.9968239264209,
+          331.3993893620441,
+          505.7716535433071,
+          475.68188976377957
+        ],
+        "grid_id": "matplotlib-grid-2",
+        "row_start": 0,
+        "row_stop": 1,
+        "col_start": 1,
+        "col_stop": 2
+      },
+      {
+        "id": "continent",
         "bbox_pt": [
           93.3732283464567,
           51.491338582677216,
           272.67689147552215,
           263.6714862322882
         ],
-        "grid_id": "matplotlib-grid-2",
+        "grid_id": "matplotlib-grid-3",
         "row_start": 1,
         "row_stop": 2,
         "col_start": 0,
         "col_stop": 1
       },
       {
-        "id": "c",
+        "id": "climate",
         "bbox_pt": [
           326.46799041424174,
           51.491338582677216,
           505.7716535433071,
           263.6714862322882
         ],
-        "grid_id": "matplotlib-grid-2",
+        "grid_id": "matplotlib-grid-3",
         "row_start": 1,
         "row_stop": 2,
         "col_start": 1,
@@ -67,10 +81,10 @@
     ],
     "row_groups": [
       {
-        "id": "inferred-row-2",
+        "id": "row-1",
         "panels": [
-          "b",
-          "c"
+          "continent",
+          "climate"
         ]
       }
     ],

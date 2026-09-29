@@ -4,7 +4,9 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from scripts.plot_manuscript_fig1 import crop_continent_climate, grid_image
+from scripts.plot_manuscript_fig1 import (
+    OMD_DISPLAY, all_crop_ranking, crop_continent_climate, grid_image,
+)
 
 
 class ManuscriptFigureOneTest(unittest.TestCase):
@@ -49,6 +51,27 @@ class ManuscriptFigureOneTest(unittest.TestCase):
         })
         with self.assertRaises(ValueError):
             crop_continent_climate(d)
+
+    def test_all_omd_crop_ranking_preserves_scope_and_missing_rows(self):
+        raw = pd.DataFrame({
+            "Year": [2020] * 13 + [2019],
+            "Item": list(OMD_DISPLAY) + ["Soybeans", "Maize"],
+            "Resid production (tonnes/year)": [1.0] * 12 + [np.nan, 999.0],
+        })
+        ranking = all_crop_ranking(raw, focal_total_t=3.0)
+        self.assertEqual(len(ranking), 12)
+        self.assertAlmostEqual(ranking.residue_production_t.sum(), 12.0)
+        self.assertAlmostEqual(ranking.loc[ranking.focal_crop_code.ne(""),
+                                           "share_of_all_omd_crops_pct"].sum(), 25.0)
+        self.assertEqual(ranking.missing_source_rows.sum(), 1)
+
+    def test_changed_omd_crop_categories_fail(self):
+        raw = pd.DataFrame({
+            "Year": [2020], "Item": ["Maize"],
+            "Resid production (tonnes/year)": [1.0],
+        })
+        with self.assertRaises(ValueError):
+            all_crop_ranking(raw, focal_total_t=1.0)
 
 
 if __name__ == "__main__":
