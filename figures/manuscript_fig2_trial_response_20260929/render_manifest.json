@@ -1,0 +1,30 @@
+{
+  "trial_source": "data/processed/pathway_endpoint_v2_20260928/trial_level.csv",
+  "trial_input_sha256": "92d56b416cfb3a3b0a0bb15d880228be78642780c3712df046a9d6a356d3e1b4",
+  "effect_source": "data/processed/stage_20260928/screened_effects.csv",
+  "effect_input_sha256": "53c6b4afd4d4bde141ccbe93c9cfa0d17e4eb5dc3d9eb14bc278bcccf4be8acb",
+  "effect_records_plotted": 339,
+  "trial_pathway_endpoint_summaries_plotted": 60,
+  "independent_trial_keys": 25,
+  "unit": "light: every eligible comparison; dark: one independent study_id per pathway and endpoint, crop units averaged within trial",
+  "analysis": "descriptive points only; no pooled effects, confidence intervals or significance tests",
+  "endpoint_boundary": "CH4 and N2O are soil emissions; open-burning pulse and full life-cycle emissions excluded",
+  "panel_order": [
+    "yield",
+    "SOC_concentration",
+    "CH4",
+    "N2O"
+  ],
+  "pathway_colors": {
+    "direct_return": "#5394c3",
+    "biochar_return": "#e16db7",
+    "open_burning": "#908ebc"
+  },
+  "axes_are_endpoint_specific": true,
+  "CH4_axis": "symmetric logarithmic above absolute 50%; all raw effect values visible",
+  "full_size_mm": [
+    183,
+    132
+  ],
+  "split_layout": "panel_slots.json"
+}
