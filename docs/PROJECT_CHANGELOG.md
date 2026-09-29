@@ -2,6 +2,14 @@
 
 本文件采用**追加式记录**。新决定写在最上方；旧决定即使被替代也不删除。每次改变研究范围、来源、准入、模型、图稿或结论，写明“原口径 → 新口径”、原因、受影响文件/分析和验证情况，并同步更新[当前项目框架](PROJECT_FRAMEWORK_AND_ANALYSIS.md)。数字若是时点快照，必须标注日期和数据层级。
 
+## 2026-09-29｜Yuan 2018 美国玉米候选原文核查：暂缓数字晋级
+
+**核查结果：** 该 Illinois 长期连续玉米试验可确认秸秆完全移除/保留与 chisel-till/no-till 的析因设计、四次重复，以及 2015–2017 年 N₂O 与产量观测，因此 trial identity 与研究范围具备继续提取价值。但当前可访问主文没有给出足以构造 residue retained vs removed 的逐臂累计 N₂O 均值+方差，也没有可直接复算的产量逐臂数值；关键处理组合数据指向 Supporting Tables S1–S2 / 图件。
+
+**处置：** 候选状态由 `candidate_unverified_not_in_master` 改为 `held_numeric_arm_data_after_primary_audit`。不从主文显著性、P 值或柱形图高度反推效应量，不新增伪 SD/SE，不把该论文提前计入严格层。故公开主库仍为 607/34，严格层 485/27，核心层 472/25；`direct_return × N2O` 独立试验数仍为 **3**。
+
+**下一步恢复条件：** 获取并核对 Supplementary Table S2 中 residue×tillage 的累计 N₂O 数值及其不确定性，并获得可复算的产量逐臂均值/误差；若满足共同背景、独立 trial identity 和方差来源门槛，再单独提交正式效应层晋级。详见 [Yuan 原文核查](YUAN2018_ILLINOIS_PRIMARY_AUDIT_20260929.md)。
+
 ## 2026-09-29｜建立 Fig. 2 独立试验晋级矩阵与非亚洲补证前沿
 
 **原口径 → 新口径：** 完整三路径统计已经回答“现在有什么”，但仍缺一个固定执行表回答“离正式分析还缺什么” → 新增[晋级矩阵与补证前沿](FIG2_PROMOTION_MATRIX_20260929.md)、12 格[缺口 CSV](../data/processed/fig2_promotion_20260929/pathway_endpoint_promotion.csv)、[候选原始研究表](../literature/fig2_targeted_candidates_20260929.csv)和复算测试。脚本直接读取最新三路径统计包，不改主库效应。

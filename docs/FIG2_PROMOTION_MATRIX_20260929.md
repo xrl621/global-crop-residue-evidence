@@ -25,7 +25,7 @@
 
 ### 美国：补 direct return 的 N₂O 与 SOC
 
-- **Yuan et al. 2018, Illinois**：长期连续玉米，秸秆保留/移除 × 耕作，三年测 N₂O 和产量。重点核相同耕作背景下的保留—移除逐臂均值和方差。
+- **Yuan et al. 2018, Illinois — 已完成第一轮原文核查，暂缓数字晋级。** 长期连续玉米，秸秆保留/移除 × 耕作，四次重复，主文可确认 2015–2017 年 N₂O 与产量观测以及处理设计；但可访问主文只给总体统计检验和按年份/耕作的汇总，秸秆处理组合的关键数值指向 Supplementary Tables S1–S2 / 图件，当前不能可靠恢复逐臂均值与不确定性。详见 [Yuan 2018 核查记录](YUAN2018_ILLINOIS_PRIMARY_AUDIT_20260929.md)。因此 `direct_return × N2O` 仍为 3 个独立试验，不从 3 人为加到 4。
 - **Li et al. 2023, Nebraska**：免耕灌溉玉米的秸秆保留/机械移除，含产量与土壤 N₂O。需拆开灌溉/覆盖作物因子，并与 Nebraska ARS 系列做 trial identity 去重。
 - **Jha et al. 2017, Ohio**：9 年免耕玉米，0–200% 秸秆保留梯度，提供 SOC 浓度候选。
 - **Schmer et al. 2024, Nebraska**：20 年灌溉连续玉米，产量和 SOC 储量；SOC stock 不直接进入当前 `SOC_concentration` 格子。
@@ -49,7 +49,7 @@
 
 ## 3. 下一轮执行顺序
 
-1. **Yuan 2018 + Li 2023：** 逐臂提取 N₂O + yield，判断能否进入 `direct_return × N2O`。
+1. **Yuan 2018 已暂缓；转向 Li 2023，同时恢复 Yuan Supplementary Table S2。** Yuan 的 trial identity 已足够明确，但当前缺 residue-specific 数值层；Li 2023 继续作为下一项 N₂O + yield 原文提取对象。
 2. **Bossio 1999 + Cintas 2001：** 先做 California trial identity 去重，再恢复可用 burning/removal/incorporation 比较。
 3. **Chan 2005 + Haines 1990：** 目标是非亚洲 open-burning 的 yield/SOC 独立试验，而不是摘要方向入库。
 4. **Raji 2026：** 提取 maize-straw biochar 臂；SOC 指标按 schema 原样分类，不为凑 `SOC_concentration` 强制转换。
